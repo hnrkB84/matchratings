@@ -55,7 +55,7 @@ app.get("/api/health", (_req, res) => {
 });
 
 // --- Rate limits (express-rate-limit v8: använd 'limit', inte 'max') ---
-const voteLimiter = rateLimit({ windowMs: 60 * 1000, limit: 20 });
+const voteLimiter = rateLimit({ windowMs: 60 * 1000, max: 20 });
 app.use("/api/rate", voteLimiter);
 app.use("/api/submit", voteLimiter);
 // --- Tabeller & index ---
