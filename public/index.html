@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <link href="https://fonts.googleapis.com/css2?family=Teko:wght@600;700&family=Oswald:wght@600;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <title>HV71 Ratings</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header>
+    <h1>HV71 Ratings</h1>
+    <div class="muted">Sätt betyg 1.0–10.0 (steg 0,5). Välj ⭐ för “Matchens lirare”.</div>
+    <div id="matchInfo" class="muted" style="margin-top:.25rem;">Laddar match…</div>
+  </header>
+
+  <div class="wrap">
+    <div class="card">
+      <div class="section-title">Spelare (inkl. “Båset” om inlagt)</div>
+      <div id="players" class="players-grid"></div>
+    </div>
+
+    <div class="card" style="margin-top:1rem;">
+      <div class="section-title">Helhetsintryck</div>
+
+      <label for="att">Jag såg matchen:</label>
+      <select id="att">
+        <option value="">— Välj —</option>
+        <option value="arena">På plats i arenan</option>
+        <option value="tv">På TV / stream</option>
+        <option value="skip">Vill ej svara</option>
+      </select>
+
+      <div style="margin-top:.5rem;">
+        <label>Matchbetyg (1–10):</label>
+        <input id="mo" type="number" step="0.5" min="1" max="10" value="7.0" />
+      </div>
+
+      <div style="margin-top:.5rem;">
+        <label>Resultatet speglade matchen (1–10):</label>
+        <input id="rr" type="number" step="0.5" min="1" max="10" value="6.0" />
+      </div>
+    </div>
+
+    <div class="row" style="margin:1rem 0;">
+      <button class="btn" id="saveAllBtn">Skicka in röster</button>
+      <button class="btn secondary" id="copyLinkBtn">Kopiera delningslänk</button>
+      <button class="btn secondary" onclick="location.href='resultat.html'">Visa resultat</button>
+      <div class="muted">⭐-valet sparas när du klickar Skicka in.</div>
+    </div>
+  </div>
+
+<script>
+/* ======= Parametrar / fingerprint ======= */
+const urlParams = new URLSearchParams(window.location.search);
+let match_id = urlParams.get("match"); // kan vara null -> vi hämtar current/latest
+const fingerprint = localStorage.getItem("hv71_fp_v1") || crypto.randomUUID();
+localStorage.setItem("hv71_fp_v1", fingerprint);
+
+/* ======= State ======= */
+let starPlayerId = null;
+
+/* ======= Helpers ======= */
+function formatName(full){
+  if(!full) return '';
+  const parts = full.trim().split(/\s+/);
+  if(parts.length===1) return parts[0]; // t.ex. "Båset"
+  const first = parts[0][0].toUpperCase() + '.';
+  const last  = parts.slice(-1)[0];
+  return `${first} ${last}`;
+}
+
+function updateBadge(id, v){
+  const badge = document.getElementById(`badge-${id}`);
+  if (badge) badge.textContent = Number(v).toFixed(1);
+}
+
+function selectStar(id){
+  starPlayerId = id;
+  document.querySelectorAll(".p-star").forEach(btn=>{
+    const pid = parseInt(btn.id.split("-")[1],10);
+    if (pid === starPlayerId){ btn.classList.add("active"); btn.innerHTML="<span>★</span>"; }
+    else { btn.classList.remove("active"); btn.innerHTML="<span>☆</span>"; }
+  });
+}
+
+/* ======= UI: spelarkort ======= */
+function playerCard(p){
+  const id = p.id;
+  const nr = p.jersey_number ?? '–';
+  const name = formatName(p.name);
+  const pos = p.position || '';
+  const defaultVal = 6.5;
+
+  return `
+    <div class="p-card" data-player-id="${id}">
+      <div class="p-top">
+        <div class="p-nr">${nr}</div>
+        <div>
+          <div class="p-name">${name}</div>
+          <div class="p-pos">${pos}</div>
+        </div>
+        <button id="star-${id}" class="p-star" title="Välj Matchens lirare" onclick="selectStar(${id})">
+          <span>☆</span>
+        </button>
+      </div>
+
+      <div class="p-rate">
+        <div class="p-range">
+          <input
+            type="range" min="1" max="10" step="0.5"
+            value="${defaultVal}" id="rate-${id}"
+            oninput="updateBadge(${id}, this.value)">
+        </div>
+        <div class="p-badge" id="badge-${id}">${defaultVal.toFixed(1)}</div>
+      </div>
+    </div>
+  `;
+}
+
+/* ======= Ladda spelare (TRUPP FÖR MATCH) ======= */
+async function loadPlayers(){
+  if (!match_id) return;
+  const res = await fetch(`/api/players?match_id=${match_id}`);
+  const players = await res.json();
+
+  const container = document.getElementById("players");
+  if (!Array.isArray(players) || players.length === 0){
+    container.innerHTML = `<div class="muted">Ingen trupp är satt för denna match ännu.</div>`;
+    return;
+  }
+  container.innerHTML = players.map(playerCard).join("");
+
+  // ev. tidigare lokalt ⭐ för denna match
+  const saved = parseInt(localStorage.getItem(`star_${match_id}`) || "0", 10);
+  if (saved) { selectStar(saved); }
+}
+
+/* ======= Actions ======= */
+function copyLink(){
+  navigator.clipboard.writeText(window.location.href);
+  alert("Länk kopierad!");
+}
+
+async function saveAll(){
+  if (!match_id) return;
+  const ratings = Array.from(document.querySelectorAll("[id^='rate-']")).map(el=>{
+    const player_id = parseInt(el.id.replace("rate-",""),10);
+    const rating = parseFloat(el.value);
+    return { player_id, rating };
+  });
+
+  const payload = {
+    match_id,
+    anon_fingerprint: fingerprint,
+    ratings,
+    star_player_id: starPlayerId ?? null,
+    attendance: document.getElementById("att").value || null,
+    match_overall: parseFloat(document.getElementById("mo").value) || null,
+    result_reflection: parseFloat(document.getElementById("rr").value) || null
+  };
+
+  const res = await fetch("/api/submit", {
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body: JSON.stringify(payload)
+  });
+
+  if (!res.ok) {
+    const errText = await res.text().catch(()=> "Fel");
+    alert("Kunde inte skicka: " + errText);
+    return;
+  }
+  if (starPlayerId) localStorage.setItem(`star_${match_id}`, String(starPlayerId));
+  alert("Rösterna är inskickade!");
+}
+
+/* ======= Init ======= */
+document.getElementById("saveAllBtn").addEventListener("click", saveAll);
+document.getElementById("copyLinkBtn").addEventListener("click", copyLink);
+
+(async function init(){
+  // Hämta "current" (öppen röstning), annars "latest"
+  if (!match_id) {
+    let current = {};
+    try { current = await fetch("/api/matches/current").then(r=>r.json()); } catch {}
+    if (current?.id) {
+      match_id = current.id;
+    } else {
+      const latest = await fetch("/api/matches/latest").then(r=>r.json()).catch(()=>null);
+      match_id = latest?.id ?? null;
+    }
+    if (match_id){
+      const u = new URL(window.location.href);
+      u.searchParams.set("match", match_id);
+      history.replaceState(null, "", u.toString());
+    }
+  }
+
+  // Visa matchinfo
+  if (match_id){
+    try{
+      const m = await fetch(`/api/matches/by-id?id=${match_id}`).then(r=>r.json());
+      const label = m.home ? `HV71 vs ${m.opponent}` : `${m.opponent} vs HV71`;
+      document.getElementById("matchInfo").textContent =
+        `${label} — ${m.date} (${m.competition})${m.voting_open ? " · Röstning öppen" : " · Röstning stängd"}`;
+    }catch{
+      document.getElementById("matchInfo").textContent = "Matchinfo kunde inte hämtas.";
+    }
+  } else {
+    document.getElementById("matchInfo").textContent = "Ingen match hittades.";
+  }
+
+  await loadPlayers();
+})();
+</script>
+</body>
+</html>

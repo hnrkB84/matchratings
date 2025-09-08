@@ -1,0 +1,131 @@
+:root{ --blue:#0a2240; --yellow:#ffcb01; --white:#ffffff; }
+
+*{ box-sizing:border-box; }
+html, body { width:100%; max-width:100%; overflow-x:hidden; } /* anti-overflow */
+
+body{
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  margin:0; background:var(--blue); color:var(--white);
+}
+header{ padding:1rem; text-align:center; border-bottom:1px solid rgba(255,255,255,.12); }
+h1{ margin:0; color:var(--yellow); font-size:1.6rem; }
+
+/* container */
+.wrap{ width:100%; max-width:980px; margin:0 auto; padding:1rem; }
+
+/* layout */
+.grid{ display:grid; gap:1rem; }             /* 1 kolumn som grund */
+@media(min-width:720px){ .grid{ grid-template-columns:3fr 2fr; } }
+
+.card{ background:#fff; color:#0a2240; border-radius:14px; padding:1rem; overflow:hidden; }
+.section-title{ margin:.25rem 0 .5rem; font-size:1.2rem; color:var(--yellow); }
+.muted{ color:#8ba0c0; font-size:.9rem; }
+
+.btn{ background:var(--yellow); border:none; padding:.6rem 1rem; border-radius:10px; cursor:pointer; font-weight:600; }
+.btn.secondary{ background:#e6e6e6; }
+
+/* ---------- SPELARKORT ---------- */
+.players-grid{
+  display:grid;
+  grid-template-columns:1fr;    /* alla under varandra */
+  gap:.6rem;
+}
+
+.p-card{
+  background:var(--blue);
+  color:#fff;
+  border:2px solid rgba(255,255,255,.15);
+  border-radius:14px;
+  padding:.75rem .9rem;
+  display:flex; flex-direction:column; gap:.6rem;
+  box-shadow:0 2px 8px rgba(0,0,0,.15);
+  overflow:hidden;
+}
+
+.p-top{ display:flex; align-items:center; gap:.7rem; min-width:0; }
+.p-top > div:nth-child(2){ flex:1; min-width:0; }
+
+/* NUMMER – större, UTAN kantlinje */
+.p-nr{
+    font-family: "Teko", "Anton", Impact, "Arial Black", system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 36px;
+    line-height: 1;
+    letter-spacing: .5px;
+    color: var(--yellow);
+    font-variant-numeric: tabular-nums;
+    -webkit-text-stroke: 0;
+    text-shadow: none;
+  }
+
+/* NAMN – större, UTAN kantlinje */
+.p-name{
+    font-family: "Oswald", "League Spartan", "Arial Black", system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 1.1;
+    color: var(--yellow);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-text-stroke: 0;
+    text-shadow: none;
+  }
+.p-pos{ font-size:12px; opacity:.9; color:#fff; }
+
+.p-star{
+  margin-left:auto; width:40px;height:40px;border-radius:10px;
+  border:2px solid rgba(255,255,255,.25);
+  background:#fff; color:#000; cursor:pointer; font-size:18px;
+  display:flex;align-items:center;justify-content:center; flex:0 0 auto;
+}
+.p-star.active{ outline:3px solid rgba(255,203,1,.35); border-color:var(--yellow); }
+
+.p-rate{ display:flex; align-items:center; gap:.6rem; min-width:0; }
+.p-range{ flex:1; min-width:0; }
+.p-range input[type="range"]{
+  width:100%;
+  appearance:none;
+  -webkit-appearance:none;
+  -moz-appearance:none;
+  height:10px;
+  border-radius:999px;
+  background:#ffffff;
+  outline:none;
+}
+.p-range input[type="range"]::-webkit-slider-thumb{
+  -webkit-appearance:none; appearance:none; width:28px;height:28px;border-radius:50%;
+  background:var(--yellow); border:3px solid var(--blue);
+}
+.p-range input[type="range"]::-moz-range-track{
+  height:10px; background:#ffffff; border-radius:999px; border:none;
+}
+.p-range input[type="range"]::-moz-range-thumb{
+  width:28px;height:28px;border-radius:50%; border:3px solid var(--blue);
+  background:var(--yellow);
+}
+
+.p-badge{
+  flex:0 0 auto;
+  min-width:50px;text-align:center;background:#fff; color:#0a2240;
+  border:1px solid rgba(0,0,0,.08);
+  padding:6px 8px;border-radius:10px;font-weight:800;
+}
+
+/* Media får inte spräcka bredden */
+canvas, img, video { max-width:100%; height:auto; display:block; }
+
+/* ---------- MOBILTAJT ---------- */
+@media (max-width:520px){
+  .wrap{ padding:.6rem; }
+  h1{ font-size:1.35rem; }
+  header{ padding:.75rem .6rem; }
+  .card{ padding:.75rem; }
+  .players-grid{ gap:.5rem; }
+  .p-card{ padding:.6rem .65rem; border-radius:12px; }
+  .p-top{ gap:.5rem; }
+  .p-nr{ font-size:30px; }
+  .p-name{ font-size:20px; }
+  .p-star{ width:36px; height:36px; }
+  .p-badge{ min-width:46px; padding:5px 7px; }
+}
