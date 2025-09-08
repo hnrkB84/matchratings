@@ -1,14 +1,18 @@
 {
   "name": "hv-ratings",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.js",
+  "description": "HV71 Ratings app för Render",
   "scripts": {
+    "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "engines": {
+    "node": "20.x"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
   "dependencies": {
     "better-sqlite3": "^12.2.0",
     "cors": "^2.8.5",
