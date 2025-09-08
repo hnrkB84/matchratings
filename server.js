@@ -10,30 +10,54 @@ const rateLimit = require("express-rate-limit");
 const path = require("path");
 
 const app = express();
+
+// --- Robust DB-init + tydlig logg ---
+const NODE = process.versions.node;
+console.log("[BOOT] Node version:", NODE);
+
+// Sätt DB_PATH (Render: /var/data/hv71.db, lokalt: ./data/hv71.db)
 const localDataDir = path.join(__dirname, "data");
-if (!process.env.DB_PATH) {
-  if (!fs.existsSync(localDataDir)) fs.mkdirSync(localDataDir, { recursive: true });
-}
 const DB_PATH = process.env.DB_PATH || path.join(localDataDir, "hv71.db");
-const db = new Database(DB_PATH);
+
+// Se till att katalogen där DB-filen ligger existerar
+const dbDir = path.dirname(DB_PATH);
+try {
+  fs.mkdirSync(dbDir, { recursive: true });
+  console.log("[BOOT] Ensured DB dir:", dbDir);
+} catch (e) {
+  console.error("[BOOT] Failed to create DB dir", dbDir, e);
+  process.exit(1);
+}
+
+// Öppna SQLite med tydlig felhantering
+let db;
+try {
+  db = new Database(DB_PATH);
+  console.log("[BOOT] SQLite opened OK at", DB_PATH);
+} catch (err) {
+  console.error("[BOOT] FAILED opening SQLite at", DB_PATH, err);
+  process.exit(1);
+}
 
 // --- Middleware ---
 app.use(express.json());
+
+// CORS: localhost i dev + PROD_ORIGIN i prod
 const allowedOrigins = [
   "http://localhost:3000",
-  process.env.PROD_ORIGIN // sätt i Render när du fått din onrender-URL
+  process.env.PROD_ORIGIN // sätt i Render när du har din onrender-URL
 ].filter(Boolean);
 app.use(cors({ origin: allowedOrigins }));
 
 // Health-check för snabb koll av deploy och DB-path
-app.get("/api/health", (req, res) => {
-  res.json({ ok: true, db: DB_PATH });
+app.get("/api/health", (_req, res) => {
+  res.json({ ok: true, node: NODE, db: DB_PATH });
 });
-// --- Rate limits ---
-const voteLimiter = rateLimit({ windowMs: 60 * 1000, max: 20 });
+
+// --- Rate limits (express-rate-limit v8: använd 'limit', inte 'max') ---
+const voteLimiter = rateLimit({ windowMs: 60 * 1000, limit: 20 });
 app.use("/api/rate", voteLimiter);
 app.use("/api/submit", voteLimiter);
-
 // --- Tabeller & index ---
 db.exec(`
 PRAGMA foreign_keys = ON;
