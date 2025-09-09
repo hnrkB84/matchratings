@@ -50,9 +50,9 @@ h1{ margin:0; color:var(--yellow); font-size:1.6rem; }
   content:"";
   position:absolute;
   top:0; right:0; bottom:0;
-  width:96px;                            /* bredd på högerkolumnen */
-  border-left:1px solid rgba(255,255,255,.12);
-  pointer-events:none;                   /* så klick går till .p-star, inte ytan */
+  width:96px;
+  /* border-left:1px solid rgba(255,255,255,.12); */ /* ta bort linjen */
+  pointer-events:none;
 }
 
 /* Stjärnknappen – placeras i högerkolumnen oavsett var den ligger i DOM:en */
@@ -63,7 +63,7 @@ h1{ margin:0; color:var(--yellow); font-size:1.6rem; }
   display:flex; align-items:center; justify-content:center;
   background:none; border:none; cursor:pointer;
   color:#fff;                            /* vit default */
-  font-size:34px; line-height:1;
+  font-size:42px; line-height:1;
   text-shadow:0 1px 4px rgba(0,0,0,.25);
   z-index:1;                             /* över innehållet men under ::after spelar ingen roll */
 }
