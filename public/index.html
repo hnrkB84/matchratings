@@ -15,14 +15,12 @@
   </header>
 
   <div class="wrap">
-    <div class="card">
-      <div class="section-title">Spelare och "Båset"</div>
-      <div id="players" class="players-grid"></div>
-    </div>
 
-    <div class="card" style="margin-top:1rem;">
-      <div class="section-title">Om betygsskalan</div>
-      <div class="muted" style="white-space:pre-line;">
+    <!-- NYTT: Kollapsande betygsskala precis före spelarbetygen -->
+    <div class="card" style="margin-bottom:1rem;">
+      <details>
+        <summary class="section-title" style="cursor:pointer;">Visa/​dölj betygsskalan</summary>
+        <div class="muted" style="white-space:pre-line; margin-top:.5rem;">
 Denna skala är inspirerad och hämtad från Gazzetta dello Sports klassiska bedömningar i italiensk sportpress. Där är 6.0 alltid godkänt, högre siffror belönar en starkare insats – medan betyg under 6.0 markerar en svag prestation.
 
 1.0–2.0 – Katastrofalt, nästan aldrig utdelat.
@@ -36,7 +34,14 @@ Denna skala är inspirerad och hämtad från Gazzetta dello Sports klassiska bed
 10.0 – Mytiskt. Extremt sällsynt, historisk nivå.
 
 Välj ⭐ för att markera matchens bästa HV-spelare.
-      </div>
+        </div>
+      </details>
+    </div>
+    <!-- /NYTT -->
+
+    <div class="card">
+      <div class="section-title">Spelare och "Båset"</div>
+      <div id="players" class="players-grid"></div>
     </div>
 
     <div class="card" style="margin-top:1rem;">
@@ -69,7 +74,6 @@ Välj ⭐ för att markera matchens bästa HV-spelare.
     </div>
   </div>
 
-  <!-- resten av scriptet oförändrat -->
 <script>
 /* ======= Parametrar / fingerprint ======= */
 const urlParams = new URLSearchParams(window.location.search);
@@ -192,7 +196,8 @@ async function saveAll(){
     return;
   }
   if (starPlayerId) localStorage.setItem(`star_${match_id}`, String(starPlayerId));
-  alert("Rösterna är inskickade!");
+  // NYTT: tack-sida så man vet att det gick in
+  window.location.href = `tack.html?match=${encodeURIComponent(match_id)}`;
 }
 
 /* ======= Init ======= */

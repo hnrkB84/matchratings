@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8" />
+  <title>Resultat – Spelarbetyg</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header>
+    <h1>Resultat just nu</h1>
+    <div id="matchInfo" class="muted">Laddar match…</div>
+  </header>
+
+  <div class="wrap">
+    <div class="card">
+      <div class="section-title">Spelarbetyg (live)</div>
+      <div id="list" class="grid"></div>
+    </div>
+  </div>
+
+<script>
+const params = new URLSearchParams(location.search);
+let match_id = params.get("match");
+
+async function resolveMatch(){
+  if (match_id) return;
+  try{
+    const current = await fetch("/api/matches/current").then(r=>r.json());
+    match_id = current?.id || null;
+    if (!match_id){
+      const latest = await fetch("/api/matches/latest").then(r=>r.json());
+      match_id = latest?.id || null;
+    }
+  }catch{}
+}
+
+function formatPlayerName(n){
+  if(!n) return "";
+  const parts = n.trim().split(/\s+/);
+  if(parts.length===1) return parts[0];
+  return parts[0][0].toUpperCase() + ". " + parts.slice(-1)[0];
+}
+
+async function load(){
+  await resolveMatch();
+  if (!match_id){
+    document.getElementById("matchInfo").textContent = "Ingen match hittades.";
+    return;
+  }
+
+  // Matchinfo-rad
+  try{
+    const m = await fetch(`/api/matches/by-id?id=${match_id}`).then(r=>r.json());
+    const label = m.home ? `HV71 vs ${m.opponent}` : `${m.opponent} vs HV71`;
+    document.getElementById("matchInfo").textContent =
+      `${label} — ${m.date} (${m.competition})`;
+  }catch{
+    document.getElementById("matchInfo").textContent = "Matchinfo kunde inte hämtas.";
+  }
+
+  // HÄR: Byt endpoint-namn om ditt backend heter något annat
+  // Förväntat (exempel): [{player_id, name, jersey_number, avg: 6.7, votes: 123, stars: 17}, ...]
+  let data = [];
+  try{
+    const res = await fetch(`/api/results?match_id=${match_id}`);
+    if(res.ok) data = await res.json();
+  }catch{}
+
+  const list = document.getElementById("list");
+  if (!Array.isArray(data) || data.length===0){
+    list.innerHTML = `<div class="muted">Inga resultat att visa ännu.</div>`;
+    return;
+  }
+
+  // sortera högst snitt först
+  data.sort((a,b)=>(b.avg||0)-(a.avg||0));
+
+  list.innerHTML = data.map(p=>`
+    <div class="p-card">
+      <div class="p-top">
+        <div class="p-nr">${p.jersey_number ?? "–"}</div>
+        <div>
+          <div class="p-name">${formatPlayerName(p.name)}</div>
+          <div class="p-pos muted">${p.votes ?? 0} röster ${p.stars ? "· ⭐ " + p.stars : ""}</div>
+        </div>
+      </div>
+      <div class="p-rate" style="align-items:center;">
+        <div class="p-badge" style="font-size:1.25rem;">${(p.avg ?? 0).toFixed(1)}</div>
+      </div>
+    </div>
+  `).join("");
+}
+
+load();
+</script>
+</body>
+</html>
