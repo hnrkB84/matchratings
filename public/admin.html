@@ -2,475 +2,315 @@
 <html lang="sv">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>HV71 Ratings – Admin</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>HV71 Admin</title>
   <style>
-    :root {
-      --blue:#0a2240; --yellow:#ffcb01; --white:#ffffff; --bg:#f6f8fb;
-      --muted:#e7ecf3; --ok:#1a7f37; --warn:#a85500; --bad:#b91c1c;
-    }
-    *{box-sizing:border-box}
-    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
-      background:var(--bg);color:#0b1320}
-    header{background:var(--blue);color:var(--white);padding:16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
-    header h1{margin:0;font-size:18px;letter-spacing:.3px}
-    .pill{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);border-radius:999px;padding:6px 10px;display:inline-flex;align-items:center;gap:8px}
-    input[type="password"],input[type="text"],input[type="date"],input[type="time"],input[type="datetime-local"],select,textarea{
-      padding:8px 10px;border:1px solid #cfd8e3;border-radius:10px;background:#fff;font:inherit}
-    textarea{width:100%;min-height:110px}
-    .btn{border:0;border-radius:12px;padding:8px 12px;cursor:pointer;font-weight:600}
-    .btn-primary{background:var(--yellow)}
-    .btn-line{background:#fff;border:1px solid #cfd8e3}
-    .btn-danger{background:var(--bad);color:#fff}
-    .btn-okay{background:var(--ok);color:#fff}
-    .wrap{max-width:1150px;margin:20px auto;padding:0 16px 40px}
-    .grid{display:grid;gap:14px}
-    .cols{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-    @media(max-width:900px){.cols{grid-template-columns:1fr}}
-    .card{background:#fff;border:1px solid var(--muted);border-radius:16px;padding:14px;box-shadow:0 1px 0 rgba(10,34,64,.04)}
-    .title{margin:0 0 8px 0;font-size:16px}
-    .help{font-size:12px;color:#556}
-    .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-    .badge{display:inline-block;padding:4px 8px;border-radius:999px;font-size:12px;font-weight:700}
-    .open{background:rgba(26,127,55,.1);color:var(--ok);border:1px solid rgba(26,127,55,.2)}
-    .closed{background:rgba(185,28,28,.08);color:var(--bad);border:1px solid rgba(185,28,28,.2)}
-    .table{width:100%;border-collapse:collapse}
-    .table th,.table td{padding:8px;border-bottom:1px solid #eef;text-align:left;font-size:14px}
-    .scroll{max-height:360px;overflow:auto;border:1px solid #eef;border-radius:12px;padding:8px}
-    .chips{display:flex;gap:6px;flex-wrap:wrap}
-    .chip{border:1px solid #dde;border-radius:999px;padding:4px 8px;font-size:12px}
-    .rowwrap{display:flex;gap:10px;flex-wrap:wrap}
+    :root { --hv-blu:#0c2d6b; --hv-yel:#ffd200; --gap:14px; }
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin:20px; background:#f7f8fb; color:#0c254a;}
+    h1 { color: var(--hv-blu); margin-bottom: 4px; }
+    h2 { margin-top:30px; color:#0c254a; }
+    .card { background:#fff; border-radius:12px; padding:16px; box-shadow:0 2px 10px rgba(0,0,0,.06); margin-top:var(--gap); }
+    .row { display:flex; gap:var(--gap); flex-wrap:wrap; }
+    label { display:block; font-weight:600; margin:6px 0 6px; }
+    input, select, textarea { width:100%; padding:10px; border:1px solid #d7dbe7; border-radius:8px; background:#fbfcff;}
+    button { background:var(--hv-blu); color:#fff; border:0; padding:10px 14px; border-radius:10px; cursor:pointer; font-weight:700; }
+    button.secondary { background:#2e4786; }
+    button.warn { background:#b60000; }
+    small.mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; background:#eef2ff; padding:2px 6px; border-radius:6px;}
+    .help { color:#51608a; }
+    .pill { display:inline-block; padding:2px 8px; border-radius:999px; background:#eef2ff; margin-right:6px; }
+    .ok { color:#147a00; }
+    .err { color:#b60000; font-weight:700;}
+    .flex { display:flex; gap:10px; }
+    #log { white-space:pre-wrap; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; background:#0b1633; color:#cce6ff; padding:12px; border-radius:10px; max-height:240px; overflow:auto; }
   </style>
 </head>
 <body>
-<header>
-  <h1>HV71 Ratings • Admin</h1>
-  <div class="pill">
-    Admin-token:
-    <input id="token" type="password" placeholder="x-admin-token" size="18" />
-    <button class="btn btn-line" id="saveToken">Spara</button>
+  <h1>HV71 – Admin</h1>
+  <p class="help">Token sparas lokalt. Bas-URL: <small class="mono" id="base"></small></p>
+
+  <div class="card">
+    <div class="row">
+      <div style="flex:1 1 280px">
+        <label>Admin token</label>
+        <input id="token" placeholder="x-admin-token" />
+      </div>
+      <div style="align-self:end">
+        <button id="saveToken">Spara token</button>
+        <button id="clearToken" class="secondary">Rensa</button>
+      </div>
+    </div>
+    <small class="help">Tips: använd samma som env-var <strong>ADMIN_TOKEN</strong> på Render.</small>
   </div>
-  <button class="btn btn-primary" id="refreshAll">Uppdatera</button>
-</header>
 
-<div class="wrap grid">
-
-  <!-- Matcher & röstning -->
-  <section class="card">
-    <h2 class="title">Matcher & röstning</h2>
-    <div class="help">Skapa match, sätt stängtid och öppna/stäng röstning.</div>
-    <div class="rowwrap" style="margin-top:8px">
-      <input id="m_date" type="date" />
-      <input id="m_opponent" type="text" placeholder="Motståndare" />
-      <select id="m_home">
-        <option value="1">Hemma</option>
-        <option value="0">Borta</option>
-      </select>
-      <input id="m_season" type="text" placeholder="Säsong (t.ex. 2025/26)" />
-      <input id="m_comp" type="text" placeholder="Tävling (t.ex. SHL)" />
-      <button class="btn btn-okay" id="createMatch">Skapa match</button>
+  <h2>Skapa match</h2>
+  <div class="card">
+    <div class="row">
+      <div style="flex:1 1 180px">
+        <label>Datum (YYYY-MM-DD)</label>
+        <input id="m_date" placeholder="2025-09-10" />
+      </div>
+      <div style="flex:1 1 180px">
+        <label>Motstånd</label>
+        <input id="m_opp" placeholder="Frölunda" />
+      </div>
+      <div style="flex:1 1 120px">
+        <label>Hemma?</label>
+        <select id="m_home">
+          <option value="1">Hemma</option>
+          <option value="0">Borta</option>
+        </select>
+      </div>
+      <div style="flex:1 1 160px">
+        <label>Säsong</label>
+        <input id="m_season" placeholder="2025/26" />
+      </div>
+      <div style="flex:1 1 160px">
+        <label>Tävling</label>
+        <input id="m_competition" placeholder="SHL" />
+      </div>
+      <div style="flex:1 1 160px">
+        <label>Öppna röstning direkt?</label>
+        <select id="m_open">
+          <option value="1">Ja</option>
+          <option value="0">Nej</option>
+        </select>
+      </div>
     </div>
-
-    <div style="margin-top:14px">
-      <table class="table" id="matchesTable">
-        <thead>
-          <tr>
-            <th>ID</th><th>Datum</th><th>Motstånd</th><th>H/B</th><th>Status</th><th>Stängtid</th><th>Åtgärder</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
+    <div class="row" style="margin-top:10px">
+      <button id="createMatch">Skapa match</button>
+      <div id="createMatchOut" class="pill"></div>
     </div>
-  </section>
+  </div>
 
-  <!-- Spelare -->
-  <section class="card">
-    <h2 class="title">Spelare (bulk-upsert)</h2>
-    <div class="help">
-      Klistra in **CSV** (<code>jersey_number,name,position,active</code>) eller **JSON** (<code>[{...}]</code>).<br/>
-      Position: <b>G</b>=målvakt, <b>D</b>=back, <b>F</b>=forward. Sätt <code>active=0</code> för att dölja.
+  <h2>Öppna/Stäng röstning</h2>
+  <div class="card">
+    <div class="row">
+      <div style="flex:1 1 220px">
+        <label>Match</label>
+        <select id="matchSelect"></select>
+      </div>
+      <div style="align-self:end" class="flex">
+        <button id="openVote">Öppna</button>
+        <button id="closeVote" class="warn">Stäng</button>
+      </div>
     </div>
-    <textarea id="playersPaste" placeholder='Exempel CSV:
-30,Jonas Gunnarsson,G,1
-35,Målvakt 2,G,1
-4,Back A,D,1
-10,Båset,F,1'></textarea>
-    <div class="row" style="margin-top:8px">
-      <button class="btn btn-okay" id="sendPlayers">Spara spelare</button>
-      <button class="btn btn-line" id="previewPlayers">Förhandsgranska</button>
-      <div class="chips" id="playersPreview"></div>
+    <small class="help">Du kan också sätta ett <em>closes_at</em> i din backend om du vill auto-stänga.</small>
+  </div>
+
+  <h2>Spelare (bulk-upsert)</h2>
+  <div class="card">
+    <label>Lista (JSON per rad eller enklare CSV: <em>nr;namn;pos</em>)</label>
+    <textarea id="playersBulk" rows="6" placeholder='Exempel JSON:
+{"jersey_number":30,"name":"Målvakt Ett","position":"G","active":1}
+{"jersey_number":3,"name":"Back Ett","position":"D","active":1}
+{"jersey_number":9,"name":"Forward Ett","position":"F","active":1}
+
+Exempel CSV:
+30;Målvakt Ett;G
+3;Back Ett;D
+9;Forward Ett;F'></textarea>
+    <div class="row" style="margin-top:10px">
+      <button id="upsertPlayers">Spara spelare</button>
+      <div id="upsertOut" class="pill"></div>
     </div>
-  </section>
+  </div>
 
-  <!-- Trupp per match -->
-  <section class="card">
-    <h2 class="title">Sätt trupp för match</h2>
-    <div class="rowwrap">
-      <select id="rosterMatch"></select>
-      <button class="btn btn-line" id="loadActivePlayers">Hämta aktiva spelare</button>
-      <button class="btn btn-okay" id="saveRoster" disabled>Spara trupp</button>
+  <h2>Sätt trupp för match</h2>
+  <div class="card">
+    <div class="row">
+      <div style="flex:1 1 220px">
+        <label>Match</label>
+        <select id="rosterMatch"></select>
+      </div>
+      <div style="flex:1 1 420px">
+        <label>Spelare (håll Ctrl/Cmd för fler)</label>
+        <select id="playerMulti" multiple size="10" style="height:220px"></select>
+      </div>
     </div>
-    <div class="help" style="margin-top:6px">
-      Endast spelare i truppen kan få betyg / väljas till ⭐ för denna match.
+    <div class="row" style="margin-top:10px">
+      <button id="setRoster">Spara trupp</button>
+      <div id="rosterOut" class="pill"></div>
     </div>
-    <div class="scroll" id="rosterBox" style="margin-top:8px"></div>
-  </section>
+  </div>
 
-  <!-- Export & feedback -->
-  <section class="card">
-    <h2 class="title">Export & matchfeedback</h2>
-    <div class="rowwrap">
-      <select id="exportMatch"></select>
-      <a id="expRatingsCsv" class="btn btn-line" target="_blank">Ratings CSV</a>
-      <a id="expRatingsJsonl" class="btn btn-line" target="_blank">Ratings JSONL</a>
-      <a id="expVotesCsv" class="btn btn-line" target="_blank">Votes CSV</a>
-      <a id="expVotesJsonl" class="btn btn-line" target="_blank">Votes JSONL</a>
-      <a id="expAggCsv" class="btn btn-line" target="_blank">Aggregat CSV</a>
-      <a id="expAggJsonl" class="btn btn-line" target="_blank">Aggregat JSONL</a>
+  <h2>Export</h2>
+  <div class="card">
+    <div class="row">
+      <div style="flex:1 1 180px">
+        <label>Match</label>
+        <select id="exportMatch"></select>
+      </div>
+      <div style="align-self:end" class="flex">
+        <button id="dlAgg">Aggregat CSV</button>
+        <button id="dlRatingsCSV">Ratings CSV</button>
+        <button id="dlRatingsJSONL" class="secondary">Ratings JSONL</button>
+      </div>
     </div>
-    <div class="rowwrap" style="margin-top:8px">
-      <select id="fbAttendance">
-        <option value="all">Alla</option>
-        <option value="arena">Arena</option>
-        <option value="tv">Tv</option>
-        <option value="unknown">Okänt</option>
-      </select>
-      <button class="btn btn-primary" id="loadFeedback">Visa feedback</button>
-    </div>
-    <div id="feedbackBox" class="scroll" style="margin-top:8px"></div>
-  </section>
+    <small class="help">JSONL är perfekt för AI-analys. CSV funkar i Excel/Sheets.</small>
+  </div>
 
-</div>
+  <h2>Logg</h2>
+  <div class="card">
+    <div id="log">redo…</div>
+  </div>
 
-<footer style="text-align:center;color:#778;font-size:12px;padding:24px 0 40px">
-  HV71 Ratings • #0a2240 / #ffcb01 • Lokalt adminverktyg
-</footer>
+  <script>
+    const BASE = location.origin;
+    document.getElementById('base').textContent = BASE;
 
-<script>
-  // --------- helpers ----------
-  const $ = s => document.querySelector(s);
-  const els = {
-    token: $('#token'),
-    saveToken: $('#saveToken'),
-    refreshAll: $('#refreshAll'),
+    const $ = (id)=>document.getElementById(id);
+    const log = (m)=>{ const el=$('log'); el.textContent += "\\n" + m; el.scrollTop = el.scrollHeight; };
 
-    // matches
-    m_date: $('#m_date'), m_opponent: $('#m_opponent'), m_home: $('#m_home'),
-    m_season: $('#m_season'), m_comp: $('#m_comp'), createMatch: $('#createMatch'),
-    matchesTable: $('#matchesTable tbody'),
+    // TOKEN
+    const TOKEN_KEY = 'hv_admin_token';
+    const tokenInput = $('token');
+    tokenInput.value = localStorage.getItem(TOKEN_KEY) || '';
+    $('saveToken').onclick = ()=>{ localStorage.setItem(TOKEN_KEY, tokenInput.value.trim()); log('Token sparad.'); };
+    $('clearToken').onclick = ()=>{ localStorage.removeItem(TOKEN_KEY); tokenInput.value=''; log('Token rensad.'); };
 
-    // players
-    playersPaste: $('#playersPaste'), sendPlayers: $('#sendPlayers'),
-    previewPlayers: $('#previewPlayers'), playersPreview: $('#playersPreview'),
-
-    // roster
-    rosterMatch: $('#rosterMatch'), loadActivePlayers: $('#loadActivePlayers'),
-    saveRoster: $('#saveRoster'), rosterBox: $('#rosterBox'),
-
-    // export & feedback
-    exportMatch: $('#exportMatch'),
-    expRatingsCsv: $('#expRatingsCsv'), expRatingsJsonl: $('#expRatingsJsonl'),
-    expVotesCsv: $('#expVotesCsv'), expVotesJsonl: $('#expVotesJsonl'),
-    expAggCsv: $('#expAggCsv'), expAggJsonl: $('#expAggJsonl'),
-    fbAttendance: $('#fbAttendance'), loadFeedback: $('#loadFeedback'),
-    feedbackBox: $('#feedbackBox'),
-  };
-
-  const LS_KEY = "hv_admin_token";
-  els.token.value = localStorage.getItem(LS_KEY) || "";
-  els.saveToken.onclick = () => { localStorage.setItem(LS_KEY, els.token.value.trim()); toast("Token sparad."); };
-
-  els.refreshAll.onclick = () => refreshAll();
-  document.addEventListener('DOMContentLoaded', refreshAll);
-
-  function toast(msg, ok=true) {
-    const div = document.createElement('div');
-    div.textContent = msg;
-    Object.assign(div.style, {
-      position:'fixed',bottom:'16px',left:'50%',transform:'translateX(-50%)',
-      background: ok ? '#1a7f37' : '#b91c1c', color:'#fff', padding:'10px 14px',
-      borderRadius:'12px', boxShadow:'0 8px 30px rgba(0,0,0,.2)', zIndex:9999
+    const headers = ()=>({
+      'Content-Type':'application/json',
+      'x-admin-token': (localStorage.getItem(TOKEN_KEY)||'').trim()
     });
-    document.body.appendChild(div);
-    setTimeout(()=>div.remove(), 2200);
-  }
 
-  async function refreshAll(){
-    await Promise.all([loadMatches(), loadMatchesIntoSelects()]);
-  }
-
-  // --------- matches list / open/close ----------
-  async function loadMatches(){
-    els.matchesTable.innerHTML = `<tr><td colspan="7">Laddar...</td></tr>`;
-    const res = await fetch('/api/matches'); const matches = await res.json();
-    els.matchesTable.innerHTML = "";
-    for(const m of matches){
-      const tr = document.createElement('tr');
-      const badge = m.voting_open ? `<span class="badge open">ÖPPEN</span>` : `<span class="badge closed">STÄNGD</span>`;
-      const closesInput = document.createElement('input');
-      closesInput.type = 'datetime-local';
-      closesInput.value = suggestCloseLocal(m.date);
-
-      const openBtn = btn('Öppna','btn-okay', async ()=>{
-        const token = getToken(); if(!token) return;
-        const closes_at = toOffsetDateTime(closesInput.value);
-        await api('/api/admin/toggle-voting', {id:m.id, open:true, closes_at}, token);
-        toast(`Match ${m.id}: röstning öppnad.`); refreshAll();
-      });
-      const closeBtn = btn('Stäng','btn-danger', async ()=>{
-        const token = getToken(); if(!token) return;
-        await api('/api/admin/toggle-voting', {id:m.id, open:false}, token);
-        toast(`Match ${m.id}: röstning stängd.`); refreshAll();
-      });
-
-      tr.innerHTML = `
-        <td>${m.id}</td>
-        <td>${m.date}</td>
-        <td>${m.opponent}</td>
-        <td>${m.home ? "H" : "B"}</td>
-        <td>${badge}</td>
-        <td></td>
-        <td></td>
-      `;
-      tr.children[5].appendChild(closesInput);
-      tr.children[6].appendChild(openBtn);
-      tr.children[6].appendChild(closeBtn);
-      els.matchesTable.appendChild(tr);
+    // Helpers
+    async function jfetch(url, opts={}) {
+      const r = await fetch(url, opts);
+      if (!r.ok) {
+        const t = await r.text();
+        throw new Error(`${r.status} ${r.statusText}: ${t}`);
+      }
+      return r.json();
     }
-  }
+    function download(url, filename){
+      const a = document.createElement('a');
+      a.href = url; a.download = filename; a.click();
+    }
 
-  // create match
-  els.createMatch.onclick = async ()=>{
-    const token = getToken(); if(!token) return;
-    const payload = {
-      date: els.m_date.value,
-      opponent: els.m_opponent.value.trim(),
-      home: Number(els.m_home.value)===1,
-      season: els.m_season.value.trim(),
-      competition: els.m_comp.value.trim(),
-      voting_open: 0
+    // Init dropdowns
+    async function loadMatches() {
+      const list = await jfetch(`${BASE}/api/matches`);
+      for (const selId of ['matchSelect','rosterMatch','exportMatch']) {
+        const sel = $(selId); sel.innerHTML = '';
+        list.forEach(m => {
+          const o = document.createElement('option');
+          o.value = m.id; o.textContent = `${m.id} – ${m.date} vs ${m.opponent} ${m.home? '(H)':'(B)'}`;
+          sel.appendChild(o);
+        });
+      }
+      log(`Laddade ${list.length} matcher.`);
+    }
+    async function loadPlayers() {
+      const list = await jfetch(`${BASE}/api/players`); // alla aktiva
+      const sel = $('playerMulti'); sel.innerHTML='';
+      list.forEach(p => {
+        const o = document.createElement('option');
+        o.value = p.id; o.textContent = `${p.jersey_number ?? '-'} ${p.name} (${p.position||'-'})`;
+        sel.appendChild(o);
+      });
+      log(`Laddade ${list.length} spelare.`);
+    }
+
+    // Skapa match
+    $('createMatch').onclick = async () => {
+      try {
+        const payload = {
+          date: $('m_date').value.trim(),
+          opponent: $('m_opp').value.trim(),
+          home: $('m_home').value === '1',
+          season: $('m_season').value.trim(),
+          competition: $('m_competition').value.trim(),
+          voting_open: $('m_open').value === '1',
+          closes_at: null
+        };
+        const j = await jfetch(`${BASE}/api/admin/create-match`, {
+          method:'POST', headers: headers(), body: JSON.stringify(payload)
+        });
+        $('createMatchOut').textContent = `Skapad: id ${j.id}`;
+        log(`Match skapad med id=${j.id}`);
+        await loadMatches();
+      } catch(e){ $('createMatchOut').textContent=''; log('ERR skapa match: '+e.message); }
     };
-    if(!payload.date || !payload.opponent){ return toast("Datum & motstånd krävs", false); }
-    await api('/api/admin/create-match', payload, token);
-    toast("Match skapad."); refreshAll();
-  };
 
-  async function loadMatchesIntoSelects(){
-    const res = await fetch('/api/matches'); const matches = await res.json();
-    const opts = matches.map(m=>({v:m.id, t:`#${m.id} • ${m.date} • ${m.home?'H':'B'} vs ${m.opponent}`}));
-    fillSelect(els.rosterMatch, opts);
-    fillSelect(els.exportMatch, opts);
-    updateExportLinks();
-  }
-
-  function fillSelect(sel, items){
-    sel.innerHTML = ""; for(const it of items){ const o=document.createElement('option'); o.value=it.v; o.textContent=it.t; sel.appendChild(o) }
-  }
-
-  // --------- players bulk upsert ----------
-  els.previewPlayers.onclick = ()=>{
-    const parsed = parsePlayersPaste(els.playersPaste.value);
-    if(!parsed.ok) return toast(parsed.error, false);
-    renderPlayersPreview(parsed.players);
-  };
-  els.sendPlayers.onclick = async ()=>{
-    const token = getToken(); if(!token) return;
-    const parsed = parsePlayersPaste(els.playersPaste.value);
-    if(!parsed.ok) return toast(parsed.error, false);
-    await api('/api/admin/bulk-upsert-players', { players: parsed.players }, token);
-    toast(`Spelare sparade (${parsed.players.length})`);
-  };
-
-  function parsePlayersPaste(txt){
-    txt = (txt||"").trim();
-    if(!txt) return {ok:false,error:"Tomt innehåll"};
-    // JSON?
-    if(txt.startsWith("[") || txt.startsWith("{")){
-      try{
-        const obj = JSON.parse(txt);
-        const arr = Array.isArray(obj)?obj:[obj];
-        const players = arr.map(p=>({
-          jersey_number: numOrNull(p.jersey_number),
-          name: String(p.name||"").trim(),
-          position: p.position?String(p.position).trim().toUpperCase():null,
-          active: p.active===0?0:1
-        })).filter(p=>p.name);
-        return {ok:true, players};
-      }catch(e){ return {ok:false,error:"Ogiltig JSON"}; }
+    // Toggle voting
+    $('openVote').onclick = ()=>toggleVoting(true);
+    $('closeVote').onclick = ()=>toggleVoting(false);
+    async function toggleVoting(open) {
+      const id = parseInt($('matchSelect').value,10);
+      try {
+        await jfetch(`${BASE}/api/admin/toggle-voting`, {
+          method:'POST', headers: headers(), body: JSON.stringify({ id, open, closes_at: null })
+        });
+        log(`Röstning ${open?'ÖPPNAD':'STÄNGD'} för match ${id}`);
+      } catch(e){ log('ERR toggle voting: '+e.message); }
     }
-    // CSV: jersey_number,name,position,active
-    const rows = txt.split(/\r?\n/).map(r=>r.trim()).filter(Boolean);
-    const players = [];
-    for(const r of rows){
-      const parts = r.split(",").map(s=>s.trim());
-      if(parts.length<2) return {ok:false,error:`Rad saknar fält: "${r}"`};
-      const [jn,name,position,active] = parts;
-      players.push({
-        jersey_number: numOrNull(jn),
-        name: (name||"").trim(),
-        position: position?position.toUpperCase():null,
-        active: active==="0"?0:1
-      });
-    }
-    return {ok:true, players};
-  }
-  function renderPlayersPreview(players){
-    els.playersPreview.innerHTML = "";
-    for(const p of players){
-      const d = document.createElement('div');
-      d.className = 'chip';
-      d.textContent = `#${p.jersey_number ?? '–'} ${p.name} (${p.position||'?'}) ${p.active?'' : '• inaktiv'}`;
-      els.playersPreview.appendChild(d);
-    }
-  }
 
-  // --------- roster editor ----------
-  els.loadActivePlayers.onclick = async ()=>{
-    const match_id = parseInt(els.rosterMatch.value,10);
-    if(!match_id) return;
-    // Hämta alla aktiva spelare (utan matchfilter)
-    const resAll = await fetch('/api/players'); const allPlayers = await resAll.json();
-    // Hämta vilka som redan är i truppen för matchen
-    const resRoster = await fetch(`/api/players?match_id=${match_id}`); const rosterPlayers = await resRoster.json();
-    const rosterIds = new Set(rosterPlayers.map(p=>p.id));
-    // Render
-    els.rosterBox.innerHTML = "";
-    const groups = groupPlayers(allPlayers);
-    for(const g of ['G','D','F','Övriga']){
-      const list = groups[g]||[];
-      if(list.length===0) continue;
-      const h = document.createElement('div');
-      h.innerHTML = `<div style="font-weight:700;margin:6px 0">${g==='G'?'Målvakter':g==='D'?'Backar':g==='F'?'Forwards':'Övriga'}</div>`;
-      els.rosterBox.appendChild(h);
-      for(const p of list){
-        const id = `p_${p.id}`;
-        const wrap = document.createElement('label');
-        wrap.style.display='flex'; wrap.style.alignItems='center'; wrap.style.gap='8px';
-        const cb = document.createElement('input');
-        cb.type='checkbox'; cb.id=id; cb.checked = rosterIds.has(p.id);
-        cb.dataset.pid = p.id;
-        const span = document.createElement('span');
-        span.textContent = `#${p.jersey_number ?? '–'} ${p.name}`;
-        wrap.appendChild(cb); wrap.appendChild(span);
-        els.rosterBox.appendChild(wrap);
-      }
-    }
-    els.saveRoster.disabled = false;
-  };
+    // Bulk-upsert players
+    $('upsertPlayers').onclick = async () => {
+      const raw = $('playersBulk').value.trim();
+      if (!raw) { log('Ingen spelarlista.'); return; }
+      try {
+        let players = [];
+        const lines = raw.split(/\\r?\\n/).map(l=>l.trim()).filter(Boolean);
+        // Försök JSON Lines först
+        let asJson = true;
+        for (const l of lines) { try { players.push(JSON.parse(l)); } catch { asJson=false; break; } }
+        if (!asJson) {
+          // tolka som semikolon-CSV: nr;namn;pos
+          players = lines.map(l=>{
+            const [nr, name, pos] = l.split(';');
+            return { jersey_number: nr? Number(nr): null, name: (name||'').trim(), position: (pos||'').trim(), active: 1 };
+          });
+        }
+        const j = await jfetch(`${BASE}/api/admin/bulk-upsert-players`, {
+          method:'POST', headers: headers(), body: JSON.stringify({ players })
+        });
+        $('upsertOut').textContent = `Sparat: ${j.count} spelare`;
+        log(`Bulk-upsert OK: ${j.count} st`);
+        await loadPlayers();
+      } catch(e){ $('upsertOut').textContent=''; log('ERR upsert players: '+e.message); }
+    };
 
-  els.saveRoster.onclick = async ()=>{
-    const token = getToken(); if(!token) return;
-    const match_id = parseInt(els.rosterMatch.value,10);
-    const checks = els.rosterBox.querySelectorAll('input[type="checkbox"]');
-    const ids = Array.from(checks).filter(c=>c.checked).map(c=>parseInt(c.dataset.pid,10));
-    await api('/api/admin/set-roster', { match_id, player_ids: ids }, token);
-    toast(`Trupp sparad (${ids.length} spelare).`);
-  };
+    // Set roster
+    $('setRoster').onclick = async () => {
+      const match_id = parseInt($('rosterMatch').value,10);
+      const sel = $('playerMulti');
+      const ids = Array.from(sel.selectedOptions).map(o=>Number(o.value));
+      try {
+        const j = await jfetch(`${BASE}/api/admin/set-roster`, {
+          method:'POST', headers: headers(), body: JSON.stringify({ match_id, player_ids: ids, dressed_default: 1 })
+        });
+        $('rosterOut').textContent = `Trupp sparad: ${j.count} spelare`;
+        log(`Roster OK för match ${match_id}: ${j.count} st`);
+      } catch(e){ $('rosterOut').textContent=''; log('ERR set roster: '+e.message); }
+    };
 
-  function groupPlayers(players){
-    const g = {G:[],D:[],F:[],Övriga:[]};
-    for(const p of players){
-      const key = p.position==='G'?'G':(p.position==='D'||p.position==='B')?'D':(p.position==='F'?'F':'Övriga');
-      g[key].push(p);
-    }
-    for(const k of Object.keys(g)){
-      g[k].sort((a,b)=>{
-        const posOrder = (x)=> x==='G'?0: x==='D'||x==='B'?1: x==='F'?2:3;
-        const o = posOrder(a.position) - posOrder(b.position);
-        if(o!==0) return o;
-        const ja = a.jersey_number ?? 999, jb = b.jersey_number ?? 999;
-        if(ja!==jb) return ja-jb;
-        return a.name.localeCompare(b.name);
-      });
-    }
-    return g;
-  }
+    // Export
+    $('dlAgg').onclick = ()=>{
+      const id = $('exportMatch').value;
+      download(`${BASE}/api/export/aggregates?match_id=${id}`, `aggregates_match_${id}.csv`);
+      log('Export aggregat startad.');
+    };
+    $('dlRatingsCSV').onclick = ()=>{
+      const id = $('exportMatch').value;
+      download(`${BASE}/api/export/ratings?match_id=${id}`, `ratings_match_${id}.csv`);
+      log('Export ratings CSV startad.');
+    };
+    $('dlRatingsJSONL').onclick = ()=>{
+      const id = $('exportMatch').value;
+      download(`${BASE}/api/export/ratings?match_id=${id}&format=jsonl`, `ratings_match_${id}.jsonl`);
+      log('Export ratings JSONL startad.');
+    };
 
-  // --------- export ----------
-  function updateExportLinks(){
-    const id = parseInt(els.exportMatch.value||"0",10);
-    const base = id ? `?match_id=${id}` : '';
-    els.expRatingsCsv.href = `/api/export/ratings${base}`;
-    els.expRatingsJsonl.href = `/api/export/ratings${base}&format=jsonl`;
-    els.expVotesCsv.href = `/api/export/votes${base}`;
-    els.expVotesJsonl.href = `/api/export/votes${base}&format=jsonl`;
-    els.expAggCsv.href = `/api/export/aggregates${base}`;
-    els.expAggJsonl.href = `/api/export/aggregates${base}&format=jsonl`;
-  }
-  els.exportMatch.onchange = updateExportLinks;
-
-  // --------- feedback ----------
-  els.loadFeedback.onclick = async ()=>{
-    const id = parseInt(els.exportMatch.value||"0",10);
-    const att = els.fbAttendance.value;
-    if(!id) return;
-    const res = await fetch(`/api/match-feedback?match_id=${id}&attendance=${att}`);
-    const data = await res.json();
-    const box = els.feedbackBox; box.innerHTML = "";
-    if(data?.summary){
-      const s = data.summary;
-      const h = document.createElement('div');
-      h.innerHTML = `<div><b>Sammanfattning</b> (${att})</div>
-        <div class="chips">
-          <span class="chip">Svar: ${s.submissions ?? 0}</span>
-          <span class="chip">Matchbetyg: ${fmt(s.match_overall_avg)}</span>
-          <span class="chip">”Resultat speglade”: ${fmt(s.result_reflection_avg)}</span>
-        </div>`;
-      box.appendChild(h);
-    }
-    if(Array.isArray(data?.by_attendance)){
-      const t = document.createElement('table'); t.className='table';
-      t.innerHTML = `<thead><tr><th>Typ</th><th>Svar</th><th>Matchbetyg</th><th>Resultat speglade</th></tr></thead><tbody></tbody>`;
-      const tb = t.querySelector('tbody');
-      for(const r of data.by_attendance){
-        const tr = document.createElement('tr');
-        tr.innerHTML = `<td>${r.attendance}</td><td>${r.submissions||0}</td><td>${fmt(r.match_overall_avg)}</td><td>${fmt(r.result_reflection_avg)}</td>`;
-        tb.appendChild(tr);
-      }
-      box.appendChild(t);
-    }
-  };
-
-  // --------- utils ----------
-  function btn(text, cls, onClick){ const b=document.createElement('button'); b.className=`btn ${cls}`; b.textContent=text; b.onclick=onClick; return b; }
-  function getToken(){ const t=(localStorage.getItem(LS_KEY)||'').trim(); if(!t){ toast("Saknar admin-token.", false); } return t; }
-  async function api(url, payload, token){
-    const res = await fetch(url,{
-      method:'POST',
-      headers:{'Content-Type':'application/json','x-admin-token':token},
-      body: JSON.stringify(payload)
-    });
-    if(!res.ok){ const txt = await res.text().catch(()=>res.statusText); throw new Error(`HTTP ${res.status} – ${txt}`); }
-    return res.json().catch(()=>null);
-  }
-  function numOrNull(v){ if(v===null||v===undefined||v==='') return null; const n=Number(v); return Number.isFinite(n)?n:null; }
-  function fmt(v){ return (v===null||v===undefined||Number.isNaN(v))?'–':String(v); }
-
-  // stängtid-förslag 23:59 matchdag
-  function suggestCloseLocal(isoDateYYYYMMDD){
-    if(!isoDateYYYYMMDD) return "";
-    try{
-      const [y,m,d] = isoDateYYYYMMDD.split('-').map(Number);
-      const end = new Date(y, m-1, d, 23, 59, 0);
-      const pad = n=>String(n).padStart(2,'0');
-      return `${end.getFullYear()}-${pad(end.getMonth()+1)}-${pad(end.getDate())}T${pad(end.getHours())}:${pad(end.getMinutes())}`;
-    }catch{return "";}
-  }
-  // lokal "YYYY-MM-DDTHH:mm" -> "YYYY-MM-DDTHH:mm:ss+TZ"
-  function toOffsetDateTime(localNoTZ){
-    if(!localNoTZ) return null;
-    const [datePart,timePart] = localNoTZ.split('T');
-    const [Y,M,D] = datePart.split('-').map(Number);
-    const [h,mi] = timePart.split(':').map(Number);
-    const dt = new Date(Y, M-1, D, h, mi, 0);
-    const offMin = -dt.getTimezoneOffset();
-    const sign = offMin>=0?'+':'-';
-    const abs = Math.abs(offMin);
-    const offH = String(Math.floor(abs/60)).padStart(2,'0');
-    const offM = String(abs%60).padStart(2,'0');
-    const pad = n=>String(n).padStart(2,'0');
-    return `${dt.getFullYear()}-${pad(dt.getMonth()+1)}-${pad(dt.getDate())}T${pad(dt.getHours())}:${pad(dt.getMinutes())}:${pad(dt.getSeconds())}${sign}${offH}:${offM}`;
-  }
-</script>
+    // Boot
+    (async function boot(){
+      try {
+        await loadMatches();
+        await loadPlayers();
+        log('Admin redo ✔');
+      } catch(e){ log('ERR boot: '+e.message); }
+    })();
+  </script>
 </body>
 </html>
