@@ -248,29 +248,62 @@ Exempel CSV:
 
     // Bulk-upsert players
     $('upsertPlayers').onclick = async () => {
-      const raw = $('playersBulk').value.trim();
-      if (!raw) { log('Ingen spelarlista.'); return; }
-      try {
-        let players = [];
-        const lines = raw.split(/\\r?\\n/).map(l=>l.trim()).filter(Boolean);
-        // Försök JSON Lines först
-        let asJson = true;
-        for (const l of lines) { try { players.push(JSON.parse(l)); } catch { asJson=false; break; } }
-        if (!asJson) {
-          // tolka som semikolon-CSV: nr;namn;pos
-          players = lines.map(l=>{
-            const [nr, name, pos] = l.split(';');
-            return { jersey_number: nr? Number(nr): null, name: (name||'').trim(), position: (pos||'').trim(), active: 1 };
-          });
-        }
-        const j = await jfetch(`${BASE}/api/admin/bulk-upsert-players`, {
-          method:'POST', headers: headers(), body: JSON.stringify({ players })
-        });
-        $('upsertOut').textContent = `Sparat: ${j.count} spelare`;
-        log(`Bulk-upsert OK: ${j.count} st`);
-        await loadPlayers();
-      } catch(e){ $('upsertOut').textContent=''; log('ERR upsert players: '+e.message); }
-    };
+  const raw0 = $('playersBulk').value;
+  if (!raw0 || !raw0.trim()) { log('Ingen spelarlista.'); return; }
+  try {
+    let players = [];
+    const raw = raw0.replace(/\r\n?/g, '\n').trim(); // normalisera radbrytningar
+
+    if (raw.startsWith('[') && raw.endsWith(']')) {
+      // JSON-array
+      players = JSON.parse(raw);
+
+    } else {
+      // Dela upp rader robust
+      const lines = raw.split('\n')
+        .map(l => l.replace(/^\uFEFF?/, '').trim())     // ta bort BOM + trim
+        .filter(l => l.length > 0);
+
+      // Försök JSON Lines (en {…} per rad), tillåt ev. avslutande komma
+      let parsedAsJsonLines = true;
+      const jsonItems = [];
+      for (const l of lines) {
+        const clean = l.replace(/,+\s*$/, '');
+        try { jsonItems.push(JSON.parse(clean)); } catch { parsedAsJsonLines = false; break; }
+      }
+      if (parsedAsJsonLines) {
+        players = jsonItems;
+      } else {
+        // Semikolon-CSV: nr;namn;pos (tolerant mot extra mellanslag)
+        players = lines.map(l => {
+          const parts = l.split(';').map(s => s.trim());
+          const [nr, name, pos] = [parts[0] || '', parts[1] || '', parts[2] || ''];
+          return {
+            jersey_number: nr ? Number(nr.replace(/\D/g,'')) : null,
+            name,
+            position: pos.toUpperCase() || null,
+            active: 1
+          };
+        }).filter(p => p.name);
+      }
+    }
+
+    if (!Array.isArray(players) || players.length === 0) throw new Error('Inget att spara');
+
+    const j = await jfetch(`${BASE}/api/admin/bulk-upsert-players`, {
+      method:'POST',
+      headers: headers(),
+      body: JSON.stringify({ players })
+    });
+
+    $('upsertOut').textContent = `Sparat: ${j.count} spelare`;
+    log(`Bulk-upsert OK: ${j.count} st`);
+    await loadPlayers(); // fyll listan till trupp-väljaren
+  } catch(e){
+    $('upsertOut').textContent = '';
+    log('ERR upsert players: ' + e.message);
+  }
+};
 
     // Set roster
     $('setRoster').onclick = async () => {
