@@ -211,3 +211,22 @@ canvas, img, video { max-width:100%; height:auto; display:block; }
   .p-name{ font-size:19px }
   .p-star{ width:52px; height:52px }
 }
+/* --- Större spelar-nummer --- */
+.p-nr{
+  font-size:44px;        /* var 32–36px, nu rejält större */
+  letter-spacing:.8px;
+  color:var(--yellow);
+}
+
+/* --- Namnet lite större --- */
+.p-name{
+  font-size:24px;        /* var 21–22px */
+  line-height:1.15;
+  color:var(--yellow);
+}
+
+/* Anpassning mobil */
+@media (max-width:520px){
+  .p-nr{ font-size:40px; }
+  .p-name{ font-size:22px; }
+}
