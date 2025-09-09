@@ -17,7 +17,7 @@ h1{ margin:0; color:var(--yellow); font-size:1.6rem; }
 /* container/layout */
 .wrap{ width:100%; max-width:980px; margin:0 auto; padding:1rem; }
 .grid{ display:grid; gap:1rem; }
-@media(min-width:720px){ .grid{ grid-template-columns:3fr 2fr; } }
+@media (min-width:720px){ .grid{ grid-template-columns:3fr 2fr; } }
 
 .card{ background:#fff; color:#0a2240; border-radius:14px; padding:1rem; }
 .section-title{ margin:.25rem 0 .5rem; font-size:1.2rem; color:var(--yellow); }
@@ -33,31 +33,57 @@ h1{ margin:0; color:var(--yellow); font-size:1.6rem; }
   gap:.8rem;
 }
 
-/* Två kolumner: vänster = info/slider, höger = stjärna (täck hela höjden) */
+/* Vänster innehåll + höger stjärnkolumn (absolut placerad) */
 .p-card{
-  display:grid;
-  grid-template-columns: 1fr 96px;           /* högerkolumn bred = lätt att träffa */
-  grid-template-rows: auto auto;             /* rad 1: topp, rad 2: slider/val */
-  align-items:center;
-  gap:.75rem 1rem;
+  position:relative;                    /* möjliggör absolut högerkolumn */
   background:#08233f;
   color:#fff;
   border:2px solid rgba(255,255,255,.12);
   border-radius:16px;
-  padding:1rem 1rem 1rem 1rem;
+  padding:1rem 108px 1rem 1rem;         /* plats för stjärnkolumnen (108px) */
   box-shadow:0 6px 22px rgba(0,0,0,.22);
-  touch-action: pan-y;                        /* scrolla vertikalt smidigt */
+  touch-action: pan-y;
 }
 
-/* -- Vänster topp: nummer + namn + position */
+/* Höger stjärnkolumn – täcker hela höjden, alltid längst till höger */
+.p-card::after{
+  content:"";
+  position:absolute;
+  top:0; right:0; bottom:0;
+  width:96px;                            /* bredd på högerkolumnen */
+  border-left:1px solid rgba(255,255,255,.12);
+  pointer-events:none;                   /* så klick går till .p-star, inte ytan */
+}
+
+/* Stjärnknappen – placeras i högerkolumnen oavsett var den ligger i DOM:en */
+.p-star{
+  position:absolute;
+  top:0; right:0; bottom:0;              /* fyll hela höjden */
+  width:96px;                            /* samma som kolumnbredden */
+  display:flex; align-items:center; justify-content:center;
+  background:none; border:none; cursor:pointer;
+  color:#fff;                            /* vit default */
+  font-size:34px; line-height:1;
+  text-shadow:0 1px 4px rgba(0,0,0,.25);
+  z-index:1;                             /* över innehållet men under ::after spelar ingen roll */
+}
+.p-star.active{
+  color:var(--yellow);                   /* gul när vald */
+  text-shadow:0 1px 6px rgba(255,203,1,.45);
+}
+@media (hover:hover){
+  .p-star:hover{ transform:scale(1.06); }
+  .p-star:active{ transform:scale(0.98); }
+}
+
+/* Vänster topp: nummer + namn + position */
 .p-top{
-  grid-column:1; grid-row:1;
   display:flex; align-items:center; gap:.7rem; min-width:0;
 }
 .p-nr{
   font-family:"Teko","Anton",Impact,"Arial Black",system-ui,sans-serif;
   font-weight:700;
-  font-size:44px;           /* större tröjnummer */
+  font-size:44px;                        /* större tröjnummer */
   line-height:1; letter-spacing:.8px;
   color:var(--yellow);
   font-variant-numeric:tabular-nums;
@@ -65,40 +91,19 @@ h1{ margin:0; color:var(--yellow); font-size:1.6rem; }
 .p-name{
   font-family:"Oswald","League Spartan","Arial Black",system-ui,sans-serif;
   font-weight:700;
-  font-size:24px;           /* lite större namn */
+  font-size:24px;                        /* större namn */
   line-height:1.15;
   color:var(--yellow);
   white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
 }
 .p-pos{ font-size:12px; opacity:.9; color:#fff; }
 
-/* -- Höger kolumn: stjärna som fyller hela sidan (båda raderna) */
-.p-star{
-  grid-column:2; grid-row:1 / span 2;        /* täck hela höjden */
-  width:100%; height:100%;
-  display:flex; align-items:center; justify-content:center;
-  background:none; border:none; cursor:pointer;
-  color:#fff;                                 /* vit i viloläge */
-  font-size:34px; line-height:1;
-  text-shadow:0 1px 4px rgba(0,0,0,.25);
-  border-left:1px solid rgba(255,255,255,.12);/* subtil avdelare */
-}
-.p-star.active{
-  color:var(--yellow);                        /* gul när vald */
-  text-shadow:0 1px 6px rgba(255,203,1,.45);
-}
-@media(hover:hover){
-  .p-star:hover{ transform:scale(1.06); }
-  .p-star:active{ transform:scale(0.98); }
-}
-
-/* -- Slider + värde (vänster kolumn) */
+/* Slider + värde (vänster sida) */
 .p-rate{
-  grid-column:1; grid-row:2;
   display:grid;
-  grid-template-columns: 1fr auto;           /* slider + värde */
+  grid-template-columns: 1fr auto;       /* slider + värde */
   align-items:center; gap:.6rem;
-  min-width:0;
+  min-width:0; margin-top:.5rem;
 }
 .p-range{ min-width:0; }
 .p-range input[type="range"]{
@@ -108,7 +113,7 @@ h1{ margin:0; color:var(--yellow); font-size:1.6rem; }
   background:#ffffff;
   outline:none;
   -webkit-appearance:none; appearance:none; -moz-appearance:none;
-  touch-action:none;                          /* dra utan att trigga scroll */
+  touch-action:none;
 }
 .p-range input[type="range"]::-webkit-slider-thumb{
   -webkit-appearance:none; appearance:none;
@@ -123,7 +128,6 @@ h1{ margin:0; color:var(--yellow); font-size:1.6rem; }
   background:var(--yellow); border:3px solid var(--blue);
 }
 
-/* -- Värde-badge (vänsterkolumn, till höger om slider) */
 .p-badge{
   justify-self:end;
   background:#fff; color:#0a2240;
@@ -131,28 +135,24 @@ h1{ margin:0; color:var(--yellow); font-size:1.6rem; }
   padding:6px 10px;
   border-radius:12px;
   font-weight:800;
-  min-width:auto;
 }
 
 /* Media får inte spräcka bredden */
 canvas,img,video{ max-width:100%; height:auto; display:block; }
 
 /* ===== Mobil ===== */
-@media(max-width:520px){
+@media (max-width:520px){
   .wrap{ padding:.6rem; }
   h1{ font-size:1.35rem; }
   header{ padding:.75rem .6rem; }
 
-  .card{ padding:.85rem; }
-
   .players-grid{ gap:.6rem; }
   .p-card{
-    grid-template-columns: 1fr 88px;
-    gap:.65rem .8rem;
-    padding:.85rem .85rem;
+    padding:.9rem 96px .9rem .9rem;      /* håll samma högerkolumn på mobil */
+    border-radius:14px;
   }
 
   .p-nr{ font-size:40px; }
   .p-name{ font-size:22px; }
-  .p-star{ font-size:32px; }
+  .p-star{ font-size:32px; width:96px; } /* säkerställ stor touch-yta */
 }
