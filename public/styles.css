@@ -129,87 +129,85 @@ canvas, img, video { max-width:100%; height:auto; display:block; }
   .p-star{ width:36px; height:36px; }
   .p-badge{ min-width:46px; padding:5px 7px; }
 }
-/* --- 1) Scroll-lane till höger på varje kort --- */
+/* --- KORT: tvåkolumnigt med tydlig kontrollsida --- */
 .p-card{
-  position:relative;
-  padding-right:28px;                 /* utrymme för skrollfältet */
-  touch-action: pan-y;                /* låt vertikal scroll prioriteras */
-}
-.p-card::after{
-  content:"";
-  position:absolute;
-  top:0; right:0; width:24px; height:100%;
-  /* ingen färg – bara tom yta för att kunna skrolla utan att träffa slider */
-  pointer-events:auto;                /* låt scroll gå igenom */
+  display:grid;
+  grid-template-columns: 1fr 92px;           /* vänster innehåll, höger kontroller */
+  grid-template-areas:
+    "top    star"
+    "range  val";
+  align-items:center;
+  gap:.75rem .9rem;
+  background:#08233f;                        /* lite mörkare, renare */
+  border:2px solid rgba(255,255,255,.10);
+  border-radius:16px;
+  padding:1rem .9rem 1rem 1rem;
+  box-shadow:0 6px 22px rgba(0,0,0,.22);
+  touch-action: pan-y;                        /* lätt att scrolla */
 }
 
-/* --- 2) Större stjärna, parkerad uppe till höger --- */
+/* sektionstitel-kortens topp */
+.p-top{ grid-area: top; display:flex; align-items:center; gap:.6rem; min-width:0; }
+.p-nr{ font-size:32px; color:var(--yellow); letter-spacing:.5px; }
+.p-name{ font-size:21px; color:var(--yellow); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.p-pos{ opacity:.9 }
+
+/* --- Höger kontrollkolumn: stjärna överst, värde under --- */
 .p-star{
-  position:absolute;
-  top:10px; right:38px;               /* innan scroll-lane (28px) */
-  width:56px; height:56px;            /* större */
+  grid-area: star;
+  justify-self:end;
+  width:54px; height:54px;
   border-radius:14px;
+  background:#fff; color:#0a2240;
   border:2px solid rgba(255,255,255,.25);
-  background:#fff; color:#000;
   display:flex; align-items:center; justify-content:center;
   font-size:22px; font-weight:700;
-  box-shadow:0 2px 8px rgba(0,0,0,.18);
-  z-index:2;
+  box-shadow:0 2px 10px rgba(0,0,0,.18);
 }
-.p-star.active{
-  outline:4px solid rgba(255,203,1,.3);
-  border-color:var(--yellow);
+.p-star.active{ outline:4px solid rgba(255,203,1,.28); border-color:var(--yellow); }
+
+.p-badge{
+  grid-area: val;
+  justify-self:end;
+  background:#fff; color:#0a2240;
+  border:1px solid rgba(0,0,0,.08);
+  padding:6px 10px; border-radius:12px; font-weight:800;
+  min-width:auto;
 }
 
-/* --- 3) Kompakt kontrollkolumn till höger (slider + siffra ihop) --- */
-.p-rate{
-  margin-left:auto;                   /* flytta hela blocket till höger */
-  width:130px;                        /* smal kontrollerad kolumn */
-  display:flex; flex-direction:column; gap:.4rem;
-  align-items:stretch; min-width:130px;
-}
-
-/* Slider kompaktare */
+/* --- Slider: egen rad i vänster kolumn --- */
+.p-rate{ grid-area: range; width:100%; }
+.p-range{ width:100%; }
 .p-range input[type="range"]{
   width:100%;
-  height:6px;                         /* tunnare track */
+  height:8px;
   border-radius:999px;
   background:#ffffff;
   outline:none;
   -webkit-appearance:none; appearance:none; -moz-appearance:none;
+  touch-action: none;                           /* dra horisontellt utan att rubba scroll */
 }
 .p-range input[type="range"]::-webkit-slider-thumb{
   -webkit-appearance:none; appearance:none;
-  width:22px; height:22px;            /* mindre thumb */
-  border-radius:50%;
-  background:var(--yellow);
-  border:3px solid var(--blue);
+  width:22px; height:22px; border-radius:50%;
+  background:var(--yellow); border:3px solid var(--blue);
 }
 .p-range input[type="range"]::-moz-range-track{
-  height:6px; background:#ffffff; border-radius:999px; border:none;
+  height:8px; background:#ffffff; border-radius:999px; border:none;
 }
 .p-range input[type="range"]::-moz-range-thumb{
   width:22px; height:22px; border-radius:50%;
-  border:3px solid var(--blue); background:var(--yellow);
+  background:var(--yellow); border:3px solid var(--blue);
 }
 
-/* Värde-badge tight bredvid slider (i samma kolumn) */
-.p-badge{
-  align-self:flex-end;
-  min-width:auto;
-  padding:6px 10px;
-  border-radius:12px;
-  font-weight:800;
-}
+/* --- Finlir: tajtare rubriker, bättre spacing --- */
+.section-title{ font-size:1.1rem; letter-spacing:.2px; }
+.muted{ color:#9db2cf; }
 
-/* Header-delen lite kompaktare nu när kontrollerna sitter till höger */
-.p-top{ gap:.55rem; }
-.p-nr{ font-size:32px; }
-.p-name{ font-size:20px; }
-
-/* Mobiljusteringar */
+/* --- Mobil --- */
 @media (max-width:520px){
-  .p-star{ width:52px; height:52px; right:34px; }
-  .p-rate{ width:120px; min-width:120px; }
-  .p-card{ padding-right:26px; }
+  .p-card{ grid-template-columns: 1fr 88px; gap:.6rem .7rem; padding:.85rem .8rem; }
+  .p-nr{ font-size:30px }
+  .p-name{ font-size:19px }
+  .p-star{ width:52px; height:52px }
 }
