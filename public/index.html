@@ -3,21 +3,40 @@
 <head>
   <link href="https://fonts.googleapis.com/css2?family=Teko:wght@600;700&family=Oswald:wght@600;700&display=swap" rel="stylesheet">
   <meta charset="UTF-8" />
-  <title>HV71 Ratings</title>
+  <title>Spelarbetyg</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
   <header>
-    <h1>HV71 Ratings</h1>
-    <div class="muted">Sätt betyg 1.0–10.0 (steg 0,5). Välj ⭐ för “Matchens lirare”.</div>
+    <h1>Spelarbetyg</h1>
+    <div class="muted">Betygsskala – inspirerad av Gazzetta dello Sport</div>
     <div id="matchInfo" class="muted" style="margin-top:.25rem;">Laddar match…</div>
   </header>
 
   <div class="wrap">
     <div class="card">
-      <div class="section-title">Spelare (inkl. “Båset” om inlagt)</div>
+      <div class="section-title">Spelare och "Båset"</div>
       <div id="players" class="players-grid"></div>
+    </div>
+
+    <div class="card" style="margin-top:1rem;">
+      <div class="section-title">Om betygsskalan</div>
+      <div class="muted" style="white-space:pre-line;">
+Denna skala är inspirerad och hämtad från Gazzetta dello Sports klassiska bedömningar i italiensk sportpress. Där är 6.0 alltid godkänt, högre siffror belönar en starkare insats – medan betyg under 6.0 markerar en svag prestation.
+
+1.0–2.0 – Katastrofalt, nästan aldrig utdelat.
+3.0 – Mycket svagt, laget skadas av insatsen.
+4.0 – Klart underkänd, långt från förväntningarna.
+5.0 – Svagt, men inte helt hopplöst.
+6.0 – Godkänt, standardnivå. Gör sitt jobb.
+7.0 – Bra, tydligt positiv insats.
+8.0 – Mycket bra, matchens bästa eller nära där.
+9.0 – Exceptionellt, en prestation som lyfter hela laget.
+10.0 – Mytiskt. Extremt sällsynt, historisk nivå.
+
+Välj ⭐ för att markera matchens bästa HV-spelare.
+      </div>
     </div>
 
     <div class="card" style="margin-top:1rem;">
@@ -50,6 +69,7 @@
     </div>
   </div>
 
+  <!-- resten av scriptet oförändrat -->
 <script>
 /* ======= Parametrar / fingerprint ======= */
 const urlParams = new URLSearchParams(window.location.search);
