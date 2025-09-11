@@ -271,3 +271,43 @@ canvas,img,video{ max-width:100%; height:auto; display:block; }
   border-radius:10px;
   font-weight:600;
 }
+/* 1) Ta bort strecken till vänster i meta-korten */
+.p-card.meta .p-nr{ display:none; }
+
+/* 2) Hindra spill på mobil (särskilt select/knappar) */
+.card, .p-card{ max-width:100%; overflow:hidden; }
+.wrap{ overflow-x:hidden; }
+
+/* 3) Knapp-rad: snyggare spacing + större primärknapp */
+.row{
+  display:flex;
+  flex-wrap:wrap;
+  gap:.6rem;               /* luft mellan knapparna */
+  align-items:center;
+}
+.btn{ font-size:1rem; }
+.btn.primary, .btn#saveAllBtn{
+  background:var(--yellow);
+  font-weight:800;         /* mer framträdande */
+  box-shadow:0 6px 16px rgba(0,0,0,.18);
+}
+
+/* 4) Mobil: fullbredd på knappar + större klickytor */
+@media (max-width:520px){
+  .row{ flex-direction:column; align-items:stretch; gap:.7rem; }
+  .row .btn{ width:100%; padding:.8rem 1rem; }
+  .btn.secondary{ background:#e9e9e9; }
+  /* lite mindre högerkolumn så inget sticker ut */
+  .p-card, .p-card.meta{ padding:.9rem 88px .9rem .9rem; }
+  .p-star{ width:88px; font-size:28px; }
+  .meta-icon{ width:88px; }
+}
+
+/* 5) Justera rubrikerna i meta-kort nu när strecket är borta */
+.p-card.meta .p-top{ gap:.9rem; }
+.p-card.meta .p-name{ font-size:22px; }
+
+/* 6) Ikonfix (säkerställer att fonten används) */
+.material-symbols-outlined{
+  font-family:'Material Symbols Outlined' !important;
+}
