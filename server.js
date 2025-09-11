@@ -407,8 +407,8 @@ app.get("/api/match-feedback", (req, res) => {
     SELECT COALESCE(attendance,'unknown') AS attendance,
            COUNT(*) AS submissions,
            ROUND(AVG(match_overall_tenths)/10.0,1) AS match_overall_avg,
-           ROUND(AVG(result_reflection_tenths)/10.0,1) AS result_reflection_avg,
-           ROUND(AVG(referee_level_tenths)/10.0,1) AS referee_level_avg
+           ROUND(AVG(result_reflection_tenths)/10.0,1) AS result_reflection_avg
+           ,ROUND(AVG(referee_level_tenths)/10.0,1) AS referee_level_avg
     FROM vote_context
     WHERE match_id = ?
     GROUP BY COALESCE(attendance,'unknown')
@@ -579,6 +579,78 @@ app.post("/api/admin/upsert-roster-row", requireAdmin, (req, res) => {
   `).run(match_id, player_id, dressed ? 1 : 0, role);
 
   res.json({ ok: true });
+});
+
+// --- Admin – extra: spelare ---
+app.get("/api/admin/players", requireAdmin, (_req, res) => {
+  const rows = db.prepare(`
+    SELECT id, jersey_number, name, position, active
+    FROM players
+    ORDER BY 
+      CASE position WHEN 'G' THEN 0 WHEN 'D' THEN 1 WHEN 'B' THEN 1 WHEN 'F' THEN 2 ELSE 3 END,
+      COALESCE(jersey_number, 999), name
+  `).all();
+  res.json(rows);
+});
+
+// Flexibel patch: uppdatera valfria fält via id
+app.post("/api/admin/player/patch", requireAdmin, (req, res) => {
+  const { id, name, jersey_number, position, active } = req.body || {};
+  const pid = parseInt(id, 10);
+  if (!pid) return res.status(400).json({ error: "id krävs" });
+
+  // Bygg dynamiskt SET
+  const sets = [];
+  const vals = [];
+
+  if (typeof name === "string" && name.trim()) {
+    const exists = db.prepare("SELECT id FROM players WHERE name=?").get(name.trim());
+    if (exists && exists.id !== pid) return res.status(409).json({ error: "Namnet används redan" });
+    sets.push("name=?"); vals.push(name.trim());
+  }
+  if (jersey_number === null || typeof jersey_number === "number") {
+    sets.push("jersey_number=?"); vals.push(jersey_number === null ? null : jersey_number);
+  }
+  if (typeof position === "string") { sets.push("position=?"); vals.push(position || null); }
+  if (active === 0 || active === 1) { sets.push("active=?"); vals.push(active); }
+
+  if (!sets.length) return res.status(400).json({ error: "Inga fält att uppdatera" });
+
+  vals.push(pid);
+  const info = db.prepare(`UPDATE players SET ${sets.join(", ")} WHERE id=?`).run(...vals);
+  res.json({ ok: true, updated: info.changes });
+});
+
+app.post("/api/admin/player/delete", requireAdmin, (req, res) => {
+  const { id } = req.body || {};
+  const pid = parseInt(id, 10);
+  if (!pid) return res.status(400).json({ error: "id krävs" });
+  const info = db.prepare("DELETE FROM players WHERE id=?").run(pid);
+  res.json({ ok: true, deleted: info.changes });
+});
+
+// --- Admin – extra: rensa/ta bort match ---
+app.post("/api/admin/matches/clear", requireAdmin, (req, res) => {
+  const { match_id } = req.body || {};
+  const id = parseInt(match_id, 10);
+  if (!id) return res.status(400).json({ error: "match_id krävs" });
+
+  const tx = db.transaction(() => {
+    db.prepare("DELETE FROM ratings WHERE match_id=?").run(id);
+    db.prepare("DELETE FROM stars WHERE match_id=?").run(id);
+    db.prepare("DELETE FROM vote_context WHERE match_id=?").run(id);
+  });
+  tx();
+
+  res.json({ ok: true, cleared: ["ratings","stars","vote_context"], match_id: id });
+});
+
+app.post("/api/admin/matches/delete", requireAdmin, (req, res) => {
+  const { match_id } = req.body || {};
+  const id = parseInt(match_id, 10);
+  if (!id) return res.status(400).json({ error: "match_id krävs" });
+  const info = db.prepare("DELETE FROM matches WHERE id=?").run(id);
+  res.json({ ok: true, deleted: info.changes });
 });
 
 // --- Export ---

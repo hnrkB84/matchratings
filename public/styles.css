@@ -246,7 +246,8 @@ canvas,img,video{ max-width:100%; height:auto; display:block; }
   white-space:nowrap;
   word-wrap:normal;
   direction:ltr;
-  -webkit-font-feature-settings:'liga';
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga'; /* fallback för äldre WebKit */
   -webkit-font-smoothing:antialiased;
 
   /* våra inställningar */

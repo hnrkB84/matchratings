@@ -27,7 +27,7 @@
 </head>
 <body>
   <h1>HV71 – Admin</h1>
-  <p class="help">Token sparas lokalt. Bas-URL: <small class="mono" id="base"></small></p>
+  <p class="help">Token sparas i denna flik (session). Bas-URL: <small class="mono" id="base"></small></p>
 
   <div class="card">
     <div class="row">
@@ -97,30 +97,31 @@
     </div>
     <small class="help">Du kan också sätta ett <em>closes_at</em> i din backend om du vill auto-stänga.</small>
   </div>
+
   <h2>Röstningsfönster (Stockholmstid)</h2>
-<div class="card">
-  <div class="row">
-    <div style="flex:1 1 220px">
-      <label>Match</label>
-      <select id="timeMatch"></select>
+  <div class="card">
+    <div class="row">
+      <div style="flex:1 1 220px">
+        <label>Match</label>
+        <select id="timeMatch"></select>
+      </div>
+      <div style="flex:1 1 220px">
+        <label>Öppnar</label>
+        <input id="openAt" type="datetime-local" />
+      </div>
+      <div style="flex:1 1 220px">
+        <label>Stänger</label>
+        <input id="closeAt" type="datetime-local" />
+      </div>
     </div>
-    <div style="flex:1 1 220px">
-      <label>Öppnar</label>
-      <input id="openAt" type="datetime-local" />
+    <div class="row" style="margin-top:10px">
+      <button id="saveTimes">Spara tider</button>
+      <button id="openNow" class="secondary">Öppna nu (4h)</button>
+      <button id="closeNow" class="warn">Stäng nu</button>
+      <div id="timesOut" class="pill"></div>
     </div>
-    <div style="flex:1 1 220px">
-      <label>Stänger</label>
-      <input id="closeAt" type="datetime-local" />
-    </div>
+    <small class="help">Tiderna skrivs i UTC i databasen. Fälten här visar lokal Stockholmstid.</small>
   </div>
-  <div class="row" style="margin-top:10px">
-    <button id="saveTimes">Spara tider</button>
-    <button id="openNow" class="secondary">Öppna nu (4h)</button>
-    <button id="closeNow" class="warn">Stäng nu</button>
-    <div id="timesOut" class="pill"></div>
-  </div>
-  <small class="help">Tiderna skrivs i UTC i databasen. Fälten här visar lokal Stockholmstid.</small>
-</div>
 
   <h2>Spelare (bulk-upsert)</h2>
   <div class="card">
@@ -138,6 +139,40 @@ Exempel CSV:
       <button id="upsertPlayers">Spara spelare</button>
       <div id="upsertOut" class="pill"></div>
     </div>
+  </div>
+
+  <!-- NY: Hantera spelare -->
+  <h2>Hantera spelare</h2>
+  <div class="card">
+    <div class="row">
+      <div style="flex:1 1 300px">
+        <label>Spelare</label>
+        <select id="admPlayer"></select>
+      </div>
+      <div style="flex:1 1 130px">
+        <label>Nr</label>
+        <input id="admNr" type="number" />
+      </div>
+      <div style="flex:1 1 150px">
+        <label>Position</label>
+        <select id="admPos">
+          <option value="">-</option>
+          <option value="G">G</option>
+          <option value="D">D</option>
+          <option value="F">F</option>
+        </select>
+      </div>
+      <div style="flex:1 1 300px">
+        <label>Namn</label>
+        <input id="admName" />
+      </div>
+      <div style="align-self:end" class="flex">
+        <button id="admSave">Spara</button>
+        <button id="admDelete" class="warn">Ta bort</button>
+        <button id="admReload" class="secondary">Uppdatera lista</button>
+      </div>
+    </div>
+    <small class="help">Redigera via /api/admin/player/patch. Lämna fält tomt för att inte ändra.</small>
   </div>
 
   <h2>Sätt trupp för match</h2>
@@ -186,16 +221,16 @@ Exempel CSV:
     const $ = (id)=>document.getElementById(id);
     const log = (m)=>{ const el=$('log'); el.textContent += "\\n" + m; el.scrollTop = el.scrollHeight; };
 
-    // TOKEN
+    // ===== TOKEN (sessionStorage i stället för localStorage) =====
     const TOKEN_KEY = 'hv_admin_token';
     const tokenInput = $('token');
-    tokenInput.value = localStorage.getItem(TOKEN_KEY) || '';
-    $('saveToken').onclick = ()=>{ localStorage.setItem(TOKEN_KEY, tokenInput.value.trim()); log('Token sparad.'); };
-    $('clearToken').onclick = ()=>{ localStorage.removeItem(TOKEN_KEY); tokenInput.value=''; log('Token rensad.'); };
+    tokenInput.value = sessionStorage.getItem(TOKEN_KEY) || '';
+    $('saveToken').onclick = ()=>{ sessionStorage.setItem(TOKEN_KEY, tokenInput.value.trim()); log('Token sparad (session).'); };
+    $('clearToken').onclick = ()=>{ sessionStorage.removeItem(TOKEN_KEY); tokenInput.value=''; log('Token rensad.'); };
 
     const headers = ()=>({
       'Content-Type':'application/json',
-      'x-admin-token': (localStorage.getItem(TOKEN_KEY)||'').trim()
+      'x-admin-token': (sessionStorage.getItem(TOKEN_KEY)||'').trim()
     });
 
     // Helpers
@@ -215,39 +250,36 @@ Exempel CSV:
     // --- Helpers för tidsfält ---
     function isoToLocalInput(iso) {
       if (!iso) return '';
-      const d = new Date(iso);                 // ISO -> Date(UTC)
+      const d = new Date(iso);
       const pad = (n)=> String(n).padStart(2,'0');
       const y = d.getFullYear();
       const m = pad(d.getMonth()+1);
       const day = pad(d.getDate());
       const hh = pad(d.getHours());
       const mm = pad(d.getMinutes());
-    // datetime-local kräver "YYYY-MM-DDTHH:MM" (lokal tid visas automatiskt i kontrollen)
-    // Men Date(iso) ger redan lokal när vi plockar ut getHours(). Bra för visning.
       return `${y}-${m}-${day}T${hh}:${mm}`;
-}
+    }
     function localInputToIso(value) {
-    // value ex: "2025-09-13T18:15" (tolkas som lokal)
       if (!value) return null;
-      const d = new Date(value);               // tolkar som lokal, konverterar till UTC i toISOString()
+      const d = new Date(value);
       return d.toISOString();
-}
+    }
 
     // Init dropdowns
     async function loadMatches() {
-  const list = await jfetch(`${BASE}/api/matches`);
-  for (const selId of ['matchSelect','rosterMatch','exportMatch','timeMatch']) {
-    const sel = $(selId); if (!sel) continue;
-    sel.innerHTML = '';
-    list.forEach(m => {
-      const o = document.createElement('option');
-      o.value = m.id;
-      o.textContent = `${m.id} – ${m.date} vs ${m.opponent} ${m.home? '(H)':'(B)'}`;
-      sel.appendChild(o);
-    });
-  }
-  log(`Laddade ${list.length} matcher.`);
-}
+      const list = await jfetch(`${BASE}/api/matches`);
+      for (const selId of ['matchSelect','rosterMatch','exportMatch','timeMatch']) {
+        const sel = $(selId); if (!sel) continue;
+        sel.innerHTML = '';
+        list.forEach(m => {
+          const o = document.createElement('option');
+          o.value = m.id;
+          o.textContent = `${m.id} – ${m.date} vs ${m.opponent} ${m.home? '(H)':'(B)'}`;
+          sel.appendChild(o);
+        });
+      }
+      log(`Laddade ${list.length} matcher.`);
+    }
 
     async function loadPlayers() {
       const list = await jfetch(`${BASE}/api/players`); // alla aktiva
@@ -280,21 +312,23 @@ Exempel CSV:
         await loadMatches();
       } catch(e){ $('createMatchOut').textContent=''; log('ERR skapa match: '+e.message); }
     };
+
     // === [TIME] När en match väljs i tidssektionen, hämta nuvarande tider och fyll inputs ===
     $('timeMatch').addEventListener('change', fillTimesFromServer);
 
-        async function fillTimesFromServer(){
-        const id = parseInt($('timeMatch').value, 10);
-        if (!id) return;
-        try {
+    async function fillTimesFromServer(){
+      const id = parseInt($('timeMatch').value, 10);
+      if (!id) return;
+      try {
         const m = await jfetch(`${BASE}/api/matches/by-id?id=${id}`);
         $('openAt').value  = isoToLocalInput(m.open_at);
         $('closeAt').value = isoToLocalInput(m.close_at);
         log(`Tider hämtade för match ${id}.`);
-        } catch(e){
+      } catch(e){
         log('ERR fetch tider: ' + e.message);
       }
     }
+
     // Toggle voting
     $('openVote').onclick = ()=>toggleVoting(true);
     $('closeVote').onclick = ()=>toggleVoting(false);
@@ -307,123 +341,180 @@ Exempel CSV:
         log(`Röstning ${open?'ÖPPNAD':'STÄNGD'} för match ${id}`);
       } catch(e){ log('ERR toggle voting: '+e.message); }
     }
+
     // === [TIME] Spara tider-knappen ===
-$('saveTimes').onclick = async ()=>{
-  const id = parseInt($('timeMatch').value, 10);
-  const openIso  = localInputToIso($('openAt').value);
-  const closeIso = localInputToIso($('closeAt').value);
-  if (!id || !openIso || !closeIso) {
-    $('timesOut').textContent = '';
-    log('Saknar match eller tider.');
-    return;
-  }
-  try {
-    await jfetch(`${BASE}/api/admin/matches/schedule`, {
-      method:'POST',
-      headers: headers(),
-      body: JSON.stringify({ match_id:id, open_at:openIso, close_at:closeIso })
-    });
-    $('timesOut').textContent = 'Tider sparade';
-    log(`Tider sparade för match ${id}: ${openIso} → ${closeIso}`);
-  } catch(e){
-    $('timesOut').textContent = '';
-    log('ERR saveTimes: ' + e.message);
-  }
-};
+    $('saveTimes').onclick = async ()=>{
+      const id = parseInt($('timeMatch').value, 10);
+      const openIso  = localInputToIso($('openAt').value);
+      const closeIso = localInputToIso($('closeAt').value);
+      if (!id || !openIso || !closeIso) {
+        $('timesOut').textContent = '';
+        log('Saknar match eller tider.');
+        return;
+      }
+      try {
+        await jfetch(`${BASE}/api/admin/matches/schedule`, {
+          method:'POST',
+          headers: headers(),
+          body: JSON.stringify({ match_id:id, open_at:openIso, close_at:closeIso })
+        });
+        $('timesOut').textContent = 'Tider sparade';
+        log(`Tider sparade för match ${id}: ${openIso} → ${closeIso}`);
+      } catch(e){
+        $('timesOut').textContent = '';
+        log('ERR saveTimes: ' + e.message);
+      }
+    };
 
-// === [TIME] Snabbknapp: Öppna nu (4h) ===
-$('openNow').onclick = async ()=>{
-  const id = parseInt($('timeMatch').value, 10);
-  if (!id) return;
-  const now  = new Date();
-  const in4h = new Date(now.getTime() + 4*60*60*1000);
-  // uppdatera fälten i UI i lokal tid
-  $('openAt').value  = isoToLocalInput(now.toISOString());
-  $('closeAt').value = isoToLocalInput(in4h.toISOString());
-  $('saveTimes').click(); // återanvänd sparlogiken
-};
+    // === [TIME] Snabbknapp: Öppna nu (4h) ===
+    $('openNow').onclick = async ()=>{
+      const id = parseInt($('timeMatch').value, 10);
+      if (!id) return;
+      const now  = new Date();
+      const in4h = new Date(now.getTime() + 4*60*60*1000);
+      $('openAt').value  = isoToLocalInput(now.toISOString());
+      $('closeAt').value = isoToLocalInput(in4h.toISOString());
+      $('saveTimes').click();
+    };
 
-// === [TIME] Snabbknapp: Stäng nu ===
-$('closeNow').onclick = async ()=>{
-  const id = parseInt($('timeMatch').value, 10);
-  if (!id) return;
-  const nowIso = new Date().toISOString();
-  try{
-    await jfetch(`${BASE}/api/admin/matches/schedule`, {
-      method:'POST',
-      headers: headers(),
-      body: JSON.stringify({ match_id:id, open_at:nowIso, close_at:nowIso })
-    });
-    $('timesOut').textContent = 'Stängd nu';
-    $('openAt').value  = isoToLocalInput(nowIso);
-    $('closeAt').value = isoToLocalInput(nowIso);
-    log(`Röstning STÄNGD för match ${id}.`);
-  }catch(e){
-    $('timesOut').textContent = '';
-    log('ERR closeNow: ' + e.message);
-  }
-};
-  
+    // === [TIME] Snabbknapp: Stäng nu ===
+    $('closeNow').onclick = async ()=>{
+      const id = parseInt($('timeMatch').value, 10);
+      if (!id) return;
+      const nowIso = new Date().toISOString();
+      try{
+        await jfetch(`${BASE}/api/admin/matches/schedule`, {
+          method:'POST',
+          headers: headers(),
+          body: JSON.stringify({ match_id:id, open_at:nowIso, close_at:nowIso })
+        });
+        $('timesOut').textContent = 'Stängd nu';
+        $('openAt').value  = isoToLocalInput(nowIso);
+        $('closeAt').value = isoToLocalInput(nowIso);
+        log(`Röstning STÄNGD för match ${id}.`);
+      }catch(e){
+        $('timesOut').textContent = '';
+        log('ERR closeNow: ' + e.message);
+      }
+    };
+
     // Bulk-upsert players
     $('upsertPlayers').onclick = async () => {
-  const raw0 = $('playersBulk').value;
-  if (!raw0 || !raw0.trim()) { log('Ingen spelarlista.'); return; }
-  try {
-    let players = [];
-    const raw = raw0.replace(/\r\n?/g, '\n').trim(); // normalisera radbrytningar
+      const raw0 = $('playersBulk').value;
+      if (!raw0 || !raw0.trim()) { log('Ingen spelarlista.'); return; }
+      try {
+        let players = [];
+        const raw = raw0.replace(/\r\n?/g, '\n').trim();
 
-    if (raw.startsWith('[') && raw.endsWith(']')) {
-      // JSON-array
-      players = JSON.parse(raw);
+        if (raw.startsWith('[') && raw.endsWith(']')) {
+          players = JSON.parse(raw);
+        } else {
+          const lines = raw.split('\n')
+            .map(l => l.replace(/^\uFEFF?/, '').trim())
+            .filter(l => l.length > 0);
 
-    } else {
-      // Dela upp rader robust
-      const lines = raw.split('\n')
-        .map(l => l.replace(/^\uFEFF?/, '').trim())     // ta bort BOM + trim
-        .filter(l => l.length > 0);
+          let parsedAsJsonLines = true;
+          const jsonItems = [];
+          for (const l of lines) {
+            const clean = l.replace(/,+\s*$/, '');
+            try { jsonItems.push(JSON.parse(clean)); } catch { parsedAsJsonLines = false; break; }
+          }
+          if (parsedAsJsonLines) {
+            players = jsonItems;
+          } else {
+            players = lines.map(l => {
+              const parts = l.split(';').map(s => s.trim());
+              const [nr, name, pos] = [parts[0] || '', parts[1] || '', parts[2] || ''];
+              return {
+                jersey_number: nr ? Number(nr.replace(/\D/g,'')) : null,
+                name,
+                position: pos.toUpperCase() || null,
+                active: 1
+              };
+            }).filter(p => p.name);
+          }
+        }
 
-      // Försök JSON Lines (en {…} per rad), tillåt ev. avslutande komma
-      let parsedAsJsonLines = true;
-      const jsonItems = [];
-      for (const l of lines) {
-        const clean = l.replace(/,+\s*$/, '');
-        try { jsonItems.push(JSON.parse(clean)); } catch { parsedAsJsonLines = false; break; }
+        if (!Array.isArray(players) || players.length === 0) throw new Error('Inget att spara');
+
+        const j = await jfetch(`${BASE}/api/admin/bulk-upsert-players`, {
+          method:'POST',
+          headers: headers(),
+          body: JSON.stringify({ players })
+        });
+
+        $('upsertOut').textContent = `Sparat: ${j.count} spelare`;
+        log(`Bulk-upsert OK: ${j.count} st`);
+        await loadPlayers(); // fyll listan till trupp-väljaren
+        await loadAdminPlayers(); // uppdatera admin-listan också
+      } catch(e){
+        $('upsertOut').textContent = '';
+        log('ERR upsert players: ' + e.message);
       }
-      if (parsedAsJsonLines) {
-        players = jsonItems;
-      } else {
-        // Semikolon-CSV: nr;namn;pos (tolerant mot extra mellanslag)
-        players = lines.map(l => {
-          const parts = l.split(';').map(s => s.trim());
-          const [nr, name, pos] = [parts[0] || '', parts[1] || '', parts[2] || ''];
-          return {
-            jersey_number: nr ? Number(nr.replace(/\D/g,'')) : null,
-            name,
-            position: pos.toUpperCase() || null,
-            active: 1
-          };
-        }).filter(p => p.name);
+    };
+
+    // ===== Hantera spelare (admin) =====
+    let adminPlayers = [];
+
+    async function loadAdminPlayers(){
+      try {
+        const list = await jfetch(`${BASE}/api/admin/players`, { headers: headers() });
+        adminPlayers = list;
+        const sel = $('admPlayer'); if (!sel) return;
+        sel.innerHTML = '';
+        list.forEach(p => {
+          const o = document.createElement('option');
+          o.value = p.id;
+          o.textContent = `${p.jersey_number ?? '-'} ${p.name} (${p.position || '-'}) [id:${p.id}]`;
+          sel.appendChild(o);
+        });
+        log(`Admin: ${list.length} spelare`);
+        fillAdminForm();
+      } catch(e){
+        log('ERR loadAdminPlayers: ' + e.message);
       }
     }
+    function fillAdminForm(){
+      const sel = $('admPlayer'); if (!sel || !sel.value) return;
+      const p = adminPlayers.find(x => String(x.id) === sel.value);
+      if (!p) return;
+      $('admName').value = p.name || '';
+      $('admNr').value   = (p.jersey_number ?? '');
+      $('admPos').value  = p.position || '';
+    }
+    $('admPlayer')?.addEventListener('change', fillAdminForm);
+    $('admReload')?.addEventListener('click', loadAdminPlayers);
 
-    if (!Array.isArray(players) || players.length === 0) throw new Error('Inget att spara');
-
-    const j = await jfetch(`${BASE}/api/admin/bulk-upsert-players`, {
-      method:'POST',
-      headers: headers(),
-      body: JSON.stringify({ players })
+    $('admSave')?.addEventListener('click', async ()=>{
+      const id = parseInt(($('admPlayer')||{}).value, 10); if (!id) return;
+      const payload = { id };
+      const name = $('admName').value.trim(); if (name) payload.name = name;
+      const nr   = $('admNr').value;         if (nr !== '') payload.jersey_number = Number(nr);
+      const pos  = $('admPos').value;        if (pos !== '') payload.position = pos;
+      try{
+        await jfetch(`${BASE}/api/admin/player/patch`, {
+          method:'POST', headers: headers(), body: JSON.stringify(payload)
+        });
+        log(`Spelare uppdaterad (id ${id})`);
+        await loadAdminPlayers();
+        await loadPlayers(); // uppdatera truppväljaren
+      }catch(e){ log('ERR patch player: ' + e.message); }
     });
 
-    $('upsertOut').textContent = `Sparat: ${j.count} spelare`;
-    log(`Bulk-upsert OK: ${j.count} st`);
-    await loadPlayers(); // fyll listan till trupp-väljaren
-  } catch(e){
-    $('upsertOut').textContent = '';
-    log('ERR upsert players: ' + e.message);
-  }
-};
+    $('admDelete')?.addEventListener('click', async ()=>{
+      const id = parseInt(($('admPlayer')||{}).value, 10); if (!id) return;
+      if (!confirm(`Ta bort spelare id ${id}?`)) return;
+      try{
+        await jfetch(`${BASE}/api/admin/player/delete`, {
+          method:'POST', headers: headers(), body: JSON.stringify({ id })
+        });
+        log(`Spelare borttagen (id ${id})`);
+        await loadAdminPlayers();
+        await loadPlayers();
+      }catch(e){ log('ERR delete player: ' + e.message); }
+    });
 
-    // Set roster
+    // ===== Sätt trupp =====
     $('setRoster').onclick = async () => {
       const match_id = parseInt($('rosterMatch').value,10);
       const sel = $('playerMulti');
@@ -459,11 +550,12 @@ $('closeNow').onclick = async ()=>{
       try {
         await loadMatches();
         const tm = $('timeMatch');
-      if (tm && tm.options.length) {
-        tm.selectedIndex = 0;
-      await fillTimesFromServer();
-    }
+        if (tm && tm.options.length) {
+          tm.selectedIndex = 0;
+          await fillTimesFromServer();
+        }
         await loadPlayers();
+        await loadAdminPlayers(); // ny
         log('Admin redo ✔');
       } catch(e){ log('ERR boot: '+e.message); }
     })();
