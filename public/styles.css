@@ -1,6 +1,6 @@
 :root{
-  --blue:#0a2240;
-  --yellow:#ffcb01;
+  --blue:#0a2240;     /* HV-blå */
+  --yellow:#ffcb01;   /* HV-gul */
   --white:#ffffff;
 }
 
@@ -20,9 +20,26 @@ h1{ margin:0; color:var(--yellow); font-size:1.6rem; }
 @media (min-width:720px){ .grid{ grid-template-columns:3fr 2fr; } }
 
 .card{ background:#fff; color:#0a2240; border-radius:14px; padding:1rem; }
-.section-title{ margin:.25rem 0 .5rem; font-size:1.2rem; color:var(--yellow); }
+
+/* ===== Rubriker ===== */
+.section-title{
+  margin:.25rem 0 .5rem;
+  font-size:1.2rem;
+  font-weight:700;
+  color:var(--yellow);
+}
+
+/* Speciell stil för "Matchtruppen" */
+.special-title{
+  color:var(--blue);     /* HV-blå text */
+  font-weight:800;       /* extra fet */
+  font-size:1.4rem;      /* lite större */
+  margin:.5rem 0 .75rem;
+}
+
 .muted{ color:#8ba0c0; font-size:.9rem; }
 
+/* Knapp */
 .btn{ background:var(--yellow); border:none; padding:.6rem 1rem; border-radius:10px; cursor:pointer; font-weight:600; }
 .btn.secondary{ background:#e6e6e6; }
 
@@ -33,42 +50,41 @@ h1{ margin:0; color:var(--yellow); font-size:1.6rem; }
   gap:.8rem;
 }
 
-/* Vänster innehåll + höger stjärnkolumn (absolut placerad) */
+/* Vänster innehåll + höger stjärn/ikon-kolumn */
 .p-card{
-  position:relative;                    /* möjliggör absolut högerkolumn */
+  position:relative;
   background:#08233f;
   color:#fff;
   border:2px solid rgba(255,255,255,.12);
   border-radius:16px;
-  padding:1rem 108px 1rem 1rem;         /* plats för stjärnkolumnen (108px) */
+  padding:1rem 108px 1rem 1rem; 
   box-shadow:0 6px 22px rgba(0,0,0,.22);
   touch-action: pan-y;
 }
 
-/* Höger stjärnkolumn – täcker hela höjden, alltid längst till höger */
+/* Höger kolumn (visuell zon) */
 .p-card::after{
   content:"";
   position:absolute;
   top:0; right:0; bottom:0;
   width:96px;
-  /* border-left:1px solid rgba(255,255,255,.12); */ /* ta bort linjen */
   pointer-events:none;
 }
 
-/* Stjärnknappen – placeras i högerkolumnen oavsett var den ligger i DOM:en */
+/* Stjärnknapp för Matchens lirare */
 .p-star{
   position:absolute;
-  top:0; right:0; bottom:0;              /* fyll hela höjden */
-  width:96px;                            /* samma som kolumnbredden */
+  top:0; right:0; bottom:0;
+  width:96px;
   display:flex; align-items:center; justify-content:center;
   background:none; border:none; cursor:pointer;
-  color:#fff;                            /* vit default */
+  color:#fff;
   font-size:42px; line-height:1;
   text-shadow:0 1px 4px rgba(0,0,0,.25);
-  z-index:1;                             /* över innehållet men under ::after spelar ingen roll */
+  z-index:1;
 }
 .p-star.active{
-  color:var(--yellow);                   /* gul när vald */
+  color:var(--yellow);
   text-shadow:0 1px 6px rgba(255,203,1,.45);
 }
 @media (hover:hover){
@@ -76,14 +92,12 @@ h1{ margin:0; color:var(--yellow); font-size:1.6rem; }
   .p-star:active{ transform:scale(0.98); }
 }
 
-/* Vänster topp: nummer + namn + position */
-.p-top{
-  display:flex; align-items:center; gap:.7rem; min-width:0;
-}
+/* Toppinfo spelarkort */
+.p-top{ display:flex; align-items:center; gap:.7rem; min-width:0; }
 .p-nr{
   font-family:"Teko","Anton",Impact,"Arial Black",system-ui,sans-serif;
   font-weight:700;
-  font-size:44px;                        /* större tröjnummer */
+  font-size:44px;
   line-height:1; letter-spacing:.8px;
   color:var(--yellow);
   font-variant-numeric:tabular-nums;
@@ -91,24 +105,23 @@ h1{ margin:0; color:var(--yellow); font-size:1.6rem; }
 .p-name{
   font-family:"Oswald","League Spartan","Arial Black",system-ui,sans-serif;
   font-weight:700;
-  font-size:24px;                        /* större namn */
+  font-size:24px;
   line-height:1.15;
   color:var(--yellow);
   white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
 }
 .p-pos{ font-size:12px; opacity:.9; color:#fff; }
 
-/* Slider + värde (vänster sida) */
+/* Slider + värde */
 .p-rate{
   display:grid;
-  grid-template-columns: 1fr auto;       /* slider + värde */
+  grid-template-columns: 1fr auto;
   align-items:center; gap:.6rem;
   min-width:0; margin-top:.5rem;
 }
 .p-range{ min-width:0; }
 .p-range input[type="range"]{
-  width:100%;
-  height:8px;
+  width:100%; height:8px;
   border-radius:999px;
   background:#ffffff;
   outline:none;
@@ -127,7 +140,6 @@ h1{ margin:0; color:var(--yellow); font-size:1.6rem; }
   width:22px; height:22px; border-radius:50%;
   background:var(--yellow); border:3px solid var(--blue);
 }
-
 .p-badge{
   justify-self:end;
   background:#fff; color:#0a2240;
@@ -148,54 +160,19 @@ canvas,img,video{ max-width:100%; height:auto; display:block; }
 
   .players-grid{ gap:.6rem; }
   .p-card{
-    padding:.9rem 96px .9rem .9rem;      /* håll samma högerkolumn på mobil */
+    padding:.9rem 96px .9rem .9rem;
     border-radius:14px;
   }
 
   .p-nr{ font-size:40px; }
   .p-name{ font-size:22px; }
-  .p-star{ font-size:32px; width:96px; } /* säkerställ stor touch-yta */
+  .p-star{ font-size:32px; width:96px; }
 }
+
 /* ===== Meta-kort (Matchbetyg / Speglade resultatet / Domarnivå) ===== */
-/* Ser ut som .p-card men utan stjärnkolumn till höger */
-.p-card.meta{
-  padding:1rem 1rem;                 /* tar bort extra utrymme för stjärnkolumnen */
-}
-.p-card.meta::after{ display:none; } /* göm högerkolumnens pseudo-element */
-.p-card.meta .p-star{ display:none; }/* säkerställ att ingen stjärna syns */
-
-/* Valfri liten rubrikrad när meta-korten ligger under spelarna */
-.subsection{
-  margin:.75rem 0 .25rem;
-  font-size:1.05rem;
-  font-weight:700;
-  color:var(--yellow);
-  letter-spacing:.2px;
-}
-
-/* En liten tunn avdelare i kortet */
-.divider{
-  margin:1rem 0 .5rem;
-  height:1px;
-  background:rgba(255,255,255,.18);
-  border:0;
-}
-
-/* Liten grid för meta-korten så de bryter snyggt */
-.meta-grid{
-  display:grid;
-  grid-template-columns:1fr;
-  gap:.8rem;
-}
-@media (min-width:720px){
-  .meta-grid{ grid-template-columns:1fr 1fr; }
-}
-/* Badge får gärna vara lite tätare på meta-korten */
-.p-card.meta .p-badge{ padding:6px 10px; }
-/* ===== Meta-kort med ikonkolumn (utan stjärnknapp) ===== */
+/* Ser ut som .p-card men utan stjärnknapp (vi visar en ikon i högerkolumnen) */
 .p-card.meta{
   position:relative;
-  /* samma högerutrymme som spelarna (för kolumnen) */
   padding:1rem 108px 1rem 1rem;
   background:#08233f;
   color:#fff;
@@ -203,37 +180,21 @@ canvas,img,video{ max-width:100%; height:auto; display:block; }
   border-radius:16px;
   box-shadow:0 6px 22px rgba(0,0,0,.22);
 }
+.p-card.meta .p-star{ display:none; }     /* ingen stjärna här */
 
-/* högerkolumn – bara en visuell zon, ingen knapp */
-.p-card.meta::after{
-  content:"";
-  position:absolute;
-  top:0; right:0; bottom:0;
-  width:96px;
-  pointer-events:none;
-}
-
-/* själva ikonen i högerkolumnen */
+/* högerkolumnens ikon */
 .meta-icon{
   position:absolute;
   top:0; right:0; bottom:0;
   width:96px;
   display:flex; align-items:center; justify-content:center;
-  pointer-events:none;                /* ej klickbar */
-}
-.material-symbols-outlined{
-  font-variation-settings:
-    'FILL' 1,   /* fylld */
-    'wght' 500,
-    'GRAD' 0,
-    'opsz' 40;
-  font-size:42px;
-  line-height:1;
-  color:var(--yellow);
-  text-shadow:0 1px 6px rgba(255,203,1,.25);
+  pointer-events:none;
 }
 
-/* meta-kortens typografi (matcha spelarkorten) */
+/* Dölj den lilla ikontexten om någon lagt .icon-right i meta-toppen */
+.p-card.meta .icon-right{ display:none; }
+
+/* meta-typografi – matcha spelarkorten */
 .p-card.meta .p-nr{ 
   font-family:"Teko","Anton",Impact,"Arial Black",system-ui,sans-serif;
   font-weight:700; font-size:44px; line-height:1; letter-spacing:.8px;
@@ -245,30 +206,69 @@ canvas,img,video{ max-width:100%; height:auto; display:block; }
 }
 .p-card.meta .p-pos{ font-size:12px; opacity:.9; color:#fff; }
 
-/* responsivt – samma touchyta som spelarna */
+/* Liten grid för meta-korten så de bryter snyggt */
+.subsection{
+  margin:.75rem 0 .25rem;
+  font-size:1.05rem;
+  font-weight:700;
+  color:var(--yellow);
+  letter-spacing:.2px;
+}
+.divider{
+  margin:1rem 0 .5rem;
+  height:1px;
+  background:rgba(255,255,255,.18);
+  border:0;
+}
+.meta-grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:.8rem;
+}
+@media (min-width:720px){
+  .meta-grid{ grid-template-columns:1fr 1fr; }
+}
+.p-card.meta .p-badge{ padding:6px 10px; }
+
+/* Responsivt meta-kort */
 @media (max-width:520px){
   .p-card.meta{ padding:.9rem 96px .9rem .9rem; border-radius:14px; }
-  .material-symbols-outlined{ font-size:32px; }
 }
-/* Gör summary-raden tydligare */
+
+/* ===== Material Symbols (ikoner) ===== */
+.material-symbols-outlined{
+  font-family:'Material Symbols Outlined';
+  font-weight:normal;
+  font-style:normal;
+  line-height:1;
+  letter-spacing:normal;
+  text-transform:none;
+  display:inline-block;
+  white-space:nowrap;
+  word-wrap:normal;
+  direction:ltr;
+  -webkit-font-feature-settings:'liga';
+  -webkit-font-smoothing:antialiased;
+
+  /* variant-inställningar + standardutseende hos oss */
+  font-variation-settings:'FILL' 1,'wght' 500,'GRAD' 0,'opsz' 40;
+  font-size:42px;
+  color:var(--yellow);
+  text-shadow:0 1px 6px rgba(255,203,1,.25);
+}
+
+/* Mindre ikon när den används inne i p-top (t.ex. på spelarkort) */
+.material-symbols-outlined.icon-right {
+  font-size:28px;
+  color:var(--yellow);
+  margin-left:auto;
+}
+
+/* Gör summary-raden tydligare i betygsskalan */
 .card summary.section-title {
   background: var(--blue);
   color: var(--yellow);
   padding:.6rem 1rem;
   border-radius:10px;
   font-weight:600;
-}
-
-/* Speciell stil för rubriken "Matchtruppen" */
-.special-title {
-  color: var(--blue);        /* HV-blå text */
-  background: var(--yellow); /* HV-gul bakgrund */
-  padding: .3rem .6rem;
-  border-radius: 8px;
-  display: inline-block;     /* bakgrund bara runt texten */
-}
-.material-symbols-outlined.icon-right {
-  font-size: 28px;       /* lagom storlek så den inte blir för maffig */
-  color: var(--yellow);  /* gul, HV-färgen */
-  margin-left: auto;     /* trycker ikonen längst till höger */
 }
