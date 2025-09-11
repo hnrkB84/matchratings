@@ -5,19 +5,57 @@
   <title>Resultat – Spelarbetyg</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="/styles.css">
+  <style>
+    .wrap{max-width:1000px;margin:0 auto;padding:16px}
+    .muted{opacity:.75}
+    .card{background:#fff;border-radius:12px;padding:16px;box-shadow:0 2px 10px rgba(0,0,0,.06);margin-top:16px}
+    .pill{display:inline-block;background:#eef2ff;border-radius:999px;padding:4px 10px;margin-right:6px}
+    table{width:100%;border-collapse:separate;border-spacing:0 6px}
+    th{font-weight:700;text-align:left;padding:8px 10px}
+    td{background:#f7f8fb;padding:10px;border-top:1px solid #e6e9f2;border-bottom:1px solid #e6e9f2}
+    tr td:first-child{border-left:1px solid #e6e9f2;border-top-left-radius:10px;border-bottom-left-radius:10px}
+    tr td:last-child{border-right:1px solid #e6e9f2;border-top-right-radius:10px;border-bottom-right-radius:10px}
+    .nr-badge{display:inline-block;min-width:36px;text-align:center;background:#eef2ff;border-radius:10px;padding:4px 8px;font-weight:700}
+    .right{text-align:right}
+  </style>
 </head>
 <body>
-  <header>
-    <h1>Resultat just nu</h1>
+  <header class="wrap">
+    <h1>Resultat</h1>
     <div id="matchInfo" class="muted">Laddar match…</div>
+    <div id="metaRow" style="margin-top:8px;display:none">
+      <span id="statusPills"></span>
+      <span id="votersInfo" class="muted"></span>
+    </div>
   </header>
 
-  <div class="wrap">
-    <div class="card">
-      <div class="section-title">Spelarbetyg (live)</div>
-      <div id="list" class="grid"></div>
-    </div>
-  </div>
+  <main class="wrap">
+    <section class="card">
+      <h3 style="margin-top:0">Matchens spelare – just nu</h3>
+      <div id="mosEmpty" class="muted" style="display:none">Inga röster än.</div>
+      <table id="mosTable" style="display:none">
+        <thead>
+          <tr>
+            <th>#</th><th>Spelare</th><th class="right">⭐</th><th class="right">Snitt</th><th class="right">Röster</th>
+          </tr>
+        </thead>
+        <tbody id="mosBody"></tbody>
+      </table>
+    </section>
+
+    <section class="card">
+      <h3 style="margin-top:0">Snitt – alla spelare</h3>
+      <div id="avgEmpty" class="muted" style="display:none">Inga betyg att visa ännu.</div>
+      <table id="avgTable" style="display:none">
+        <thead>
+          <tr>
+            <th>#</th><th>Spelare</th><th>Pos</th><th class="right">Snitt</th><th class="right">Röster</th>
+          </tr>
+        </thead>
+        <tbody id="avgBody"></tbody>
+      </table>
+    </section>
+  </main>
 
 <script>
 const params = new URLSearchParams(location.search);
@@ -35,61 +73,110 @@ async function resolveMatch(){
   }catch{}
 }
 
-function formatPlayerName(n){
+function shortName(n){
   if(!n) return "";
   const parts = n.trim().split(/\s+/);
   if(parts.length===1) return parts[0];
   return parts[0][0].toUpperCase() + ". " + parts.slice(-1)[0];
 }
+function toLocal(iso){
+  if(!iso) return null;
+  const d = new Date(iso);
+  const pad = n => String(n).padStart(2,"0");
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
 
 async function load(){
   await resolveMatch();
+
+  const $ = (id)=>document.getElementById(id);
   if (!match_id){
-    document.getElementById("matchInfo").textContent = "Ingen match hittades.";
+    $("matchInfo").textContent = "Ingen match hittades.";
+    $("mosEmpty").style.display = "block";
+    $("avgEmpty").style.display = "block";
     return;
   }
 
-  // Matchinfo-rad
+  // Matchinfo + status
   try{
     const m = await fetch(`/api/matches/by-id?id=${match_id}`).then(r=>r.json());
     const label = m.home ? `HV71 vs ${m.opponent}` : `${m.opponent} vs HV71`;
-    document.getElementById("matchInfo").textContent =
-      `${label} — ${m.date} (${m.competition})`;
-  }catch{
-    document.getElementById("matchInfo").textContent = "Matchinfo kunde inte hämtas.";
-  }
+    $("matchInfo").textContent = `${label} — ${m.date}${m.competition?` (${m.competition})`:""}`;
 
-  // HÄR: Byt endpoint-namn om ditt backend heter något annat
-  // Förväntat (exempel): [{player_id, name, jersey_number, avg: 6.7, votes: 123, stars: 17}, ...]
-  let data = [];
-  try{
-    const res = await fetch(`/api/results?match_id=${match_id}`);
-    if(res.ok) data = await res.json();
+    const pills = [];
+    if (m.voting_open) pills.push(`<span class="pill">Öppet för röstning</span>`);
+    if (m.open_at)  pills.push(`<span class="pill">Öppnade: ${toLocal(m.open_at)}</span>`);
+    if (m.close_at) pills.push(`<span class="pill">Stänger: ${toLocal(m.close_at)}</span>`);
+    $("statusPills").innerHTML = pills.join(" ");
+    document.getElementById("metaRow").style.display = "block";
   }catch{}
 
-  const list = document.getElementById("list");
-  if (!Array.isArray(data) || data.length===0){
-    list.innerHTML = `<div class="muted">Inga resultat att visa ännu.</div>`;
+  // Summary-data
+  let summary = null;
+  try{
+    const res = await fetch(`/api/results/summary?match_id=${match_id}`);
+    if (res.ok) summary = await res.json();
+  }catch{}
+
+  if (!summary){ 
+    $("mosEmpty").style.display = "block";
+    $("avgEmpty").style.display = "block";
     return;
   }
 
-  // sortera högst snitt först
-  data.sort((a,b)=>(b.avg||0)-(a.avg||0));
+  // --- Meta (voters/overalls) ---
+  const t = summary.totals || {};
+  const metaParts = [];
+  if (typeof t.voters === "number") metaParts.push(`${t.voters} röstande`);
+  if (typeof t.match_overall_avg === "number") metaParts.push(`Match: ${t.match_overall_avg.toFixed(1)}`);
+  if (typeof t.result_reflection_avg === "number") metaParts.push(`Prestationskänsla: ${t.result_reflection_avg.toFixed(1)}`);
+  if (typeof t.referee_level_avg === "number") metaParts.push(`Domarnivå: ${t.referee_level_avg.toFixed(1)}`);
+  document.getElementById("votersInfo").textContent = metaParts.join(" · ");
 
-  list.innerHTML = data.map(p=>`
-    <div class="p-card">
-      <div class="p-top">
-        <div class="p-nr">${p.jersey_number ?? "–"}</div>
-        <div>
-          <div class="p-name">${formatPlayerName(p.name)}</div>
-          <div class="p-pos muted">${p.votes ?? 0} röster ${p.stars ? "· ⭐ " + p.stars : ""}</div>
-        </div>
-      </div>
-      <div class="p-rate" style="align-items:center;">
-        <div class="p-badge" style="font-size:1.25rem;">${(p.avg ?? 0).toFixed(1)}</div>
-      </div>
-    </div>
-  `).join("");
+  const players = Array.isArray(summary.players) ? summary.players : [];
+
+  // ===== Tabell 1: Matchens spelare (TOPP-lista efter ⭐, sen snitt, röster) =====
+  const withVotes = players.filter(p => (p.votes||0) > 0);
+  const top = withVotes
+    .slice()
+    .sort((a,b) => (b.stars||0)-(a.stars||0) || (b.avg||0)-(a.avg||0) || (b.votes||0)-(a.votes||0))
+    .slice(0, Math.max(3, Math.min(5, withVotes.length))); // visa 3–5 rader
+
+  if (top.length === 0){
+    $("mosEmpty").style.display = "block";
+  } else {
+    $("mosTable").style.display = "table";
+    $("mosBody").innerHTML = top.map(p=>`
+      <tr>
+        <td><span class="nr-badge">${p.jersey_number ?? "–"}</span></td>
+        <td>${shortName(p.name)}</td>
+        <td class="right">${p.stars || 0}</td>
+        <td class="right">${(p.avg ?? 0).toFixed(1)}</td>
+        <td class="right">${p.votes || 0}</td>
+      </tr>
+    `).join("");
+  }
+
+  // ===== Tabell 2: Snitt alla spelare =====
+  const ranked = players
+    .slice()
+    .sort((a,b) => (b.avg||0)-(a.avg||0) || (b.votes||0)-(a.votes||0));
+
+  const hasAny = ranked.some(p => (p.votes||0)>0);
+  if (!hasAny){
+    $("avgEmpty").style.display = "block";
+  } else {
+    $("avgTable").style.display = "table";
+    $("avgBody").innerHTML = ranked.map(p=>`
+      <tr>
+        <td><span class="nr-badge">${p.jersey_number ?? "–"}</span></td>
+        <td>${shortName(p.name)}</td>
+        <td>${p.position || "-"}</td>
+        <td class="right">${p.avg != null ? p.avg.toFixed(1) : "–"}</td>
+        <td class="right">${p.votes || 0}</td>
+      </tr>
+    `).join("");
+  }
 }
 
 load();
