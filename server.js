@@ -104,6 +104,7 @@ CREATE TABLE IF NOT EXISTS stars (
   FOREIGN KEY(player_id) REFERENCES players(id) ON DELETE CASCADE
 );
 
+-- OBS: innehåller nu även referee_level_tenths (Domarnivå)
 CREATE TABLE IF NOT EXISTS vote_context (
   id INTEGER PRIMARY KEY,
   match_id INTEGER NOT NULL,
@@ -111,6 +112,7 @@ CREATE TABLE IF NOT EXISTS vote_context (
   attendance TEXT CHECK(attendance IN ('arena','tv','skip')),
   match_overall_tenths INTEGER CHECK(match_overall_tenths BETWEEN 10 AND 100),
   result_reflection_tenths INTEGER CHECK(result_reflection_tenths BETWEEN 10 AND 100),
+  referee_level_tenths INTEGER CHECK(referee_level_tenths BETWEEN 10 AND 100),
   created_at TEXT DEFAULT CURRENT_TIMESTAMP,
   updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
   UNIQUE(match_id, anon_fingerprint),
@@ -135,6 +137,20 @@ CREATE INDEX IF NOT EXISTS idx_roster_match ON match_roster(match_id);
   if (!names.has("close_at")) {
     console.log("[MIGRATE] Adding matches.close_at");
     db.exec(`ALTER TABLE matches ADD COLUMN close_at TEXT`);
+  }
+})();
+
+// Migration: lägg till referee_level_tenths i vote_context om det saknas
+(function migrateVoteContextAddReferee() {
+  const cols = db.prepare(`PRAGMA table_info(vote_context)`).all();
+  const names = new Set(cols.map(c => c.name));
+  if (!names.has("referee_level_tenths")) {
+    console.log("[MIGRATE] Adding vote_context.referee_level_tenths");
+    try {
+      db.exec(`ALTER TABLE vote_context ADD COLUMN referee_level_tenths INTEGER`);
+    } catch (e) {
+      console.warn("[MIGRATE] Could not add referee_level_tenths (maybe exists):", e.message);
+    }
   }
 })();
 
@@ -270,7 +286,7 @@ app.post("/api/rate", (req, res) => {
 // --- Submit (alla betyg + ⭐ + kontext) ---
 app.post("/api/submit", (req, res) => {
   const { match_id, anon_fingerprint, ratings, star_player_id,
-          attendance, match_overall, result_reflection } = req.body || {};
+          attendance, match_overall, result_reflection, referee_level } = req.body || {};
   if (!match_id || !anon_fingerprint || !Array.isArray(ratings)) {
     return res.status(400).json({ error: "match_id, anon_fingerprint, ratings[]" });
   }
@@ -291,26 +307,28 @@ app.post("/api/submit", (req, res) => {
     DO UPDATE SET player_id=excluded.player_id, created_at=CURRENT_TIMESTAMP
   `);
   const upsertContext = db.prepare(`
-    INSERT INTO vote_context (match_id, anon_fingerprint, attendance, match_overall_tenths, result_reflection_tenths)
-    VALUES (?, ?, ?, ?, ?)
+    INSERT INTO vote_context (match_id, anon_fingerprint, attendance, match_overall_tenths, result_reflection_tenths, referee_level_tenths)
+    VALUES (?, ?, ?, ?, ?, ?)
     ON CONFLICT(match_id, anon_fingerprint)
     DO UPDATE SET
       attendance = COALESCE(excluded.attendance, vote_context.attendance),
       match_overall_tenths = COALESCE(excluded.match_overall_tenths, vote_context.match_overall_tenths),
       result_reflection_tenths = COALESCE(excluded.result_reflection_tenths, vote_context.result_reflection_tenths),
+      referee_level_tenths = COALESCE(excluded.referee_level_tenths, vote_context.referee_level_tenths),
       updated_at = CURRENT_TIMESTAMP
   `);
 
   const a = validAttendance(attendance);
   const mo = clampToTenths(match_overall);
   const rr = clampToTenths(result_reflection);
+  const rl = clampToTenths(referee_level);
 
   const rosterIds = new Set(
     db.prepare("SELECT player_id FROM match_roster WHERE match_id=?").all(match_id).map(r => r.player_id)
   );
 
   const tx = db.transaction(() => {
-    if (a || mo || rr) upsertContext.run(match_id, anon_fingerprint, a, mo, rr);
+    if (a || mo || rr || rl) upsertContext.run(match_id, anon_fingerprint, a, mo, rr, rl);
 
     for (const r of ratings) {
       if (!r || typeof r.player_id !== "number" || typeof r.rating !== "number") continue;
@@ -379,7 +397,8 @@ app.get("/api/match-feedback", (req, res) => {
     SELECT
       COUNT(*) AS submissions,
       ROUND(AVG(match_overall_tenths)/10.0,1) AS match_overall_avg,
-      ROUND(AVG(result_reflection_tenths)/10.0,1) AS result_reflection_avg
+      ROUND(AVG(result_reflection_tenths)/10.0,1) AS result_reflection_avg,
+      ROUND(AVG(referee_level_tenths)/10.0,1) AS referee_level_avg
     FROM vote_context
     WHERE match_id = ? AND ${whereAttendance}
   `).get(matchId);
@@ -388,7 +407,8 @@ app.get("/api/match-feedback", (req, res) => {
     SELECT COALESCE(attendance,'unknown') AS attendance,
            COUNT(*) AS submissions,
            ROUND(AVG(match_overall_tenths)/10.0,1) AS match_overall_avg,
-           ROUND(AVG(result_reflection_tenths)/10.0,1) AS result_reflection_avg
+           ROUND(AVG(result_reflection_tenths)/10.0,1) AS result_reflection_avg,
+           ROUND(AVG(referee_level_tenths)/10.0,1) AS referee_level_avg
     FROM vote_context
     WHERE match_id = ?
     GROUP BY COALESCE(attendance,'unknown')
@@ -438,13 +458,14 @@ app.get("/api/results/summary", (req, res) => {
     SELECT
       COALESCE(ROUND(AVG(match_overall_tenths)/10.0,1), NULL) AS match_overall_avg,
       COALESCE(ROUND(AVG(result_reflection_tenths)/10.0,1), NULL) AS result_reflection_avg,
+      COALESCE(ROUND(AVG(referee_level_tenths)/10.0,1), NULL) AS referee_level_avg,
       SUM(CASE WHEN attendance='arena' THEN 1 ELSE 0 END) AS arena,
       SUM(CASE WHEN attendance='tv'    THEN 1 ELSE 0 END) AS tv,
       SUM(CASE WHEN attendance='skip'  THEN 1 ELSE 0 END) AS skip,
       COUNT(DISTINCT anon_fingerprint) AS voters
     FROM vote_context
     WHERE match_id = ?
-  `).get(match_id) || { match_overall_avg:null, result_reflection_avg:null, arena:0, tv:0, skip:0, voters:0 };
+  `).get(match_id) || { match_overall_avg:null, result_reflection_avg:null, referee_level_avg:null, arena:0, tv:0, skip:0, voters:0 };
 
   const players = perPlayer.map(p => ({
     player_id: p.player_id,
@@ -462,6 +483,7 @@ app.get("/api/results/summary", (req, res) => {
       voters: overall.voters,
       match_overall_avg: overall.match_overall_avg,
       result_reflection_avg: overall.result_reflection_avg,
+      referee_level_avg: overall.referee_level_avg,
       attendance: { arena: overall.arena, tv: overall.tv, skip: overall.skip }
     }
   });
@@ -592,6 +614,7 @@ app.get("/api/export/ratings", (req, res) => {
       vc.attendance,
       ROUND(vc.match_overall_tenths/10.0,1) AS match_overall,
       ROUND(vc.result_reflection_tenths/10.0,1) AS result_reflection,
+      ROUND(vc.referee_level_tenths/10.0,1) AS referee_level,
       r.created_at,
       r.updated_at
     FROM ratings r
@@ -624,6 +647,7 @@ app.get("/api/export/votes", (req, res) => {
       vc.attendance,
       ROUND(vc.match_overall_tenths/10.0,1) AS match_overall,
       ROUND(vc.result_reflection_tenths/10.0,1) AS result_reflection,
+      ROUND(vc.referee_level_tenths/10.0,1) AS referee_level,
       vc.created_at,
       vc.updated_at
     FROM vote_context vc
