@@ -169,8 +169,7 @@ canvas,img,video{ max-width:100%; height:auto; display:block; }
   .p-star{ font-size:32px; width:96px; }
 }
 
-/* ===== Meta-kort (Matchbetyg / Speglade resultatet / Domarnivå) ===== */
-/* Ser ut som .p-card men utan stjärnknapp (vi visar en ikon i högerkolumnen) */
+/* ===== Meta-kort ===== */
 .p-card.meta{
   position:relative;
   padding:1rem 108px 1rem 1rem;
@@ -191,10 +190,10 @@ canvas,img,video{ max-width:100%; height:auto; display:block; }
   pointer-events:none;
 }
 
-/* Dölj den lilla ikontexten om någon lagt .icon-right i meta-toppen */
+/* Om någon råkar lägga .icon-right inne i meta-toppen – dölj den */
 .p-card.meta .icon-right{ display:none; }
 
-/* meta-typografi – matcha spelarkorten */
+/* meta-typografi */
 .p-card.meta .p-nr{ 
   font-family:"Teko","Anton",Impact,"Arial Black",system-ui,sans-serif;
   font-weight:700; font-size:44px; line-height:1; letter-spacing:.8px;
@@ -206,7 +205,7 @@ canvas,img,video{ max-width:100%; height:auto; display:block; }
 }
 .p-card.meta .p-pos{ font-size:12px; opacity:.9; color:#fff; }
 
-/* Liten grid för meta-korten så de bryter snyggt */
+/* Liten grid för meta-korten */
 .subsection{
   margin:.75rem 0 .25rem;
   font-size:1.05rem;
@@ -237,7 +236,7 @@ canvas,img,video{ max-width:100%; height:auto; display:block; }
 
 /* ===== Material Symbols (ikoner) ===== */
 .material-symbols-outlined{
-  font-family:'Material Symbols Outlined';
+  font-family:'Material Symbols Outlined' !important; /* tvinga rätt font */
   font-weight:normal;
   font-style:normal;
   line-height:1;
@@ -250,7 +249,7 @@ canvas,img,video{ max-width:100%; height:auto; display:block; }
   -webkit-font-feature-settings:'liga';
   -webkit-font-smoothing:antialiased;
 
-  /* variant-inställningar + standardutseende hos oss */
+  /* våra inställningar */
   font-variation-settings:'FILL' 1,'wght' 500,'GRAD' 0,'opsz' 40;
   font-size:42px;
   color:var(--yellow);
@@ -258,16 +257,16 @@ canvas,img,video{ max-width:100%; height:auto; display:block; }
 }
 
 /* Mindre ikon när den används inne i p-top (t.ex. på spelarkort) */
-.material-symbols-outlined.icon-right {
+.material-symbols-outlined.icon-right{
   font-size:28px;
   color:var(--yellow);
   margin-left:auto;
 }
 
 /* Gör summary-raden tydligare i betygsskalan */
-.card summary.section-title {
-  background: var(--blue);
-  color: var(--yellow);
+.card summary.section-title{
+  background:var(--blue);
+  color:var(--yellow);
   padding:.6rem 1rem;
   border-radius:10px;
   font-weight:600;
