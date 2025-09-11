@@ -124,6 +124,13 @@ Välj ⭐ för att markera matchens bästa HV-spelare.
         </div>
       </div>
     </div>  
+      <!-- KNAPPRAD: läggs direkt efter cardet ovan -->
+    <div class="row" style="margin:1rem 0;">
+    <button class="btn" id="saveAllBtn">Skicka in röster</button>
+    <button class="btn secondary" id="copyLinkBtn">Kopiera delningslänk</button>
+    <button class="btn secondary" onclick="location.href='resultat.html'">Visa resultat</button>
+    <div class="muted">⭐-valet sparas när du klickar Skicka in.</div>
+    </div>
 
 <script>
 /* ======= Parametrar / fingerprint ======= */
@@ -253,8 +260,11 @@ async function saveAll(){
 }
 
 /* ======= Init ======= */
-document.getElementById("saveAllBtn").addEventListener("click", saveAll);
-document.getElementById("copyLinkBtn").addEventListener("click", copyLink);
+    const saveBtn = document.getElementById("saveAllBtn");
+  if (saveBtn) saveBtn.addEventListener("click", saveAll);
+
+    const copyBtn = document.getElementById("copyLinkBtn");
+  if (copyBtn) copyBtn.addEventListener("click", copyLink);
 
 (async function init(){
   // Hämta "current" (öppen röstning), annars "latest"
