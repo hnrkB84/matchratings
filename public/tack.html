@@ -9,27 +9,67 @@
 <body>
   <header>
     <h1>Tack!</h1>
-    <div class="muted">Dina röster är inskickade.</div>
+    <div class="muted" id="matchLabel">Dina röster är inskickade.</div>
   </header>
 
   <div class="wrap">
     <div class="card">
-      <div id="links" class="row" style="gap:.5rem;"></div>
+      <p>
+        Det här är ett hobbyprojekt som samlar in fansens betyg för att bygga
+        <strong>statistik, trender och mönster</strong> över tid.
+      </p>
+      <p>
+        Projektet är <strong>ideellt och fristående</strong>. Sidan utvecklas löpande och
+        vi uppskattar verkligen ditt bidrag. Resultat och sammanställningar
+        redovisas i lämpliga sociala medier-kanaler.
+      </p>
+      <p>
+        Vill du sprida projektet? <strong>Dela gärna länken till resultatet</strong> med andra HV-fans!
+      </p>
+      <p>
+        Tankar, funderingar eller tips? Mejla gärna
+        <a href="mailto:spelardata@outlook.com">spelardata@outlook.com</a>.
+      </p>
+
+      <div id="links" class="row" style="gap:.5rem; margin-top:1rem;"></div>
     </div>
   </div>
 
 <script>
-const params = new URLSearchParams(location.search);
-const match_id = params.get("match");
-const links = document.getElementById("links");
+  const params   = new URLSearchParams(location.search);
+  const match_id = params.get("match");
+  const linksEl  = document.getElementById("links");
 
-const voteUrl = match_id ? `index.html?match=${encodeURIComponent(match_id)}` : `index.html`;
-const resUrl  = `resultat.html${match_id ? `?match=${encodeURIComponent(match_id)}` : ""}`;
+  const resUrl = `resultat.html${match_id ? `?match=${encodeURIComponent(match_id)}` : ""}`;
 
-links.innerHTML = `
-  <a class="btn" href="${resUrl}">Visa resultat</a>
-  <a class="btn secondary" href="${voteUrl}">Tillbaka till röstningen</a>
-`;
+  linksEl.innerHTML = `
+    <a class="btn" href="${resUrl}">Visa resultat</a>
+    <button class="btn secondary" id="shareBtn">Kopiera delningslänk</button>
+  `;
+
+  // Hantera delningslänken
+  document.getElementById("shareBtn").addEventListener("click", async ()=>{
+    try {
+      await navigator.clipboard.writeText(window.location.origin + "/" + resUrl);
+      alert("Länk kopierad! Dela den gärna med andra HV-fans.");
+    } catch (e) {
+      alert("Kunde inte kopiera länken.");
+    }
+  });
+
+  // (Valfritt) visa matchnamn under rubriken
+  async function setMatchLabel(){
+    if (!match_id) return;
+    try{
+      const m = await fetch(`/api/matches/by-id?id=${match_id}`).then(r=>r.json());
+      if (m && m.id){
+        const label = m.home ? `HV71 vs ${m.opponent}` : `${m.opponent} vs HV71`;
+        document.getElementById("matchLabel").textContent =
+          `Dina röster för ${label} • ${m.date} (${m.competition}) är inskickade.`;
+      }
+    }catch{}
+  }
+  setMatchLabel();
 </script>
 </body>
 </html>

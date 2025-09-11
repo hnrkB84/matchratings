@@ -259,11 +259,16 @@ canvas,img,video{ max-width:100%; height:auto; display:block; }
   font-weight:600;
 }
 
-/* Speciell stil för rubriken "Matchtrupp" */
+/* Speciell stil för rubriken "Matchtruppen" */
 .special-title {
   color: var(--blue);        /* HV-blå text */
   background: var(--yellow); /* HV-gul bakgrund */
   padding: .3rem .6rem;
   border-radius: 8px;
   display: inline-block;     /* bakgrund bara runt texten */
+}
+.material-symbols-outlined.icon-right {
+  font-size: 28px;       /* lagom storlek så den inte blir för maffig */
+  color: var(--yellow);  /* gul, HV-färgen */
+  margin-left: auto;     /* trycker ikonen längst till höger */
 }
