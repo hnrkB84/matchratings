@@ -156,3 +156,39 @@ canvas,img,video{ max-width:100%; height:auto; display:block; }
   .p-name{ font-size:22px; }
   .p-star{ font-size:32px; width:96px; } /* säkerställ stor touch-yta */
 }
+/* ===== Meta-kort (Matchbetyg / Speglade resultatet / Domarnivå) ===== */
+/* Ser ut som .p-card men utan stjärnkolumn till höger */
+.p-card.meta{
+  padding:1rem 1rem;                 /* tar bort extra utrymme för stjärnkolumnen */
+}
+.p-card.meta::after{ display:none; } /* göm högerkolumnens pseudo-element */
+.p-card.meta .p-star{ display:none; }/* säkerställ att ingen stjärna syns */
+
+/* Valfri liten rubrikrad när meta-korten ligger under spelarna */
+.subsection{
+  margin:.75rem 0 .25rem;
+  font-size:1.05rem;
+  font-weight:700;
+  color:var(--yellow);
+  letter-spacing:.2px;
+}
+
+/* En liten tunn avdelare i kortet */
+.divider{
+  margin:1rem 0 .5rem;
+  height:1px;
+  background:rgba(255,255,255,.18);
+  border:0;
+}
+
+/* Liten grid för meta-korten så de bryter snyggt */
+.meta-grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:.8rem;
+}
+@media (min-width:720px){
+  .meta-grid{ grid-template-columns:1fr 1fr; }
+}
+/* Badge får gärna vara lite tätare på meta-korten */
+.p-card.meta .p-badge{ padding:6px 10px; }

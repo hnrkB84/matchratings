@@ -41,38 +41,89 @@ Välj ⭐ för att markera matchens bästa HV-spelare.
 
     <div class="card">
       <div class="section-title">Spelare och "Båset"</div>
+    
+      <!-- Spelare -->
       <div id="players" class="players-grid"></div>
-    </div>
-
-    <div class="card" style="margin-top:1rem;">
-      <div class="section-title">Helhetsintryck</div>
-
-      <label for="att">Jag såg matchen:</label>
-      <select id="att">
-        <option value="">— Välj —</option>
-        <option value="arena">På plats i arenan</option>
-        <option value="tv">På TV / stream</option>
-        <option value="skip">Vill ej svara</option>
-      </select>
-
-      <div style="margin-top:.5rem;">
-        <label>Matchbetyg (1–10):</label>
-        <input id="mo" type="number" step="0.5" min="1" max="10" value="7.0" />
+    
+      <!-- Avdelare + meta-kort under spelarna -->
+      <hr class="divider">
+      <div class="subsection">Match-omdömen</div>
+    
+      <div class="meta-grid">
+        <!-- Matchbetyg -->
+        <div class="p-card meta">
+          <div class="p-top">
+            <div class="p-nr">—</div>
+            <div>
+              <div class="p-name">Matchbetyg</div>
+              <div class="p-pos">Helhetsintryck (1–10)</div>
+            </div>
+          </div>
+          <div class="p-rate">
+            <div class="p-range">
+              <input type="range" min="1" max="10" step="0.5" value="7.0" id="mo_range"
+                     oninput="document.getElementById('badge-mo').textContent=Number(this.value).toFixed(1)">
+            </div>
+            <div class="p-badge" id="badge-mo">7.0</div>
+          </div>
+        </div>
+    
+        <!-- Speglade resultatet matchen? -->
+        <div class="p-card meta">
+          <div class="p-top">
+            <div class="p-nr">—</div>
+            <div>
+              <div class="p-name">Speglade resultatet matchen?</div>
+              <div class="p-pos">(1–10)</div>
+            </div>
+          </div>
+          <div class="p-rate">
+            <div class="p-range">
+              <input type="range" min="1" max="10" step="0.5" value="6.0" id="rr_range"
+                     oninput="document.getElementById('badge-rr').textContent=Number(this.value).toFixed(1)">
+            </div>
+            <div class="p-badge" id="badge-rr">6.0</div>
+          </div>
+        </div>
+    
+        <!-- Domarnivå -->
+        <div class="p-card meta">
+          <div class="p-top">
+            <div class="p-nr">—</div>
+            <div>
+              <div class="p-name">Domarnivå</div>
+              <div class="p-pos">(1–10)</div>
+            </div>
+          </div>
+          <div class="p-rate">
+            <div class="p-range">
+              <input type="range" min="1" max="10" step="0.5" value="6.5" id="ref_range"
+                     oninput="document.getElementById('badge-ref').textContent=Number(this.value).toFixed(1)">
+            </div>
+            <div class="p-badge" id="badge-ref">6.5</div>
+          </div>
+        </div>
       </div>
-
-      <div style="margin-top:.5rem;">
-        <label>Resultatet speglade matchen (1–10):</label>
-        <input id="rr" type="number" step="0.5" min="1" max="10" value="6.0" />
+    
+      <!-- "Vart såg jag matchen?" kan ligga kvar i egen card, men vill du ha den här: -->
+      <div class="p-card meta" style="margin-top:.8rem;">
+        <div class="p-top">
+          <div class="p-nr">—</div>
+          <div>
+            <div class="p-name">Vart såg jag matchen?</div>
+            <div class="p-pos">Valfritt</div>
+          </div>
+        </div>
+        <div style="margin-top:.5rem;">
+          <select id="att" style="width:100%; padding:.55rem .7rem; border-radius:10px; border:1px solid rgba(0,0,0,.08);">
+            <option value="">— Välj —</option>
+            <option value="arena">På plats i arenan</option>
+            <option value="tv">På TV / stream</option>
+            <option value="skip">Vill ej svara</option>
+          </select>
+        </div>
       </div>
-    </div>
-
-    <div class="row" style="margin:1rem 0;">
-      <button class="btn" id="saveAllBtn">Skicka in röster</button>
-      <button class="btn secondary" id="copyLinkBtn">Kopiera delningslänk</button>
-      <button class="btn secondary" onclick="location.href='resultat.html'">Visa resultat</button>
-      <div class="muted">⭐-valet sparas när du klickar Skicka in.</div>
-    </div>
-  </div>
+    </div>  
 
 <script>
 /* ======= Parametrar / fingerprint ======= */
@@ -180,8 +231,9 @@ async function saveAll(){
     ratings,
     star_player_id: starPlayerId ?? null,
     attendance: document.getElementById("att").value || null,
-    match_overall: parseFloat(document.getElementById("mo").value) || null,
-    result_reflection: parseFloat(document.getElementById("rr").value) || null
+    match_overall: parseFloat(document.getElementById("mo_range").value) || null,
+    result_reflection: parseFloat(document.getElementById("rr_range").value) || null,
+    referee_level: parseFloat(document.getElementById("ref_range").value) || null
   };
 
   const res = await fetch("/api/submit", {
