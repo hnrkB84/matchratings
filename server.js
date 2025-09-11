@@ -1,4 +1,4 @@
-// server.js — HV71 Ratings: trupp per match + röstarkontext + AI-export + ⭐
+// server.js — HV71 Ratings: tidsstyrd röstning, trupp per match, sammanställning, export
 // Install: npm i express better-sqlite3 cors express-rate-limit
 // Start:   node server.js
 
@@ -11,54 +11,42 @@ const path = require("path");
 
 const app = express();
 
-// --- Robust DB-init + tydlig logg ---
+// --- BOOT/DB-path ---
 const NODE = process.versions.node;
 console.log("[BOOT] Node version:", NODE);
 
-// Sätt DB_PATH (Render: /var/data/hv71.db, lokalt: ./data/hv71.db)
 const localDataDir = path.join(__dirname, "data");
 const DB_PATH = process.env.DB_PATH || path.join(localDataDir, "hv71.db");
 
-// Se till att katalogen där DB-filen ligger existerar
 const dbDir = path.dirname(DB_PATH);
-try {
-  fs.mkdirSync(dbDir, { recursive: true });
-  console.log("[BOOT] Ensured DB dir:", dbDir);
-} catch (e) {
-  console.error("[BOOT] Failed to create DB dir", dbDir, e);
-  process.exit(1);
-}
+fs.mkdirSync(dbDir, { recursive: true });
+console.log("[BOOT] DB dir OK:", dbDir);
 
-// Öppna SQLite med tydlig felhantering
-let db;
-try {
-  db = new Database(DB_PATH);
-  console.log("[BOOT] SQLite opened OK at", DB_PATH);
-} catch (err) {
-  console.error("[BOOT] FAILED opening SQLite at", DB_PATH, err);
-  process.exit(1);
-}
+// Öppna DB
+const db = new Database(DB_PATH);
+console.log("[BOOT] SQLite opened at", DB_PATH);
 
 // --- Middleware ---
 app.use(express.json());
 
-// CORS: localhost i dev + PROD_ORIGIN i prod
+// CORS
 const allowedOrigins = [
   "http://localhost:3000",
-  process.env.PROD_ORIGIN // sätt i Render när du har din onrender-URL
+  process.env.PROD_ORIGIN // sätt i Render: https://din-app.onrender.com
 ].filter(Boolean);
 app.use(cors({ origin: allowedOrigins }));
 
-// Health-check för snabb koll av deploy och DB-path
+// Health
 app.get("/api/health", (_req, res) => {
-  res.json({ ok: true, node: NODE, db: DB_PATH });
+  res.json({ ok: true, node: NODE, db: DB_PATH, now: new Date().toISOString() });
 });
 
-// --- Rate limits (express-rate-limit v8: använd 'limit', inte 'max') ---
+// --- Rate limits ---
 const voteLimiter = rateLimit({ windowMs: 60 * 1000, max: 20 });
-app.use("/api/rate", voteLimiter);
 app.use("/api/submit", voteLimiter);
-// --- Tabeller & index ---
+app.use("/api/rate", voteLimiter);
+
+// --- Schema + auto-migrering ---
 db.exec(`
 PRAGMA foreign_keys = ON;
 
@@ -66,28 +54,27 @@ CREATE TABLE IF NOT EXISTS players (
   id INTEGER PRIMARY KEY,
   jersey_number INTEGER,
   name TEXT UNIQUE,
-  position TEXT,               -- G/D/F (eller B för back om du vill)
+  position TEXT,
   active INTEGER DEFAULT 1
 );
 
 CREATE TABLE IF NOT EXISTS matches (
   id INTEGER PRIMARY KEY,
-  date TEXT,                   -- ISO yyyy-mm-dd
+  date TEXT,
   opponent TEXT,
-  home INTEGER,                -- 1=hemma, 0=borta
+  home INTEGER,
   season TEXT,
   competition TEXT,
-  voting_open INTEGER DEFAULT 0,
-  closes_at TEXT               -- ISO timestamp, valfri
+  voting_open INTEGER DEFAULT 0,   -- kvar för bakåtkomp
+  closes_at TEXT                   -- gammalt fält (bakåtkomp)
 );
 
--- Vilka spelare är uttagna till en viss match? (dagens trupp)
 CREATE TABLE IF NOT EXISTS match_roster (
   id INTEGER PRIMARY KEY,
   match_id INTEGER NOT NULL,
   player_id INTEGER NOT NULL,
-  dressed INTEGER DEFAULT 1,   -- 1=spelar/uttagna, 0=reserv/extra
-  role TEXT,                   -- valfritt: "PP1", "PK", "Line1" etc.
+  dressed INTEGER DEFAULT 1,
+  role TEXT,
   UNIQUE(match_id, player_id),
   FOREIGN KEY(match_id) REFERENCES matches(id) ON DELETE CASCADE,
   FOREIGN KEY(player_id) REFERENCES players(id) ON DELETE CASCADE
@@ -117,7 +104,6 @@ CREATE TABLE IF NOT EXISTS stars (
   FOREIGN KEY(player_id) REFERENCES players(id) ON DELETE CASCADE
 );
 
--- Frivillig röstarkontext (en post per match & fingerprint)
 CREATE TABLE IF NOT EXISTS vote_context (
   id INTEGER PRIMARY KEY,
   match_id INTEGER NOT NULL,
@@ -131,7 +117,6 @@ CREATE TABLE IF NOT EXISTS vote_context (
   FOREIGN KEY(match_id) REFERENCES matches(id) ON DELETE CASCADE
 );
 
--- Nyttiga index
 CREATE INDEX IF NOT EXISTS idx_ratings_match ON ratings(match_id);
 CREATE INDEX IF NOT EXISTS idx_ratings_player ON ratings(player_id);
 CREATE INDEX IF NOT EXISTS idx_context_match ON vote_context(match_id);
@@ -139,18 +124,50 @@ CREATE INDEX IF NOT EXISTS idx_stars_match ON stars(match_id);
 CREATE INDEX IF NOT EXISTS idx_roster_match ON match_roster(match_id);
 `);
 
-// --- Hjälpare ---
+// Lägg till nya tidskolumner om de saknas
+(function migrateMatchesAddOpenClose() {
+  const cols = db.prepare(`PRAGMA table_info(matches)`).all();
+  const names = new Set(cols.map(c => c.name));
+  if (!names.has("open_at")) {
+    console.log("[MIGRATE] Adding matches.open_at");
+    db.exec(`ALTER TABLE matches ADD COLUMN open_at TEXT`);
+  }
+  if (!names.has("close_at")) {
+    console.log("[MIGRATE] Adding matches.close_at");
+    db.exec(`ALTER TABLE matches ADD COLUMN close_at TEXT`);
+  }
+})();
+
+// --- Helpers ---
 const clampToTenths = (num) => {
   if (typeof num !== "number") return null;
   const t = Math.round(num * 10);
-  if (t < 10 || t > 100) return null;
-  return t;
+  return (t >= 10 && t <= 100) ? t : null;
 };
 const validAttendance = (s) => (s === "arena" || s === "tv" || s === "skip") ? s : null;
 
+// Hämta match
+const matchByIdStmt = db.prepare(`
+  SELECT id, date, opponent, home, season, competition,
+         voting_open, closes_at, open_at, close_at
+  FROM matches WHERE id = ?
+`);
+
+// Beräkna om röstning är öppen
+function isVotingOpen(m) {
+  if (!m) return false;
+  const now = new Date().toISOString();
+  // Primärt: använd open_at/close_at om båda finns
+  if (m.open_at && m.close_at) return (now >= m.open_at && now <= m.close_at);
+  // Bakåtkomp: använd voting_open + closes_at
+  if (m.voting_open) {
+    if (!m.closes_at) return true;
+    return now < new Date(m.closes_at).toISOString();
+  }
+  return false;
+}
+
 // --- API: Players ---
-// Om ?match_id anges -> returnera ENDAST spelare i truppen (default dressed=1).
-// Skicka include_reserves=1 om du vill få även reserver.
 app.get("/api/players", (req, res) => {
   const matchId = parseInt(req.query.match_id || "0", 10);
   const includeReserves = req.query.include_reserves === "1";
@@ -171,42 +188,58 @@ app.get("/api/players", (req, res) => {
     return res.json(rows);
   }
 
-  // Utan match_id -> alla aktiva (för admin/uppslag)
   const rows = db.prepare(`
     SELECT * FROM players
     WHERE active=1
     ORDER BY 
       CASE position WHEN 'G' THEN 0 WHEN 'D' THEN 1 WHEN 'B' THEN 1 WHEN 'F' THEN 2 ELSE 3 END,
-      COALESCE(jersey_number, 999),
-      name
+      COALESCE(jersey_number, 999), name
   `).all();
   res.json(rows);
 });
 
-
 // --- API: Matches ---
-app.get("/api/matches", (req, res) => {
-  res.json(db.prepare("SELECT * FROM matches ORDER BY date ASC, id ASC").all());
-});
-app.get("/api/matches/latest", (req, res) => {
-  res.json(db.prepare("SELECT * FROM matches ORDER BY date DESC, id DESC LIMIT 1").get());
-});
-app.get("/api/matches/by-id", (req, res) => {
-  const m = db.prepare("SELECT * FROM matches WHERE id=?").get(req.query.id);
-  res.json(m || {});
+app.get("/api/matches", (_req, res) => {
+  const rows = db.prepare(`
+    SELECT id, date, opponent, home, season, competition,
+           voting_open, closes_at, open_at, close_at
+    FROM matches
+    ORDER BY date DESC, id DESC
+  `).all();
+  res.json(rows.map(m => ({ ...m, voting_open: isVotingOpen(m) })));
 });
 
-// Senaste match med öppen röstning (tar hänsyn till closes_at)
-app.get("/api/matches/current", (req, res) => {
-  const row = db.prepare(`
-    SELECT *
+app.get("/api/matches/latest", (_req, res) => {
+  const m = db.prepare(`
+    SELECT id, date, opponent, home, season, competition,
+           voting_open, closes_at, open_at, close_at
     FROM matches
-    WHERE voting_open = 1
-      AND (closes_at IS NULL OR datetime(closes_at) > datetime('now'))
     ORDER BY date DESC, id DESC
     LIMIT 1
   `).get();
-  res.json(row || {});
+  res.json(m ? { ...m, voting_open: isVotingOpen(m) } : {});
+});
+
+app.get("/api/matches/by-id", (req, res) => {
+  const id = parseInt(req.query.id, 10);
+  if (!id) return res.status(400).json({ error: "id krävs" });
+  const m = matchByIdStmt.get(id);
+  if (!m) return res.status(404).json({ error: "not found" });
+  res.json({ ...m, voting_open: isVotingOpen(m) });
+});
+
+// Match som är öppen just nu (via open_at/close_at)
+app.get("/api/matches/current", (_req, res) => {
+  const m = db.prepare(`
+    SELECT id, date, opponent, home, season, competition,
+           voting_open, closes_at, open_at, close_at
+    FROM matches
+    WHERE open_at IS NOT NULL AND close_at IS NOT NULL
+      AND open_at <= datetime('now') AND close_at >= datetime('now')
+    ORDER BY date DESC, id DESC
+    LIMIT 1
+  `).get();
+  res.json(m ? { ...m, voting_open: true } : {});
 });
 
 // --- Enstaka rate (bakåtkomp) ---
@@ -218,11 +251,9 @@ app.post("/api/rate", (req, res) => {
   const tenths = clampToTenths(rating);
   if (tenths === null) return res.status(400).json({ error: "Invalid rating" });
 
-  const match = db.prepare("SELECT voting_open, closes_at FROM matches WHERE id=?").get(match_id);
-  if (!match || !match.voting_open) return res.status(403).json({ error: "Voting closed" });
-  if (match.closes_at && new Date(match.closes_at) < new Date()) return res.status(403).json({ error: "Voting closed" });
+  const m = matchByIdStmt.get(match_id);
+  if (!m || !isVotingOpen(m)) return res.status(403).json({ error: "Voting closed" });
 
-  // Tillåt endast spelare i trupp
   const inRoster = db.prepare("SELECT 1 FROM match_roster WHERE match_id=? AND player_id=?").get(match_id, player_id);
   if (!inRoster) return res.status(400).json({ error: "Player not on roster for this match" });
 
@@ -236,7 +267,7 @@ app.post("/api/rate", (req, res) => {
   res.json({ ok: true });
 });
 
-// --- Submit (alla betyg + ev ⭐ + kontext) ---
+// --- Submit (alla betyg + ⭐ + kontext) ---
 app.post("/api/submit", (req, res) => {
   const { match_id, anon_fingerprint, ratings, star_player_id,
           attendance, match_overall, result_reflection } = req.body || {};
@@ -244,9 +275,8 @@ app.post("/api/submit", (req, res) => {
     return res.status(400).json({ error: "match_id, anon_fingerprint, ratings[]" });
   }
 
-  const match = db.prepare("SELECT voting_open, closes_at FROM matches WHERE id=?").get(match_id);
-  if (!match || !match.voting_open) return res.status(403).json({ error: "Voting closed" });
-  if (match.closes_at && new Date(match.closes_at) < new Date()) return res.status(403).json({ error: "Voting closed" });
+  const m = matchByIdStmt.get(match_id);
+  if (!m || !isVotingOpen(m)) return res.status(403).json({ error: "Voting closed" });
 
   const upsertRating = db.prepare(`
     INSERT INTO ratings (match_id,player_id,anon_fingerprint,rating_tenths)
@@ -275,7 +305,6 @@ app.post("/api/submit", (req, res) => {
   const mo = clampToTenths(match_overall);
   const rr = clampToTenths(result_reflection);
 
-  // Hämtar roster som Set för snabba kollar
   const rosterIds = new Set(
     db.prepare("SELECT player_id FROM match_roster WHERE match_id=?").all(match_id).map(r => r.player_id)
   );
@@ -285,7 +314,7 @@ app.post("/api/submit", (req, res) => {
 
     for (const r of ratings) {
       if (!r || typeof r.player_id !== "number" || typeof r.rating !== "number") continue;
-      if (!rosterIds.has(r.player_id)) continue; // ignorera spelare ej i trupp
+      if (!rosterIds.has(r.player_id)) continue;
       const tenths = clampToTenths(r.rating);
       if (tenths === null) continue;
       upsertRating.run(match_id, r.player_id, anon_fingerprint, tenths);
@@ -326,7 +355,7 @@ app.get("/api/averages", (req, res) => {
       ON vc.match_id = r.match_id AND vc.anon_fingerprint = r.anon_fingerprint
     WHERE mr.match_id = ? AND p.active=1 AND ${whereAttendance}
     GROUP BY p.id
-    ORDER BY avg DESC, votes DESC, p.name ASC
+    ORDER BY avg DESC NULLS LAST, votes DESC, p.name ASC
   `).all(matchId);
 
   res.json(rows);
@@ -369,28 +398,115 @@ app.get("/api/match-feedback", (req, res) => {
   res.json({ summary, by_attendance: byAtt });
 });
 
+// --- Results summary (för resultat.html) ---
+app.get("/api/results/summary", (req, res) => {
+  const match_id = parseInt(req.query.match_id, 10);
+  if (!match_id) return res.status(400).json({ error: "match_id krävs" });
+
+  const match = db.prepare(`
+    SELECT id, date, opponent, home, competition, season,
+           open_at, close_at, voting_open, closes_at
+    FROM matches WHERE id = ?
+  `).get(match_id);
+
+  // per-spelare snitt + count
+  const perPlayer = db.prepare(`
+    SELECT
+      p.id AS player_id,
+      p.name,
+      p.jersey_number,
+      COALESCE(ROUND(AVG(r.rating_tenths)/10.0, 1), NULL) AS avg_rating,
+      COUNT(r.rating_tenths) AS votes
+    FROM players p
+    LEFT JOIN ratings r
+      ON r.player_id = p.id AND r.match_id = ?
+    WHERE p.active = 1
+      OR p.id IN (SELECT player_id FROM ratings WHERE match_id = ?)
+    GROUP BY p.id
+    ORDER BY avg_rating DESC NULLS LAST, votes DESC, p.jersey_number ASC
+  `).all(match_id, match_id);
+
+  const starCounts = db.prepare(`
+    SELECT player_id, COUNT(*) AS stars
+    FROM stars
+    WHERE match_id = ?
+    GROUP BY player_id
+  `).all(match_id);
+  const starsMap = Object.fromEntries(starCounts.map(r => [r.player_id, r.stars]));
+
+  const overall = db.prepare(`
+    SELECT
+      COALESCE(ROUND(AVG(match_overall_tenths)/10.0,1), NULL) AS match_overall_avg,
+      COALESCE(ROUND(AVG(result_reflection_tenths)/10.0,1), NULL) AS result_reflection_avg,
+      SUM(CASE WHEN attendance='arena' THEN 1 ELSE 0 END) AS arena,
+      SUM(CASE WHEN attendance='tv'    THEN 1 ELSE 0 END) AS tv,
+      SUM(CASE WHEN attendance='skip'  THEN 1 ELSE 0 END) AS skip,
+      COUNT(DISTINCT anon_fingerprint) AS voters
+    FROM vote_context
+    WHERE match_id = ?
+  `).get(match_id) || { match_overall_avg:null, result_reflection_avg:null, arena:0, tv:0, skip:0, voters:0 };
+
+  const players = perPlayer.map(p => ({
+    player_id: p.player_id,
+    name: p.name,
+    jersey_number: p.jersey_number,
+    avg: p.avg_rating,
+    votes: p.votes,
+    stars: starsMap[p.player_id] || 0
+  }));
+
+  res.json({
+    match: match ? { ...match, voting_open: isVotingOpen(match) } : null,
+    players,
+    totals: {
+      voters: overall.voters,
+      match_overall_avg: overall.match_overall_avg,
+      result_reflection_avg: overall.result_reflection_avg,
+      attendance: { arena: overall.arena, tv: overall.tv, skip: overall.skip }
+    }
+  });
+});
+
 // --- Admin ---
 const ADMIN_TOKEN = process.env.ADMIN_TOKEN || "secret123";
+function requireAdmin(req, res, next) {
+  const t = (req.headers["x-admin-token"] || "").trim();
+  if (!t || t !== ADMIN_TOKEN) return res.status(401).send("Unauthorized");
+  next();
+}
 
-app.post("/api/admin/create-match", (req, res) => {
-  if (req.headers["x-admin-token"] !== ADMIN_TOKEN) return res.status(403).json({ error: "forbidden" });
-  const { date, opponent, home, season, competition, voting_open = 0, closes_at = null } = req.body || {};
+app.post("/api/admin/create-match", requireAdmin, (req, res) => {
+  const { date, opponent, home, season, competition,
+          voting_open = 0, closes_at = null, open_at = null, close_at = null } = req.body || {};
   const info = db.prepare(`
-    INSERT INTO matches (date,opponent,home,season,competition,voting_open,closes_at)
-    VALUES (?,?,?,?,?,?,?)
-  `).run(date, opponent, home ? 1 : 0, season, competition, voting_open ? 1 : 0, closes_at);
+    INSERT INTO matches (date,opponent,home,season,competition,voting_open,closes_at,open_at,close_at)
+    VALUES (?,?,?,?,?,?,?,?,?)
+  `).run(date, opponent, home ? 1 : 0, season, competition, voting_open ? 1 : 0, closes_at, open_at, close_at);
   res.json({ id: info.lastInsertRowid });
 });
 
-app.post("/api/admin/toggle-voting", (req, res) => {
-  if (req.headers["x-admin-token"] !== ADMIN_TOKEN) return res.status(403).json({ error: "forbidden" });
+app.post("/api/admin/toggle-voting", requireAdmin, (req, res) => {
   const { id, open, closes_at = null } = req.body || {};
-  db.prepare("UPDATE matches SET voting_open=?, closes_at=? WHERE id=?").run(open ? 1 : 0, closes_at, id);
-  res.json({ ok: true });
+  // Bakåtkomp: behåll stöd men rekommendera tidsstyrning istället
+  db.prepare("UPDATE matches SET voting_open=?, closes_at=? WHERE id=?")
+    .run(open ? 1 : 0, closes_at, id);
+  const m = matchByIdStmt.get(id);
+  res.json({ ok: true, match: { ...m, voting_open: isVotingOpen(m) } });
 });
 
-app.post("/api/admin/bulk-upsert-players", (req, res) => {
-  if (req.headers["x-admin-token"] !== ADMIN_TOKEN) return res.status(403).json({ error: "forbidden" });
+// Ny: spara tidsfönster (UTC-ISO i body)
+app.post("/api/admin/matches/schedule", requireAdmin, (req, res) => {
+  const { match_id, open_at, close_at } = req.body || {};
+  const id = parseInt(match_id, 10);
+  if (!id || !open_at || !close_at) return res.status(400).send("match_id/open_at/close_at krävs (UTC ISO)");
+  if (open_at >= close_at) return res.status(400).send("open_at måste vara före close_at");
+
+  db.prepare(`UPDATE matches SET open_at=?, close_at=? WHERE id=?`).run(open_at, close_at, id);
+  const m = matchByIdStmt.get(id);
+  res.json({ ok: true, match: { ...m, voting_open: isVotingOpen(m) } });
+});
+
+app.post("/api/admin/bulk-upsert-players", requireAdmin, (req, res) => {
   const players = req.body?.players;
   if (!Array.isArray(players) || players.length === 0) {
     return res.status(400).json({ error: "Provide players: [{jersey_number, name, position, active}]" });
@@ -414,9 +530,7 @@ app.post("/api/admin/bulk-upsert-players", (req, res) => {
   res.json({ ok: true, count: players.length });
 });
 
-// --- Admin: sätt/ersätt trupp för match ---
-app.post("/api/admin/set-roster", (req, res) => {
-  if (req.headers["x-admin-token"] !== ADMIN_TOKEN) return res.status(403).json({ error: "forbidden" });
+app.post("/api/admin/set-roster", requireAdmin, (req, res) => {
   const { match_id, player_ids, dressed_default = 1 } = req.body || {};
   if (!match_id || !Array.isArray(player_ids)) return res.status(400).json({ error: "match_id & player_ids[]" });
 
@@ -431,9 +545,7 @@ app.post("/api/admin/set-roster", (req, res) => {
   res.json({ ok: true, count: player_ids.length });
 });
 
-// --- Admin: lägg till/uppdatera enskild i trupp (t.ex. role/dressed) ---
-app.post("/api/admin/upsert-roster-row", (req, res) => {
-  if (req.headers["x-admin-token"] !== ADMIN_TOKEN) return res.status(403).json({ error: "forbidden" });
+app.post("/api/admin/upsert-roster-row", requireAdmin, (req, res) => {
   const { match_id, player_id, dressed = 1, role = null } = req.body || {};
   if (!match_id || !player_id) return res.status(400).json({ error: "match_id & player_id required" });
 
@@ -447,7 +559,7 @@ app.post("/api/admin/upsert-roster-row", (req, res) => {
   res.json({ ok: true });
 });
 
-// --- Export: AI-vänligt (CSV/JSONL) ---
+// --- Export ---
 const toCSV = (rows) => {
   if (!rows || !rows.length) return "";
   const headers = Object.keys(rows[0]);
@@ -459,7 +571,6 @@ const toCSV = (rows) => {
   return [headers.join(","), ...rows.map(r => headers.map(h => esc(r[h])).join(","))].join("\n");
 };
 
-// 1) Radrader per spelarbetyg
 app.get("/api/export/ratings", (req, res) => {
   const matchId = parseInt(req.query.match_id || "0", 10);
   const format = (req.query.format || "csv").toLowerCase();
@@ -498,7 +609,6 @@ app.get("/api/export/ratings", (req, res) => {
   }
 });
 
-// 2) En rad per röstare (kontext)
 app.get("/api/export/votes", (req, res) => {
   const matchId = parseInt(req.query.match_id || "0", 10);
   const format = (req.query.format || "csv").toLowerCase();
@@ -529,7 +639,6 @@ app.get("/api/export/votes", (req, res) => {
   }
 });
 
-// 3) Aggregat per spelare + attendance-snitt
 app.get("/api/export/aggregates", (req, res) => {
   const matchId = parseInt(req.query.match_id || "0", 10);
   const format = (req.query.format || "csv").toLowerCase();
@@ -563,7 +672,7 @@ app.get("/api/export/aggregates", (req, res) => {
   }
 });
 
-// --- Static (läggs sist) ---
+// --- Static ---
 app.use(express.static(path.join(__dirname, "public")));
 
 const PORT = process.env.PORT || 3000;

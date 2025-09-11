@@ -97,6 +97,30 @@
     </div>
     <small class="help">Du kan också sätta ett <em>closes_at</em> i din backend om du vill auto-stänga.</small>
   </div>
+  <h2>Röstningsfönster (Stockholmstid)</h2>
+<div class="card">
+  <div class="row">
+    <div style="flex:1 1 220px">
+      <label>Match</label>
+      <select id="timeMatch"></select>
+    </div>
+    <div style="flex:1 1 220px">
+      <label>Öppnar</label>
+      <input id="openAt" type="datetime-local" />
+    </div>
+    <div style="flex:1 1 220px">
+      <label>Stänger</label>
+      <input id="closeAt" type="datetime-local" />
+    </div>
+  </div>
+  <div class="row" style="margin-top:10px">
+    <button id="saveTimes">Spara tider</button>
+    <button id="openNow" class="secondary">Öppna nu (4h)</button>
+    <button id="closeNow" class="warn">Stäng nu</button>
+    <div id="timesOut" class="pill"></div>
+  </div>
+  <small class="help">Tiderna skrivs i UTC i databasen. Fälten här visar lokal Stockholmstid.</small>
+</div>
 
   <h2>Spelare (bulk-upsert)</h2>
   <div class="card">
@@ -188,19 +212,43 @@ Exempel CSV:
       a.href = url; a.download = filename; a.click();
     }
 
+    // --- Helpers för tidsfält ---
+    function isoToLocalInput(iso) {
+      if (!iso) return '';
+      const d = new Date(iso);                 // ISO -> Date(UTC)
+      const pad = (n)=> String(n).padStart(2,'0');
+      const y = d.getFullYear();
+      const m = pad(d.getMonth()+1);
+      const day = pad(d.getDate());
+      const hh = pad(d.getHours());
+      const mm = pad(d.getMinutes());
+    // datetime-local kräver "YYYY-MM-DDTHH:MM" (lokal tid visas automatiskt i kontrollen)
+    // Men Date(iso) ger redan lokal när vi plockar ut getHours(). Bra för visning.
+      return `${y}-${m}-${day}T${hh}:${mm}`;
+}
+    function localInputToIso(value) {
+    // value ex: "2025-09-13T18:15" (tolkas som lokal)
+      if (!value) return null;
+      const d = new Date(value);               // tolkar som lokal, konverterar till UTC i toISOString()
+      return d.toISOString();
+}
+
     // Init dropdowns
     async function loadMatches() {
-      const list = await jfetch(`${BASE}/api/matches`);
-      for (const selId of ['matchSelect','rosterMatch','exportMatch']) {
-        const sel = $(selId); sel.innerHTML = '';
-        list.forEach(m => {
-          const o = document.createElement('option');
-          o.value = m.id; o.textContent = `${m.id} – ${m.date} vs ${m.opponent} ${m.home? '(H)':'(B)'}`;
-          sel.appendChild(o);
-        });
-      }
-      log(`Laddade ${list.length} matcher.`);
-    }
+  const list = await jfetch(`${BASE}/api/matches`);
+  for (const selId of ['matchSelect','rosterMatch','exportMatch','timeMatch']) {
+    const sel = $(selId); if (!sel) continue;
+    sel.innerHTML = '';
+    list.forEach(m => {
+      const o = document.createElement('option');
+      o.value = m.id;
+      o.textContent = `${m.id} – ${m.date} vs ${m.opponent} ${m.home? '(H)':'(B)'}`;
+      sel.appendChild(o);
+    });
+  }
+  log(`Laddade ${list.length} matcher.`);
+}
+
     async function loadPlayers() {
       const list = await jfetch(`${BASE}/api/players`); // alla aktiva
       const sel = $('playerMulti'); sel.innerHTML='';
@@ -232,7 +280,21 @@ Exempel CSV:
         await loadMatches();
       } catch(e){ $('createMatchOut').textContent=''; log('ERR skapa match: '+e.message); }
     };
+    // === [TIME] När en match väljs i tidssektionen, hämta nuvarande tider och fyll inputs ===
+    $('timeMatch').addEventListener('change', fillTimesFromServer);
 
+        async function fillTimesFromServer(){
+        const id = parseInt($('timeMatch').value, 10);
+        if (!id) return;
+        try {
+        const m = await jfetch(`${BASE}/api/matches/by-id?id=${id}`);
+        $('openAt').value  = isoToLocalInput(m.open_at);
+        $('closeAt').value = isoToLocalInput(m.close_at);
+        log(`Tider hämtade för match ${id}.`);
+        } catch(e){
+        log('ERR fetch tider: ' + e.message);
+      }
+    }
     // Toggle voting
     $('openVote').onclick = ()=>toggleVoting(true);
     $('closeVote').onclick = ()=>toggleVoting(false);
@@ -245,7 +307,63 @@ Exempel CSV:
         log(`Röstning ${open?'ÖPPNAD':'STÄNGD'} för match ${id}`);
       } catch(e){ log('ERR toggle voting: '+e.message); }
     }
+    // === [TIME] Spara tider-knappen ===
+$('saveTimes').onclick = async ()=>{
+  const id = parseInt($('timeMatch').value, 10);
+  const openIso  = localInputToIso($('openAt').value);
+  const closeIso = localInputToIso($('closeAt').value);
+  if (!id || !openIso || !closeIso) {
+    $('timesOut').textContent = '';
+    log('Saknar match eller tider.');
+    return;
+  }
+  try {
+    await jfetch(`${BASE}/api/admin/matches/schedule`, {
+      method:'POST',
+      headers: headers(),
+      body: JSON.stringify({ match_id:id, open_at:openIso, close_at:closeIso })
+    });
+    $('timesOut').textContent = 'Tider sparade';
+    log(`Tider sparade för match ${id}: ${openIso} → ${closeIso}`);
+  } catch(e){
+    $('timesOut').textContent = '';
+    log('ERR saveTimes: ' + e.message);
+  }
+};
 
+// === [TIME] Snabbknapp: Öppna nu (4h) ===
+$('openNow').onclick = async ()=>{
+  const id = parseInt($('timeMatch').value, 10);
+  if (!id) return;
+  const now  = new Date();
+  const in4h = new Date(now.getTime() + 4*60*60*1000);
+  // uppdatera fälten i UI i lokal tid
+  $('openAt').value  = isoToLocalInput(now.toISOString());
+  $('closeAt').value = isoToLocalInput(in4h.toISOString());
+  $('saveTimes').click(); // återanvänd sparlogiken
+};
+
+// === [TIME] Snabbknapp: Stäng nu ===
+$('closeNow').onclick = async ()=>{
+  const id = parseInt($('timeMatch').value, 10);
+  if (!id) return;
+  const nowIso = new Date().toISOString();
+  try{
+    await jfetch(`${BASE}/api/admin/matches/schedule`, {
+      method:'POST',
+      headers: headers(),
+      body: JSON.stringify({ match_id:id, open_at:nowIso, close_at:nowIso })
+    });
+    $('timesOut').textContent = 'Stängd nu';
+    $('openAt').value  = isoToLocalInput(nowIso);
+    $('closeAt').value = isoToLocalInput(nowIso);
+    log(`Röstning STÄNGD för match ${id}.`);
+  }catch(e){
+    $('timesOut').textContent = '';
+    log('ERR closeNow: ' + e.message);
+  }
+};
+  
     // Bulk-upsert players
     $('upsertPlayers').onclick = async () => {
   const raw0 = $('playersBulk').value;
@@ -340,6 +458,11 @@ Exempel CSV:
     (async function boot(){
       try {
         await loadMatches();
+        const tm = $('timeMatch');
+      if (tm && tm.options.length) {
+        tm.selectedIndex = 0;
+      await fillTimesFromServer();
+    }
         await loadPlayers();
         log('Admin redo ✔');
       } catch(e){ log('ERR boot: '+e.message); }
