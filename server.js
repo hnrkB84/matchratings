@@ -11,6 +11,9 @@ const path = require("path");
 
 const app = express();
 
+// Lita på Render-proxy så X-Forwarded-* fungerar korrekt (fixar rate-limit felet)
+app.set('trust proxy', 1);
+
 // --- BOOT/DB-path ---
 const NODE = process.versions.node;
 console.log("[BOOT] Node version:", NODE);
@@ -42,9 +45,27 @@ app.get("/api/health", (_req, res) => {
 });
 
 // --- Rate limits ---
-const voteLimiter = rateLimit({ windowMs: 60 * 1000, max: 20 });
+const keyByIp = (req) => (req.ip || req.headers['x-forwarded-for'] || 'ip-unknown').toString();
+
+const voteLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+  keyGenerator: keyByIp
+});
 app.use("/api/submit", voteLimiter);
 app.use("/api/rate", voteLimiter);
+
+// (valfritt men bra): mild limiter för admin-API
+const adminLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 60,
+  standardHeaders: true,
+  legacyHeaders: false,
+  keyGenerator: keyByIp
+});
+app.use("/api/admin", adminLimiter);
 
 // --- Schema + auto-migrering ---
 db.exec(`
