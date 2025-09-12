@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8" />
+  <title>Om projektet – Spelarbetyg</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header>
+    <h1>Om detta projekt</h1>
+    <div class="muted" id="matchNote">Information, bakgrund och hur allt funkar.</div>
+  </header>
+
+  <div class="wrap">
+    <div class="card">
+      <h2 style="margin-top:0;">Vad är detta?</h2>
+      <p>
+        Det här är ett hobbyprojekt som samlar in fansens betyg för att bygga
+        <strong>statistik, trender och mönster</strong> över tid.
+      </p>
+      <p>
+        Projektet är <strong>ideellt och fristående</strong>. Sidan utvecklas löpande och
+        vi uppskattar verkligen ditt bidrag. Resultat och sammanställningar
+        redovisas i lämpliga sociala medier-kanaler.
+      </p>
+
+      <h3>Betygsskalan (kort)</h3>
+      <p>
+        <em>Betygsskalan är inspirerad av Gazzetta dello Sports klassiska modell.</em>
+        <strong>6.0 är godkänt</strong>; högre siffror belönar en starkare insats och lägre siffror markerar
+        svag prestation. 8–9 ges sällan, och <strong>10.0</strong> är på <em>mytisk</em> nivå.
+      </p>
+
+      <h3>Arbetssätt & “work in progress”</h3>
+      <p>
+        Projektet är under utveckling. Ingenting är testat för stor trafik ännu och saker kan ändras.
+        All insamlad data kan i framtiden visas i sammanställningar och jämförelser (säsong, matcher, spelare).
+      </p>
+
+      <h3>Kontakt</h3>
+      <p>
+        Tankar, funderingar eller tips? Mejla gärna
+        <a href="mailto:spelardata@outlook.com">spelardata@outlook.com</a>.
+      </p>
+
+      <hr class="divider" />
+
+      <h3>Dela och navigera</h3>
+      <p class="muted" id="ctxInfo">
+        Om du kom hit efter att ha röstat eller via en matchlänk kan du använda knapparna nedan.
+      </p>
+
+      <div id="links" class="row" style="gap:.5rem; flex-wrap:wrap;">
+        <!-- byggs upp i JS beroende på om ?match= finns -->
+      </div>
+
+      <div class="muted" id="noMatchHint" style="margin-top:.5rem; display:none;">
+        Tips: Om du öppnar denna sida via en matchlänk (t.ex. <code>index.html?match=123</code>)
+        visas knappar för delning och resultat för just den matchen.
+      </div>
+    </div>
+  </div>
+
+<script>
+  const params   = new URLSearchParams(location.search);
+  const match_id = params.get("match");
+  const linksEl  = document.getElementById("links");
+  const noMatchHint = document.getElementById("noMatchHint");
+  const matchNote = document.getElementById("matchNote");
+
+  // Bas-URL: röstningssida (index) + resultat
+  const voteUrl = `index.html${match_id ? `?match=${encodeURIComponent(match_id)}` : ""}`;
+  const resUrl  = `resultat.html${match_id ? `?match=${encodeURIComponent(match_id)}` : ""}`;
+
+  // Bygg knapparna
+  function renderLinks(){
+    const parts = [];
+
+    // Till röstningen (alltid)
+    parts.push(`<a class="btn" href="${voteUrl}">← Till röstningen</a>`);
+
+    // Om vi har en match-id kan vi visa delning + resultat
+    if (match_id){
+      parts.push(`<a class="btn secondary" href="${resUrl}">Visa resultat</a>`);
+      parts.push(`<button class="btn secondary" id="shareBtn">Kopiera delningslänk</button>`);
+    } else {
+      noMatchHint.style.display = "block";
+    }
+
+    linksEl.innerHTML = parts.join("");
+
+    // Kopiera delningslänken (röstningslänk för aktuell match)
+    const shareBtn = document.getElementById("shareBtn");
+    if (shareBtn){
+      shareBtn.addEventListener("click", async ()=>{
+        try {
+          const full = new URL(voteUrl, window.location.origin).toString();
+          await navigator.clipboard.writeText(full);
+          alert("Länk kopierad! Dela den gärna med andra HV-fans.");
+        } catch (e) {
+          alert("Kunde inte kopiera länken.");
+        }
+      });
+    }
+  }
+
+  renderLinks();
+
+  // Om match finns: visa en liten förklarande rad i headern
+  (async function setMatchNote(){
+    if (!match_id) return;
+    try{
+      const m = await fetch(`/api/matches/by-id?id=${match_id}`).then(r=>r.json());
+      if (m && m.id){
+        const label = m.home ? `HV71 vs ${m.opponent}` : `${m.opponent} vs HV71`;
+        matchNote.textContent = `Du tittar på information om projektet. Kontext: ${label} • ${m.date} (${m.competition}).`;
+      }
+    }catch{/* behåll standardtext */}
+  })();
+</script>
+</body>
+</html>

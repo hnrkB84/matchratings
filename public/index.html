@@ -11,17 +11,42 @@
 <body>
   <header>
     <h1>Spelarbetyg</h1>
-    <div class="muted">Betygsskala – Läs gärna före betygssättning -</div>
-    <div id="matchInfo" class="muted" style="margin-top:.25rem;">Laddar match…</div>
+
+    <!-- Matchinfo badge -->
+    <div id="matchInfo"
+         style="margin-top:.5rem; display:inline-block; font-weight:700;
+                background:var(--yellow); color:var(--blue);
+                padding:.4rem .7rem; border-radius:999px; box-shadow:0 1px 0 rgba(0,0,0,.15);">
+      Laddar match…
+    </div>
+
+    <!-- NYTT: Länk till om-sidan -->
+    <div style="margin-top:.5rem; font-size:.9rem;">
+      <a href="omprojektet.html"
+         style="color:var(--white); opacity:.8; text-decoration:none;">
+         Om detta projekt
+      </a>
+    </div>
   </header>
 
   <div class="wrap">
 
-    <!-- NYTT: Kollapsande betygsskala precis före spelarbetygen -->
+    <!-- Kollapsande betygsskala -->
     <div class="card" style="margin-bottom:1rem;">
       <details>
-        <summary class="section-title" style="cursor:pointer;">Visa/​dölj betygsskalan</summary>
-        <div class="muted" style="white-space:pre-line; margin-top:.5rem;">
+        <summary class="section-title" style="cursor:pointer;">
+          Visa/​dölj betygsskalan — <span style="font-weight:700;">Läs gärna först</span>
+        </summary>
+
+        <!-- Highlight: Välj stjärna -->
+        <div style="margin-top:.75rem; background:rgba(255,203,1,.12); border-left:4px solid var(--yellow);
+                    padding:.75rem .9rem; border-radius:.5rem;">
+          <div style="font-weight:800; letter-spacing:.2px;">Välj ⭐ för matchens bästa HV-spelare</div>
+          <div class="muted" style="margin-top:.15rem;">(Du kan bara välja en spelare – sparas när du klickar “Skicka in”.)</div>
+        </div>
+
+        <!-- Själva skalan -->
+        <div class="muted" style="white-space:pre-line; margin-top:.75rem;">
 Denna skala är inspirerad och hämtad från Gazzetta dello Sports klassiska bedömningar i italiensk sportpress. Där är 6.0 alltid godkänt, högre siffror belönar en starkare insats – medan betyg under 6.0 markerar en svag prestation.
 
 1.0–2.0 – Katastrofalt, nästan aldrig utdelat.
@@ -33,12 +58,10 @@ Denna skala är inspirerad och hämtad från Gazzetta dello Sports klassiska bed
 8.0 – Mycket bra, matchens bästa eller nära där.
 9.0 – Exceptionellt, en prestation som lyfter hela laget.
 10.0 – Mytiskt. Extremt sällsynt, historisk nivå.
-
-Välj ⭐ för att markera matchens bästa HV-spelare.
         </div>
       </details>
     </div>
-    <!-- /NYTT -->
+    <!-- /Kollapsande betygsskala -->
 
     <div class="card">
       <div class="section-title special-title">Matchtruppen</div>
@@ -111,29 +134,33 @@ Välj ⭐ för att markera matchens bästa HV-spelare.
           <div class="meta-icon"><span class="material-symbols-outlined">sports</span></div>
         </div>
     
-      <!-- "Vart såg jag matchen?" kan ligga kvar i egen card, men vill du ha den här: -->
-      <div class="p-card meta" style="margin-top:.8rem;">
-        <div class="p-top">
-          <div class="p-nr">—</div>
-          <div>
-            <div class="p-name">Vart såg jag matchen?</div>
-            <div class="p-pos">Valfritt</div>
+        <!-- Vart såg jag matchen? -->
+        <div class="p-card meta" style="margin-top:.8rem;">
+          <div class="p-top">
+            <div class="p-nr">—</div>
+            <div>
+              <div class="p-name">Vart såg jag matchen?</div>
+              <div class="p-pos">Valfritt</div>
+            </div>
+          </div>
+          <div style="margin-top:.5rem;">
+            <select id="att" style="width:100%; padding:.55rem .7rem; border-radius:10px; border:1px solid rgba(0,0,0,.08);">
+              <option value="">— Välj —</option>
+              <option value="arena">På plats i arenan</option>
+              <option value="tv">På TV / stream</option>
+              <option value="skip">Vill ej svara</option>
+            </select>
           </div>
         </div>
-        <div style="margin-top:.5rem;">
-          <select id="att" style="width:100%; padding:.55rem .7rem; border-radius:10px; border:1px solid rgba(0,0,0,.08);">
-            <option value="">— Välj —</option>
-            <option value="arena">På plats i arenan</option>
-            <option value="tv">På TV / stream</option>
-            <option value="skip">Vill ej svara</option>
-          </select>
-        </div> 
-      <!-- KNAPPRAD: läggs direkt efter cardet ovan -->
-    <div class="row" style="margin:1rem 0;">
-    <button class="btn" id="saveAllBtn">Skicka in röster</button>
-    <button class="btn secondary" id="copyLinkBtn">Kopiera delningslänk</button>
-    <button class="btn secondary" onclick="location.href='resultat.html'">Visa resultat</button>
-    <div class="muted">⭐-valet sparas när du klickar Skicka in.</div>
+      </div>
+    
+      <!-- KNAPPRAD -->
+      <div class="row" style="margin:1rem 0;">
+        <button class="btn" id="saveAllBtn">Skicka in röster</button>
+        <button class="btn secondary" id="copyLinkBtn">Kopiera delningslänk</button>
+        <button class="btn secondary" onclick="location.href='resultat.html'">Visa resultat</button>
+        <div class="muted">⭐-valet sparas när du klickar Skicka in.</div>
+      </div>
     </div>
 
 <script>
@@ -176,7 +203,7 @@ function playerCard(p){
   const nr = p.jersey_number ?? '–';
   const name = formatName(p.name);
   const pos = p.position || '';
-  const defaultVal = 6.5;
+  const defaultVal = 6.0;
 
   return `
     <div class="p-card" data-player-id="${id}">
@@ -186,7 +213,7 @@ function playerCard(p){
           <div class="p-name">${name}</div>
           <div class="p-pos">${pos}</div>
         </div>
-        <button id="star-${id}" class="p-star" title="Välj Matchens lirare" onclick="selectStar(${id})">
+        <button id="star-\${id}" class="p-star" title="Välj Matchens lirare" onclick="selectStar(\${id})">
           <span>☆</span>
         </button>
       </div>
@@ -195,10 +222,10 @@ function playerCard(p){
         <div class="p-range">
           <input
             type="range" min="1" max="10" step="0.5"
-            value="${defaultVal}" id="rate-${id}"
-            oninput="updateBadge(${id}, this.value)">
+            value="${defaultVal}" id="rate-\${id}"
+            oninput="updateBadge(\${id}, this.value)">
         </div>
-        <div class="p-badge" id="badge-${id}">${defaultVal.toFixed(1)}</div>
+        <div class="p-badge" id="badge-\${id}">${defaultVal.toFixed(1)}</div>
       </div>
     </div>
   `;
@@ -259,16 +286,15 @@ async function saveAll(){
     return;
   }
   if (starPlayerId) localStorage.setItem(`star_${match_id}`, String(starPlayerId));
-  // NYTT: tack-sida så man vet att det gick in
   window.location.href = `tack.html?match=${encodeURIComponent(match_id)}`;
 }
 
 /* ======= Init ======= */
-    const saveBtn = document.getElementById("saveAllBtn");
-  if (saveBtn) saveBtn.addEventListener("click", saveAll);
+const saveBtn = document.getElementById("saveAllBtn");
+if (saveBtn) saveBtn.addEventListener("click", saveAll);
 
-    const copyBtn = document.getElementById("copyLinkBtn");
-  if (copyBtn) copyBtn.addEventListener("click", copyLink);
+const copyBtn = document.getElementById("copyLinkBtn");
+if (copyBtn) copyBtn.addEventListener("click", copyLink);
 
 (async function init(){
   // Hämta "current" (öppen röstning), annars "latest"
@@ -288,18 +314,18 @@ async function saveAll(){
     }
   }
 
-  // Visa matchinfo
+  // Visa matchinfo (nu i tydlig gul badge)
+  const infoEl = document.getElementById("matchInfo");
   if (match_id){
     try{
       const m = await fetch(`/api/matches/by-id?id=${match_id}`).then(r=>r.json());
       const label = m.home ? `HV71 vs ${m.opponent}` : `${m.opponent} vs HV71`;
-      document.getElementById("matchInfo").textContent =
-        `${label} — ${m.date} (${m.competition})${m.voting_open ? " · Röstning öppen" : " · Röstning stängd"}`;
+      infoEl.textContent = `${label} — ${m.date} (${m.competition})${m.voting_open ? " · Röstning öppen" : " · Röstning stängd"}`;
     }catch{
-      document.getElementById("matchInfo").textContent = "Matchinfo kunde inte hämtas.";
+      infoEl.textContent = "Matchinfo kunde inte hämtas.";
     }
   } else {
-    document.getElementById("matchInfo").textContent = "Ingen match hittades.";
+    infoEl.textContent = "Ingen match hittades.";
   }
 
   await loadPlayers();
