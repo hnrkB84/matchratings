@@ -65,14 +65,14 @@ Denna skala är inspirerad och hämtad från Gazzetta dello Sports klassiska bed
 
     <div class="card">
       <div class="section-title special-title">Matchtruppen</div>
-    
+
       <!-- Spelare -->
       <div id="players" class="players-grid"></div>
-    
+
       <!-- Avdelare + meta-kort under spelarna -->
       <hr class="divider">
       <div class="subsection" style="color:var(--blue); font-weight:700;">Omdömen om matchen</div>
-    
+
       <div class="meta-grid">
         <!-- Matchbetyg -->
         <div class="p-card meta">
@@ -93,7 +93,7 @@ Denna skala är inspirerad och hämtad från Gazzetta dello Sports klassiska bed
           </div>
           <div class="meta-icon"><span class="material-symbols-outlined">sports_hockey</span></div>
         </div>
-    
+
         <!-- Speglade resultatet matchen? -->
         <div class="p-card meta">
           <div class="p-top">
@@ -113,7 +113,7 @@ Denna skala är inspirerad och hämtad från Gazzetta dello Sports klassiska bed
           </div>
           <div class="meta-icon"><span class="material-symbols-outlined">balance</span></div>
         </div>
-    
+
         <!-- Domarnivå -->
         <div class="p-card meta">
           <div class="p-top">
@@ -133,7 +133,7 @@ Denna skala är inspirerad och hämtad från Gazzetta dello Sports klassiska bed
           </div>
           <div class="meta-icon"><span class="material-symbols-outlined">sports</span></div>
         </div>
-    
+
         <!-- Vart såg jag matchen? -->
         <div class="p-card meta" style="margin-top:.8rem;">
           <div class="p-top">
@@ -153,7 +153,7 @@ Denna skala är inspirerad och hämtad från Gazzetta dello Sports klassiska bed
           </div>
         </div>
       </div>
-    
+
       <!-- KNAPPRAD -->
       <div class="row" style="margin:1rem 0;">
         <button class="btn" id="saveAllBtn">Skicka in röster</button>
@@ -203,7 +203,7 @@ function playerCard(p){
   const nr = p.jersey_number ?? '–';
   const name = formatName(p.name);
   const pos = p.position || '';
-  const defaultVal = 6.0;
+  const defaultVal = 6.0; // startvärde
 
   return `
     <div class="p-card" data-player-id="${id}">
@@ -213,7 +213,7 @@ function playerCard(p){
           <div class="p-name">${name}</div>
           <div class="p-pos">${pos}</div>
         </div>
-        <button id="star-\${id}" class="p-star" title="Välj Matchens lirare" onclick="selectStar(\${id})">
+        <button id="star-${id}" class="p-star" title="Välj Matchens lirare" onclick="selectStar(${id})">
           <span>☆</span>
         </button>
       </div>
@@ -222,10 +222,10 @@ function playerCard(p){
         <div class="p-range">
           <input
             type="range" min="1" max="10" step="0.5"
-            value="${defaultVal}" id="rate-\${id}"
-            oninput="updateBadge(\${id}, this.value)">
+            value="${defaultVal}" id="rate-${id}"
+            oninput="updateBadge(${id}, this.value)">
         </div>
-        <div class="p-badge" id="badge-\${id}">${defaultVal.toFixed(1)}</div>
+        <div class="p-badge" id="badge-${id}">${defaultVal.toFixed(1)}</div>
       </div>
     </div>
   `;
