@@ -20,7 +20,7 @@
       Laddar match…
     </div>
 
-    <!-- NYTT: Länk till om-sidan -->
+    <!-- Länk till om-sidan -->
     <div style="margin-top:.5rem; font-size:.9rem;">
       <a href="omprojektet.html"
          style="color:var(--white); opacity:.8; text-decoration:none;">
@@ -71,7 +71,7 @@ Denna skala är inspirerad och hämtad från Gazzetta dello Sports klassiska bed
     
       <!-- Avdelare + meta-kort under spelarna -->
       <hr class="divider">
-      <div class="subsection">Match-omdömen</div>
+      <div class="subsection" style="color:var(--blue); font-weight:700;">Omdömen om matchen</div>
     
       <div class="meta-grid">
         <!-- Matchbetyg -->
@@ -86,10 +86,10 @@ Denna skala är inspirerad och hämtad från Gazzetta dello Sports klassiska bed
           </div>
           <div class="p-rate">
             <div class="p-range">
-              <input type="range" min="1" max="10" step="0.5" value="7.0" id="mo_range"
+              <input type="range" min="1" max="10" step="0.5" value="6.0" id="mo_range"
                      oninput="document.getElementById('badge-mo').textContent=Number(this.value).toFixed(1)">
             </div>
-            <div class="p-badge" id="badge-mo">7.0</div>
+            <div class="p-badge" id="badge-mo">6.0</div>
           </div>
           <div class="meta-icon"><span class="material-symbols-outlined">sports_hockey</span></div>
         </div>
@@ -126,10 +126,10 @@ Denna skala är inspirerad och hämtad från Gazzetta dello Sports klassiska bed
           </div>
           <div class="p-rate">
             <div class="p-range">
-              <input type="range" min="1" max="10" step="0.5" value="6.5" id="ref_range"
+              <input type="range" min="1" max="10" step="0.5" value="6.0" id="ref_range"
                      oninput="document.getElementById('badge-ref').textContent=Number(this.value).toFixed(1)">
             </div>
-            <div class="p-badge" id="badge-ref">6.5</div>
+            <div class="p-badge" id="badge-ref">6.0</div>
           </div>
           <div class="meta-icon"><span class="material-symbols-outlined">sports</span></div>
         </div>
@@ -314,13 +314,41 @@ if (copyBtn) copyBtn.addEventListener("click", copyLink);
     }
   }
 
-  // Visa matchinfo (nu i tydlig gul badge)
+  // Visa matchinfo (smart status)
   const infoEl = document.getElementById("matchInfo");
+
+  function fmtDateTime(d){
+    try{
+      const dt = (d instanceof Date) ? d : new Date(d);
+      const date = dt.toLocaleDateString("sv-SE", { year:"numeric", month:"2-digit", day:"2-digit" });
+      const time = dt.toLocaleTimeString("sv-SE", { hour:"2-digit", minute:"2-digit" });
+      return { date, time };
+    }catch{ return { date: String(d), time:"" }; }
+  }
+
   if (match_id){
     try{
       const m = await fetch(`/api/matches/by-id?id=${match_id}`).then(r=>r.json());
       const label = m.home ? `HV71 vs ${m.opponent}` : `${m.opponent} vs HV71`;
-      infoEl.textContent = `${label} — ${m.date} (${m.competition})${m.voting_open ? " · Röstning öppen" : " · Röstning stängd"}`;
+
+      const now = new Date();
+      const matchStart = m?.date ? new Date(m.date) : null;
+      const opensAt = m?.opens_at ? new Date(m.opens_at) : null;
+
+      let status = "";
+      if (m.voting_open) {
+        status = "· Röstning öppen";
+      } else if (opensAt && opensAt > now) {
+        const { date, time } = fmtDateTime(opensAt);
+        status = `· Röstning öppnas ${date} kl ${time}`;
+      } else if (matchStart && matchStart > now) {
+        status = "· Röstning öppnas vid slutsignal";
+      } else {
+        status = "· Röstning stängd";
+      }
+
+      const { date } = fmtDateTime(matchStart || m.date);
+      infoEl.textContent = `${label} — ${date} (${m.competition}) ${status}`;
     }catch{
       infoEl.textContent = "Matchinfo kunde inte hämtas.";
     }
