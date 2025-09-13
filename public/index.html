@@ -333,8 +333,8 @@ if (copyBtn) copyBtn.addEventListener("click", copyLink);
 
       const now       = new Date();
       const matchStart= m?.date ? new Date(m.date) : null;
-      const opensAt   = m?.opens_at ? new Date(m.opens_at) : null;
-      const closesAt  = m?.closes_at ? new Date(m.closes_at) : null;
+      const opensAt  = m?.open_at ? new Date(m.open_at) : null;
+      const closesAt = m?.close_at ? new Date(m.close_at) : null;
 
       let status = "";
       if (opensAt && now < opensAt) {
