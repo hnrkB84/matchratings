@@ -314,7 +314,7 @@ if (copyBtn) copyBtn.addEventListener("click", copyLink);
     }
   }
 
-  // Visa matchinfo (smart status)
+  // Visa matchinfo (tre fasta statusar)
   const infoEl = document.getElementById("matchInfo");
 
   function fmtDateTime(d){
@@ -331,19 +331,23 @@ if (copyBtn) copyBtn.addEventListener("click", copyLink);
       const m = await fetch(`/api/matches/by-id?id=${match_id}`).then(r=>r.json());
       const label = m.home ? `HV71 vs ${m.opponent}` : `${m.opponent} vs HV71`;
 
-      const now = new Date();
-      const matchStart = m?.date ? new Date(m.date) : null;
-      const opensAt = m?.opens_at ? new Date(m.opens_at) : null;
+      const now       = new Date();
+      const matchStart= m?.date ? new Date(m.date) : null;
+      const opensAt   = m?.opens_at ? new Date(m.opens_at) : null;
+      const closesAt  = m?.closes_at ? new Date(m.closes_at) : null;
 
       let status = "";
-      if (m.voting_open) {
-        status = "· Röstning öppen";
-      } else if (opensAt && opensAt > now) {
-        const { date, time } = fmtDateTime(opensAt);
-        status = `· Röstning öppnas ${date} kl ${time}`;
-      } else if (matchStart && matchStart > now) {
+      if (opensAt && now < opensAt) {
         status = "· Röstning öppnas vid slutsignal";
+      } else if (opensAt && closesAt && now >= opensAt && now <= closesAt) {
+        status = "· Röstning öppen";
+      } else if (closesAt && now > closesAt) {
+        status = "· Röstning stängd";
+      } else if (m.voting_open) {
+        // Fallback om tider saknas men server flaggar öppet
+        status = "· Röstning öppen";
       } else {
+        // Fallback om inget av ovan kan avgöras
         status = "· Röstning stängd";
       }
 
