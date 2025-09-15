@@ -451,3 +451,44 @@ canvas,img,video{ max-width:100%; height:auto; display:block; }
   transition: opacity .18s ease;
 }
 .toast.show{ opacity:1; }
+
+/* ===== Bottenlänkar – klicksäkra och snygga ===== */
+.after-links{ 
+  display:flex; flex-wrap:wrap; gap:.7rem; margin-top:1rem;
+  position:relative; z-index:2;  /* säkerställ över allt innehåll i kortet */
+}
+.after-links .btn{
+  display:inline-flex; align-items:center; gap:.4rem;
+  background:var(--yellow);
+  color:#0a2240;
+  text-decoration:none;
+  border:none;
+  padding:.7rem 1rem;
+  border-radius:12px;
+  font-weight:800;
+  cursor:pointer;
+  box-shadow:0 6px 16px rgba(0,0,0,.12);
+  transition: transform .06s ease, box-shadow .12s ease, background .12s ease, opacity .12s ease;
+  user-select:none;
+  -webkit-tap-highlight-color: transparent;
+}
+.after-links .btn .material-symbols-outlined{
+  font-size:22px;
+  color:inherit;            /* ärv färg från knappen */
+  text-shadow:none;
+}
+.after-links .btn:hover{ transform: translateY(-1px); box-shadow:0 10px 20px rgba(0,0,0,.16); }
+.after-links .btn:active{ transform: translateY(0); box-shadow:0 6px 14px rgba(0,0,0,.14); }
+
+.after-links .btn.secondary{
+  background:#e9e9e9;
+  color:#0a2240;
+  box-shadow:none;
+}
+.after-links .btn:focus-visible{
+  outline:3px solid #ffffff;
+  outline-offset:2px;
+}
+
+/* Säkerställ att inget pseudo-element i kortet täcker knapparna */
+.card{ position:relative; z-index:1; }
