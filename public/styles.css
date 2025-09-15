@@ -411,3 +411,43 @@ canvas,img,video{ max-width:100%; height:auto; display:block; }
   display:flex; flex-wrap:wrap; gap:.6rem; margin-top:1rem;
 }
 .after-links .btn{ font-weight:700; }
+/* Blå huvudrubrik */
+.section-title--blue{ color: var(--blue); }
+
+/* Accordion summary med ikon till vänster */
+.acc-sum{
+  display:flex;
+  align-items:center;
+  gap:.6rem;
+  cursor:pointer;
+  padding:.75rem 1rem;
+  background:var(--blue);
+  color:var(--white);
+  font-weight:700;
+}
+.acc-sum .material-symbols-outlined{
+  color: var(--yellow);
+  font-size: 26px;
+}
+
+/* Fotnot */
+.footnote{ margin-top:.5rem; font-size:.85rem; }
+
+/* Nedersta länkar */
+.after-links--pretty{ gap:.7rem; margin-top:1rem; }
+.after-links--pretty .btn{
+  display:inline-flex; align-items:center; gap:.35rem;
+  border-radius:12px; box-shadow:0 6px 16px rgba(0,0,0,.12);
+}
+.after-links--pretty .btn.secondary{ box-shadow:none; }
+
+/* Toast */
+.toast{
+  position: fixed;
+  left:50%; bottom:24px; transform:translateX(-50%);
+  background:rgba(0,0,0,.8); color:#fff;
+  padding:.55rem .8rem; border-radius:10px;
+  font-weight:700; opacity:0; pointer-events:none;
+  transition: opacity .18s ease;
+}
+.toast.show{ opacity:1; }
