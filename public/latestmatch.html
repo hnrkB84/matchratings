@@ -6,9 +6,28 @@
   <link href="https://fonts.googleapis.com/css2?family=Teko:wght@600;700&family=Oswald:wght@600;700&display=swap" rel="stylesheet">
   <!-- Material Symbols (korrekt variant-axlar) -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,500,1,0&display=swap" />
+
   <title>Senaste matchen – Spelarbetyg HV71</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="/styles.css">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="sv_SE">
+  <meta property="og:site_name" content="Spelarbetyg – HV71">
+  <meta property="og:title" content="Senaste matchen – Spelarbetyg HV71">
+  <meta property="og:description" content="Fansens betyg på spelarna i HV71:s senaste match. Se ranking, kedjor, backpar och effektivitet per istidsminut.">
+  <meta property="og:url" content="https://matchratings.onrender.com/latestmatch.html">
+  <meta property="og:image" content="https://matchratings.onrender.com/resog.jpeg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="HV71 Spelarbetyg – blågul bakgrund">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Senaste matchen – Spelarbetyg HV71">
+  <meta name="twitter:description" content="Se fansens betyg spelare för spelare, kedjor & backpar – samt analys av mest/minst effektiv istid.">
+  <meta name="twitter:image" content="https://matchratings.onrender.com/resog.jpeg">
 </head>
 <body>
   <header>
@@ -204,9 +223,9 @@
       }catch{/* anv. avbröt */}
     });
 
-    // Skydda ”Nästa match”-länk från onödiga overlays + tydlig focus
+    // ”Nästa match” – inget extra, men lämna hook här om du vill
     const nextLink = document.getElementById('nextMatchLink');
-    nextLink?.addEventListener('click', ()=>{/* inget extra */});
+    nextLink?.addEventListener('click', ()=>{});
   </script>
 </body>
 </html>
