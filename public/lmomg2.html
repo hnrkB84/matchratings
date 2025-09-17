@@ -16,7 +16,7 @@
   <meta property="og:locale" content="sv_SE">
   <meta property="og:site_name" content="Spelarbetyg – HV71">
   <meta property="og:title" content="Senaste matchen – Spelarbetyg HV71">
-  <meta property="og:description" content="Fansens betyg på spelarna i HV71:s senaste match. Se ranking, forwards, backpar och ’Statistik Vs Ögat’.">
+  <meta property="og:description" content="Fansens betyg på spelarna i HV71:s senaste match. Se ranking, lagdelssnitt och ’Statistik Vs Ögat’.">
   <meta property="og:url" content="https://matchratings.onrender.com/latestmatch.html">
   <meta property="og:image" content="https://matchratings.onrender.com/resog.jpeg">
   <meta property="og:image:width" content="1200">
@@ -26,7 +26,7 @@
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Senaste matchen – Spelarbetyg HV71">
-  <meta name="twitter:description" content="Se fansens betyg – spelare för spelare, forwards & backpar samt ’Statistik Vs Ögat’.">
+  <meta name="twitter:description" content="Se fansens betyg – spelare för spelare, lagdelssnitt samt ’Statistik Vs Ögat’.">
   <meta name="twitter:image" content="https://matchratings.onrender.com/resog.jpeg">
 </head>
 <body>
@@ -134,30 +134,6 @@
         </div>
       </details>
 
-      <!-- Backpar -->
-      <details class="acc">
-        <summary class="acc-sum">
-          <span class="material-symbols-outlined">groups_2</span>
-          Backpar (snitt)
-        </summary>
-        <div class="muted" style="margin:.25rem 0 .6rem;">rankat bäst → sämst</div>
-        <ul class="pairs">
-          <!-- TODO: Fyll på med backpar i fallande snitt -->
-        </ul>
-      </details>
-
-      <!-- Forwards (tidigare "Kedjor") -->
-      <details class="acc">
-        <summary class="acc-sum">
-          <span class="material-symbols-outlined">link</span>
-          Forwards (snitt)
-        </summary>
-        <div class="muted" style="margin:.25rem 0 .6rem;">rankat bäst → sämst</div>
-        <ul class="pairs">
-          <!-- TODO: Fyll på med kedjor/lines i fallande snitt -->
-        </ul>
-      </details>
-
       <!-- Statistik Vs Ögat -->
       <details class="acc">
         <summary class="acc-sum">
@@ -165,32 +141,42 @@
           Statistik Vs Ögat
         </summary>
 
-        <h4>Förklaring</h4>
-        <p>Vi tittar här på tre mått från avancerad hockeystatistik:</p>
+        <h4>Förklaring (HV71 – Växjö)</h4>
+        <p class="muted" style="margin-top:.2rem">Tre vanliga mått i avancerad hockeystatistik:</p>
         <ul class="bullets">
-          <li><strong>Corsi (CF%)</strong> – andel skottförsök framåt när spelaren är på isen.</li>
-          <li><strong>Fenwick (FF%)</strong> – samma men bara skott som faktiskt når mål.</li>
-          <li><strong>PDO</strong> – kombinerad skotteffektivitet och målvaktsspel när spelaren är på isen.</li>
+          <li><strong>Corsi (CF%)</strong> – andel skottförsök för när spelaren är på isen.</li>
+          <li><strong>Fenwick (FF%)</strong> – som Corsi men bara skott som når mål.</li>
+          <li><strong>PDO</strong> – skotteffektivitet + målvaktsräddningar med spelaren på isen.</li>
         </ul>
-        <p>Höga siffror betyder oftast spelkontroll eller bra utdelning, medan låga pekar på att laget försvarade mer än anföll. Samtidigt ska vi komma ihåg att detta bara gäller en match. Det gör underlaget litet och siffrorna osäkra. Istid och roll (t.ex. defensiva zonstarter mot motståndets toppkedjor) påverkar också starkt.</p>
+        <p class="muted">En match är liten sample. Istid, zonstarter och motstånd påverkar utfallet tydligt.</p>
 
-        <h4>Backar</h4>
-        <p>HV71:s toppbackar hade det tufft i siffrorna. Niklas Hansson (19:36) och Andreas Borgman (16:25) fick mycket speltid men hamnade ofta i defensiva situationer mot motståndets bästa spelare, vilket gav låga Corsi-värden. Det är inte oväntat – toppbackar får ofta de tyngsta minuterna.</p>
-        <p>Ett undantag var Axel Rindell (18:55) som trots hög istid låg på 56% i puckinnehav. Olle Alsing (17:16) och Santeri Hatakka (15:13) låg runt 50%, vilket visar på jämna byten.</p>
+        <h4>Backar – kort bild</h4>
+        <ul class="player-points">
+          <li><strong>Niklas Hansson (19:36)</strong> – tunga minuter mot toppkedja, pressad CF/FF.</li>
+          <li><strong>Andreas Borgman (16:25)</strong> – liknande matchbild, mer försvar än anfall.</li>
+          <li><strong>Axel Rindell (18:55)</strong> – positiv puckinnehav (~56%); stack ut bland backar.</li>
+          <li><strong>Olle Alsing (17:16), Santeri Hatakka (15:13)</strong> – runt 50%, jämna byten.</li>
+        </ul>
 
-        <h4>Forwards</h4>
-        <p>På forwardssidan stack Jonathan Ang (18:18) och Justin Kloos (14:19) ut som de mest drivande. De låg högt både i Corsi och Fenwick och matchade dessutom fansens intryck – de toppade röstningen. Även Martin Johnsen (15:39) och Jamiro Reber (9:00) hade positiva siffror i puckinnehavet, även om Rebers korta istid gör att underlaget är litet.</p>
-        <p>Längre ner fick spelare som Lukas Rousek (16:04), Oskar Stål Lyrenäs (14:36) och Linus Lindström (12:09) kämpa mer. När de var på isen var det tydligt fler skottförsök mot HV71 än framåt.</p>
+        <h4>Forwards – kort bild</h4>
+        <ul class="player-points">
+          <li><strong>Jonathan Ang (18:18), Justin Kloos (14:19)</strong> – drev spelet; höga CF/FF, matchar topp i röstning.</li>
+          <li><strong>Martin Johnsen (15:39)</strong> – positiva puckinnehavssiffror.</li>
+          <li><strong>Jamiro Reber (9:00)</strong> – bra signaler men liten istid (litet underlag).</li>
+          <li><strong>Lukas Rousek (16:04), Oskar Stål Lyrenäs (14:36), Linus Lindström (12:09)</strong> – mer mottryck än framåtdriv i skotten.</li>
+        </ul>
 
-        <h4>Fansens röstning jämfört med siffrorna</h4>
-        <p>Det intressanta är att fansens röstning både bekräftar och avviker från statistiken. Ang och Kloos hyllas mest – helt i linje med siffrorna. Samtidigt hamnar Rindell och Reber ganska långt ner trots att statistiken visar på starka byten. Troligen på grund av att deras insatser inte var lika iögonfallande.</p>
-        <p>Å andra hållet finns Hansson och Luoto som fick bättre betyg än siffrorna motiverar. Här kan roll, förtroende och synlighet väga tyngre i upplevelsen än rena siffror.</p>
+        <h4>Rösterna vs siffrorna</h4>
+        <ul class="player-points">
+          <li><strong>Överens:</strong> Ang & Kloos får högst betyg – linjerar med CF/FF.</li>
+          <li><strong>Möjl. undervärderade:</strong> Rindell, Reber – siffror bra, mindre iögonfallande i matchbilden.</li>
+          <li><strong>Möjl. övervärderade:</strong> Hansson, Luoto – roll/synlighet kan ha vägt tyngre än underliggande siffror.</li>
+        </ul>
 
         <h4>Slutsats</h4>
-        <p>Statistiken ger en ögonblicksbild av matchen: toppforwards drev spelet framåt, medan toppbackarna fick ta de tyngsta defensiva minuterna. Fansens röstning stämmer väl på några punkter men går isär på andra – vilket visar värdet i att väga samman både känsla och siffror.</p>
-        <p>Med bara en match som underlag bör man dock vara försiktig med slutsatserna. Istid, zonstarter och motstånd påverkar starkt, och det krävs fler matcher för att se tydliga mönster.</p>
+        <p>Mot Växjö drev toppforwards spelet, medan toppbackarna fick ta tyngre defensiva minuter. Rösterna träffar rätt på flera punkter men viker av på några – ett bra exempel på varför både statistik och ögonmått behövs. Med fler matcher kan mönstren bedömas säkrare.</p>
 
-        <p class="muted footnote">* TOI inkluderar PP/BP-tid. Siffror behöver alltid tolkas i kontext (istid, zonstarter, motstånd).</p>
+        <p class="muted footnote">* TOI inkluderar PP/BP. Tolka alltid i kontext: istid, zonstarter, motstånd.</p>
       </details>
 
       <!-- Nedersta länkar -->
