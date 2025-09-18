@@ -492,3 +492,49 @@ canvas,img,video{ max-width:100%; height:auto; display:block; }
 
 /* Säkerställ att inget pseudo-element i kortet täcker knapparna */
 .card{ position:relative; z-index:1; }
+/* ===== Steppers (ersätter sliders) ===== */
+.stepper{
+  display:inline-grid;
+  grid-template-columns:auto auto auto;
+  align-items:center;
+  gap:.5rem;
+}
+.stepper-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:38px; height:38px;
+  border-radius:10px;
+  border:1px solid rgba(0,0,0,.08);
+  background:var(--yellow);
+  color:var(--blue);
+  font-weight:800;
+  cursor:pointer;
+  box-shadow:0 4px 12px rgba(0,0,0,.12);
+  transition:transform .06s ease, box-shadow .12s ease, opacity .12s ease;
+}
+.stepper-btn:active{ transform:translateY(1px); box-shadow:0 3px 10px rgba(0,0,0,.12); }
+.stepper-btn .material-symbols-outlined{
+  font-size:20px; color:inherit; text-shadow:none;
+}
+
+.stepper-val{
+  min-width:64px;
+  text-align:center;
+  background:#fff; color:#0a2240;
+  border:1px solid rgba(0,0,0,.08);
+  padding:6px 10px;
+  border-radius:12px;
+  font-weight:800;
+  font-variant-numeric: tabular-nums;
+}
+
+/* P-raden: centrera steppern och ta bort gamla slider-breddkrav */
+.p-rate{
+  display:flex; align-items:center; justify-content:flex-start;
+  gap:.6rem; margin-top:.5rem;
+}
+.p-range{ min-width:0; }
+
+/* (valfritt) tona ned gamla range-styles ifall något finns kvar i DOM */
+.p-range input[type="range"]{ display:none !important; }

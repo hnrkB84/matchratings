@@ -21,7 +21,6 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://matchratings.onrender.com/">
   <meta property="og:image" content="https://matchratings.onrender.com/ofacb.jpeg">
-  <!-- Rekommenderade dimensioner för FB: 1200×630 -->
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:locale" content="sv_SE">
@@ -109,11 +108,17 @@ Denna skala är inspirerad och hämtad från Gazzetta dello Sports klassiska bed
             <span class="material-symbols-outlined icon-right">sports_hockey</span>
           </div>
           <div class="p-rate">
-            <div class="p-range">
-              <input type="range" min="1" max="10" step="0.5" value="6.0" id="mo_range"
-                     oninput="document.getElementById('badge-mo').textContent=Number(this.value).toFixed(1)">
+            <!-- Dold input + stepper -->
+            <input type="hidden" id="mo_range" value="6.0">
+            <div class="stepper" data-target="mo_range">
+              <button class="stepper-btn" aria-label="Minska matchbetyg" onclick="stepValue('mo_range', -0.5)">
+                <span class="material-symbols-outlined">remove</span>
+              </button>
+              <div class="stepper-val" id="badge-mo">6.0</div>
+              <button class="stepper-btn" aria-label="Öka matchbetyg" onclick="stepValue('mo_range', +0.5)">
+                <span class="material-symbols-outlined">add</span>
+              </button>
             </div>
-            <div class="p-badge" id="badge-mo">6.0</div>
           </div>
           <div class="meta-icon"><span class="material-symbols-outlined">sports_hockey</span></div>
         </div>
@@ -129,11 +134,16 @@ Denna skala är inspirerad och hämtad från Gazzetta dello Sports klassiska bed
             <span class="material-symbols-outlined icon-right">balance</span>
           </div>
           <div class="p-rate">
-            <div class="p-range">
-              <input type="range" min="1" max="10" step="0.5" value="6.0" id="rr_range"
-                     oninput="document.getElementById('badge-rr').textContent=Number(this.value).toFixed(1)">
+            <input type="hidden" id="rr_range" value="6.0">
+            <div class="stepper" data-target="rr_range">
+              <button class="stepper-btn" aria-label="Minska spegling" onclick="stepValue('rr_range', -0.5)">
+                <span class="material-symbols-outlined">remove</span>
+              </button>
+              <div class="stepper-val" id="badge-rr">6.0</div>
+              <button class="stepper-btn" aria-label="Öka spegling" onclick="stepValue('rr_range', +0.5)">
+                <span class="material-symbols-outlined">add</span>
+              </button>
             </div>
-            <div class="p-badge" id="badge-rr">6.0</div>
           </div>
           <div class="meta-icon"><span class="material-symbols-outlined">balance</span></div>
         </div>
@@ -149,11 +159,16 @@ Denna skala är inspirerad och hämtad från Gazzetta dello Sports klassiska bed
             <span class="material-symbols-outlined icon-right">sports</span>
           </div>
           <div class="p-rate">
-            <div class="p-range">
-              <input type="range" min="1" max="10" step="0.5" value="6.0" id="ref_range"
-                     oninput="document.getElementById('badge-ref').textContent=Number(this.value).toFixed(1)">
+            <input type="hidden" id="ref_range" value="6.0">
+            <div class="stepper" data-target="ref_range">
+              <button class="stepper-btn" aria-label="Minska domarnivå" onclick="stepValue('ref_range', -0.5)">
+                <span class="material-symbols-outlined">remove</span>
+              </button>
+              <div class="stepper-val" id="badge-ref">6.0</div>
+              <button class="stepper-btn" aria-label="Öka domarnivå" onclick="stepValue('ref_range', +0.5)">
+                <span class="material-symbols-outlined">add</span>
+              </button>
             </div>
-            <div class="p-badge" id="badge-ref">6.0</div>
           </div>
           <div class="meta-icon"><span class="material-symbols-outlined">sports</span></div>
         </div>
@@ -197,7 +212,7 @@ localStorage.setItem("hv71_fp_v1", fingerprint);
 /* ======= State ======= */
 let starPlayerId = null;
 
-/* ======= Helpers ======= */
+/* ======= Helpers (namn/stjärna/badge) ======= */
 function formatName(full){
   if(!full) return '';
   const parts = full.trim().split(/\s+/);
@@ -219,6 +234,33 @@ function selectStar(id){
     if (pid === starPlayerId){ btn.classList.add("active"); btn.innerHTML="<span>★</span>"; }
     else { btn.classList.remove("active"); btn.innerHTML="<span>☆</span>"; }
   });
+}
+
+/* ======= Stepper helpers (ersätter sliders) ======= */
+function clamp(v, min, max){
+  return Math.max(min, Math.min(max, v));
+}
+function roundToStep(v, step){
+  return Math.round(v / step) * step;
+}
+function setValue(id, v, step=0.5, min=1.0, max=10.0){
+  const hidden = document.getElementById(id);
+  if(!hidden) return;
+  const val = clamp(roundToStep(v, step), min, max);
+  hidden.value = String(val.toFixed(1));
+
+  // Uppdatera display/badge
+  const isMeta = (id === "mo_range" || id === "rr_range" || id === "ref_range");
+  const badgeId = isMeta
+    ? ("badge-" + id.replace("_range","").replace("mo","mo").replace("rr","rr").replace("ref","ref"))
+    : ("badge-" + id.replace("rate-",""));
+  const badge = document.getElementById(badgeId);
+  if (badge) badge.textContent = val.toFixed(1);
+}
+function stepValue(id, delta){
+  const hidden = document.getElementById(id);
+  const current = hidden ? parseFloat(hidden.value || "6.0") : 6.0;
+  setValue(id, current + delta, 0.5, 1.0, 10.0);
 }
 
 /* ======= UI: spelarkort ======= */
@@ -243,13 +285,18 @@ function playerCard(p){
       </div>
 
       <div class="p-rate">
-        <div class="p-range">
-          <input
-            type="range" min="1" max="10" step="0.5"
-            value="${defaultVal}" id="rate-${id}"
-            oninput="updateBadge(${id}, this.value)">
+        <!-- dold input som sparas av saveAll() precis som tidigare -->
+        <input type="hidden" id="rate-${id}" value="${defaultVal}">
+        <!-- synlig stepper -->
+        <div class="stepper" data-target="rate-${id}">
+          <button class="stepper-btn" aria-label="Minska betyg" onclick="stepValue('rate-${id}', -0.5)">
+            <span class="material-symbols-outlined">remove</span>
+          </button>
+          <div class="stepper-val" id="badge-${id}">${defaultVal.toFixed(1)}</div>
+          <button class="stepper-btn" aria-label="Öka betyg" onclick="stepValue('rate-${id}', +0.5)">
+            <span class="material-symbols-outlined">add</span>
+          </button>
         </div>
-        <div class="p-badge" id="badge-${id}">${defaultVal.toFixed(1)}</div>
       </div>
     </div>
   `;
@@ -281,7 +328,7 @@ function copyLink(){
 
 async function saveAll(){
   if (!match_id) return;
-  const ratings = Array.from(document.querySelectorAll("[id^='rate-']")).map(el=>{
+  const ratings = Array.from(document.querySelectorAll("input[id^='rate-']")).map(el=>{
     const player_id = parseInt(el.id.replace("rate-",""),10);
     const rating = parseFloat(el.value);
     return { player_id, rating };
