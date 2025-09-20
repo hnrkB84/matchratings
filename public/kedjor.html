@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bygg din HV71-kedja</title>
+  <link rel="stylesheet" href="/styles.css" />
+  <style>
+    .player-pool, .lineup {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 1rem;
+    }
+
+    .chip {
+      background: #0a2240;
+      color: white;
+      padding: 8px 12px;
+      border-radius: 20px;
+      cursor: grab;
+      user-select: none;
+      font-size: 0.9rem;
+    }
+
+    .chip.dragging {
+      opacity: 0.5;
+    }
+
+    .line {
+      border: 2px dashed #ccc;
+      border-radius: 10px;
+      padding: 10px;
+      flex: 1 1 100%;
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 1rem;
+      background: #f9f9f9;
+    }
+
+    .slot {
+      width: 80px;
+      height: 40px;
+      border: 2px dashed #aaa;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: white;
+    }
+
+    .slot.filled {
+      border: 2px solid #0a2240;
+    }
+
+    button {
+      background: #ffcb01;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Bygg dina HV71-kedjor</h1>
+  <p>Dra spelarna till de fyra kedjorna nedan. En spelare kan bara användas en gång.</p>
+
+  <div class="player-pool" id="playerPool">
+    <div class="chip" draggable="true">Jonathan Ang</div>
+    <div class="chip" draggable="true">Ludvig Larsson</div>
+    <div class="chip" draggable="true">Kloos</div>
+    <div class="chip" draggable="true">Pasic</div>
+    <div class="chip" draggable="true">Haponiemi</div>
+    <div class="chip" draggable="true">Woods</div>
+    <!-- fler spelare -->
+  </div>
+
+  <div class="lineup">
+    <div class="line" data-line="1">
+      <div class="slot"></div>
+      <div class="slot"></div>
+      <div class="slot"></div>
+    </div>
+    <div class="line" data-line="2">
+      <div class="slot"></div>
+      <div class="slot"></div>
+      <div class="slot"></div>
+    </div>
+    <div class="line" data-line="3">
+      <div class="slot"></div>
+      <div class="slot"></div>
+      <div class="slot"></div>
+    </div>
+    <div class="line" data-line="4">
+      <div class="slot"></div>
+      <div class="slot"></div>
+      <div class="slot"></div>
+    </div>
+  </div>
+
+  <button id="submitBtn">Skicka in ditt förslag</button>
+
+  <script>
+    const chips = document.querySelectorAll(".chip");
+    const slots = document.querySelectorAll(".slot");
+    const pool = document.getElementById("playerPool");
+
+    chips.forEach(chip => {
+      chip.addEventListener("dragstart", e => {
+        chip.classList.add("dragging");
+        e.dataTransfer.setData("text/plain", chip.textContent);
+      });
+      chip.addEventListener("dragend", () => chip.classList.remove("dragging"));
+    });
+
+    slots.forEach(slot => {
+      slot.addEventListener("dragover", e => e.preventDefault());
+      slot.addEventListener("drop", e => {
+        e.preventDefault();
+        const name = e.dataTransfer.getData("text/plain");
+        const dragged = [...chips].find(c => c.textContent === name);
+        
+        // rensa om slot redan har spelare
+        if (slot.firstChild) {
+          pool.appendChild(slot.firstChild);
+          slot.classList.remove("filled");
+        }
+
+        slot.textContent = "";
+        slot.appendChild(dragged);
+        slot.classList.add("filled");
+      });
+    });
+
+    pool.addEventListener("dragover", e => e.preventDefault());
+    pool.addEventListener("drop", e => {
+      e.preventDefault();
+      const name = e.dataTransfer.getData("text/plain");
+      const dragged = [...chips].find(c => c.textContent === name);
+      pool.appendChild(dragged);
+    });
+
+    document.getElementById("submitBtn").addEventListener("click", () => {
+      const result = {};
+      document.querySelectorAll(".line").forEach(line => {
+        const lineNum = line.dataset.line;
+        result[lineNum] = [...line.querySelectorAll(".chip")].map(c => c.textContent);
+      });
+      console.log("Röstning skickad:", result);
+      alert("Tack! Ditt förslag är inskickat.");
+      // här anropar du ditt API med fetch()
+    });
+  </script>
+</body>
+</html>
