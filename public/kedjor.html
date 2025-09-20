@@ -7,7 +7,8 @@
 <style>
   :root{
     --hv-blue:#0a2240; --hv-yellow:#ffcb01; --ink:#e8eef6;
-    --card:#0b1f3a; --card-strong:#0d1f3d; --pp-card:#14294f;
+    --card:#0b1f3a; --card-strong:#0d1f3d;
+    --pp-card:#0f264d; /* tydligt annorlunda för PP1 */
     --slot:#112949; --slot-b:#2f4a75; --chip:#0f2d58; --muted:#9fb3d9;
   }
   *{box-sizing:border-box}
@@ -16,17 +17,27 @@
   h1{margin:0 0 4px;color:var(--hv-yellow);font-size:1.2rem}
   .wrap{max-width:980px;margin:0 auto;padding:12px}
 
-  .card{background:var(--card);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:12px;margin:12px 0;box-shadow:0 2px 0 rgba(0,0,0,.25)}
-  .card.alt{background:var(--pp-card);border-color:rgba(255,255,255,.12)} /* PP1 skiljer sig */
+  .card{background:var(--card);border:1px solid rgba(255,255,255,.10);border-radius:14px;padding:12px;margin:12px 0;box-shadow:0 2px 0 rgba(0,0,0,.25)}
   .card h2{margin:0 0 8px;font-size:1.02rem;display:flex;gap:8px;align-items:center}
   .badge{background:rgba(255,203,1,.16);color:var(--hv-yellow);padding:2px 8px;border-radius:999px;font-weight:700;font-size:.78rem}
 
+  /* PP1: distinkt kort */
+  .card.alt{
+    background:var(--pp-card);
+    border:1px solid rgba(255,255,255,.22);
+    box-shadow:inset 0 0 0 2px rgba(255,203,1,.10);
+    position:relative;
+  }
+  .card.alt::before{
+    content:""; position:absolute; left:-1px; top:-1px; bottom:-1px; width:4px;
+    background:linear-gradient(180deg,#ffd84a,#ffcb01); border-radius:12px 0 0 12px;
+  }
+
   /* kompakt pool */
-  .pool-wrap{position:relative}
+  .pool-controls{display:flex;justify-content:flex-end;margin-bottom:6px}
+  .toggle{background:transparent;color:#cfe0ff;border:1px solid rgba(255,255,255,.16);padding:6px 10px;border-radius:10px;cursor:pointer;font-weight:700}
   .pool{display:flex;flex-wrap:wrap;gap:6px;max-height:120px;overflow:hidden;transition:max-height .2s ease}
   .pool.expanded{max-height:none}
-  .pool-controls{display:flex;justify-content:flex-end;margin-bottom:6px}
-  .toggle{background:transparent;color:#cfe0ff;border:1px solid rgba(255,255,255,.16);padding:6px 10px;border-radius:10px;cursor:pointer;font-weight:700;white-space:nowrap}
 
   .chip{
     display:inline-flex;align-items:center;gap:6px;background:var(--chip);color:#fff;
@@ -38,7 +49,6 @@
     box-shadow:0 1px 0 rgba(0,0,0,.25);
   }
   .chip.selected{outline:2px solid var(--hv-yellow);box-shadow:0 0 0 2px rgba(255,203,1,.2) inset;border-color:var(--hv-yellow)}
-  .muted{color:var(--muted);font-size:.9rem}
 
   /* lines */
   .grid-lines{display:grid;grid-template-columns:1fr;gap:10px}
@@ -58,24 +68,29 @@
   }
   .slot .remove{position:absolute;right:6px;top:6px;background:transparent;border:none;color:#b8c5db;font-size:18px;cursor:pointer}
 
-  /* PP1 dropdowns – med tydlig 1-3-1 rink */
+  /* PP1 rink – dekor bakom innehållet, ingen overlap */
   .pp-rink{
-    position:relative;padding:14px;border-radius:12px;
+    position:relative;
+    padding:16px 14px 54px; /* extra bottenpadding så nätet får plats */
+    border-radius:12px;
     background:linear-gradient(180deg,#163058 0%, #142b50 100%);
     border:1px solid rgba(255,255,255,.15);
+    overflow:hidden;
   }
-  .rink-decor{
-    pointer-events:none;position:absolute;inset:0;border-radius:12px;
-    box-shadow:inset 0 0 0 2px rgba(255,255,255,.08);
+  .rink-decor,.goal-line,.net{
+    position:absolute; pointer-events:none; z-index:0; /* bakom all form */
   }
-  .goal-line{
-    pointer-events:none;position:absolute;left:12px;right:12px;bottom:42px;height:2px;background:rgba(255,255,255,.35);
-  }
+  .rink-decor{inset:0;border-radius:12px;box-shadow:inset 0 0 0 2px rgba(255,255,255,.08)}
+  .goal-line{left:12px;right:12px;bottom:36px;height:2px;background:rgba(255,255,255,.35)}
   .net{
-    pointer-events:none;position:absolute;left:calc(50% - 18px);bottom:16px;width:36px;height:18px;
+    left:calc(50% - 18px);bottom:14px;width:36px;height:18px;
     border:2px solid rgba(255,255,255,.9);border-top:none;border-radius:0 0 6px 6px;
   }
-  .net::after{content:'MÅL'; position:absolute; top:-18px; left:50%; transform:translateX(-50%); font-size:.7rem; color:#cfe0ff; opacity:.9}
+  .net::after{
+    content:'MÅL'; position:absolute; top:-18px; left:50%; transform:translateX(-50%);
+    font-size:.7rem; color:#cfe0ff; opacity:.9;
+  }
+  .pp-content{position:relative; z-index:1;}
   .pp-grid{display:grid;grid-template-rows:auto auto auto;gap:10px}
   .pp-row{display:grid;gap:10px}
   .pp-row.top{grid-template-columns:1fr}
@@ -90,24 +105,19 @@
   .btn{border:none;cursor:pointer;border-radius:10px;font-weight:800}
   .btn.primary{background:var(--hv-yellow);color:#1c1500;padding:12px 14px}
   .btn.ghost{background:transparent;color:#cfe0ff;border:1px solid rgba(255,255,255,.16);padding:10px 12px}
-
   #outCard{display:none}
   pre{white-space:pre-wrap;background:#081833;border:1px solid rgba(255,255,255,.12);padding:10px;border-radius:10px;color:#cfe0ff;font-size:.85rem}
 </style>
 </head>
 <body>
-<header>
-  <h1>Bygg kedjor & PP1</h1>
-</header>
+<header><h1>Bygg kedjor & PP1</h1></header>
 
 <div class="wrap">
 
   <!-- A. POOL (forwards) – kompakt och först -->
   <div class="card">
     <h2>Spelarpool <span class="badge">Forwards</span></h2>
-    <div class="pool-controls">
-      <button id="togglePool" class="toggle">Visa alla</button>
-    </div>
+    <div class="pool-controls"><button id="togglePool" class="toggle">Visa alla</button></div>
     <div id="pool-lines" class="pool" aria-label="Forwards till kedjor"></div>
   </div>
 
@@ -157,21 +167,24 @@
       <div class="rink-decor"></div>
       <div class="goal-line"></div>
       <div class="net"></div>
-      <div class="pp-grid">
-        <div class="pp-row top">
-          <div class="pp-slot"><label for="pp-PNT">PNT (point, blålinjen)</label><select id="pp-PNT"></select></div>
-        </div>
-        <div class="pp-row mid">
-          <div class="pp-slot"><label for="pp-LFL">LFL (vänster flank)</label><select id="pp-LFL"></select></div>
-          <div class="pp-slot"><label for="pp-BUM">BUM (bumper, slott)</label><select id="pp-BUM"></select></div>
-          <div class="pp-slot"><label for="pp-RFL">RFL (höger flank)</label><select id="pp-RFL"></select></div>
-        </div>
-        <div class="pp-row bot">
-          <div class="pp-slot"><label for="pp-NET">NET (framför mål)</label><select id="pp-NET"></select></div>
+
+      <div class="pp-content">
+        <div class="pp-grid">
+          <div class="pp-row top">
+            <div class="pp-slot"><label for="pp-PNT">PNT (point, blålinjen)</label><select id="pp-PNT"></select></div>
+          </div>
+          <div class="pp-row mid">
+            <div class="pp-slot"><label for="pp-LFL">LFL (vänster flank)</label><select id="pp-LFL"></select></div>
+            <div class="pp-slot"><label for="pp-BUM">BUM (bumper, slott)</label><select id="pp-BUM"></select></div>
+            <div class="pp-slot"><label for="pp-RFL">RFL (höger flank)</label><select id="pp-RFL"></select></div>
+          </div>
+          <div class="pp-row bot">
+            <div class="pp-slot"><label for="pp-NET">NET (framför mål)</label><select id="pp-NET"></select></div>
+          </div>
         </div>
       </div>
     </div>
-    <p class="muted" style="margin-top:8px">Målet är längst ned i rutan. Välj en spelare per roll.</p>
+    <p class="muted" style="margin-top:8px">Målet är längst ned i rutan.</p>
   </div>
 
   <!-- D. Actions -->
@@ -252,7 +265,7 @@
     state.selected = was ? null : id;
     poolEl.querySelectorAll('.chip').forEach(c=>c.classList.remove('selected'));
     if(!was) el.classList.add('selected');
-    setStatus(state.selected? 'Forward vald – tryck på en slot (LW/C/RW).' : '');
+    setStatus(state.selected? 'Forward vald – tryck LW/C/RW.' : '');
   }
   toggleEl.addEventListener('click', ()=>{
     poolEl.classList.toggle('expanded');
@@ -271,7 +284,7 @@
         refreshPoolUsage(); return;
       }
       if(!state.selected){ setStatus('Välj forward i poolen först.'); return; }
-      // ta bort om forwarden redan finns någonstans
+      // ta bort om forward redan finns någonstans
       for(const L of ['1','2','3','4']) for(const R of ['LW','C','RW']){
         if(state.lines[L][R]===state.selected){
           const other = document.querySelector(`.line-card[data-line="${L}"] .slot[data-pos="${R}"]`);
@@ -286,7 +299,7 @@
     });
   });
 
-  /* ===== PP1 dropdowns (Forwards först) + dubblettskydd ===== */
+  /* ===== PP1 dropdowns (Forwards först, Backar sen) ===== */
   const ppIds = ['PNT','LFL','BUM','RFL','NET'];
   const selects = Object.fromEntries(ppIds.map(id=>[id, document.getElementById('pp-'+id)]));
   function buildPPSelects(){
@@ -300,7 +313,7 @@
       DEFENSE.forEach(p=>ogD.appendChild(new Option(`${p.no} ${p.name}`, p.id)));
       sel.appendChild(ogF); sel.appendChild(ogD);
       sel.addEventListener('change', ()=>{
-        // hindra samma spelare i två PP-roller
+        // hindra dublett i PP-roller
         const chosen = ppIds.map(k=>selects[k].value).filter(Boolean);
         const set = new Set(chosen);
         if(set.size !== chosen.length){
