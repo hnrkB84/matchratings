@@ -3,155 +3,426 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Bygg din HV71-kedja</title>
-  <link rel="stylesheet" href="/styles.css" />
+  <title>HV71 – Bygg kedjor & PP1</title>
+  <!-- Din globala styles.css får gärna ligga kvar, men denna sida funkar fristående -->
   <style>
-    .player-pool, .lineup {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 1rem;
+    :root{
+      --hv-blue:#0a2240;
+      --hv-yellow:#ffcb01;
+      --ink:#e8eef6;
+      --card:#0b1f3a;
+      --slot:#112949;
+      --slot-border:#2f4a75;
+      --chip:#0f2d58;
+      --muted:#9fb3d9;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; background:var(--hv-blue); color:var(--ink);
+      font-family:system-ui,-apple-system,Segoe UI,Inter,Roboto,Helvetica,Arial,sans-serif;
+    }
+    header{
+      position:sticky; top:0; z-index:10;
+      background:linear-gradient(180deg,#09203b 0%,#0a2240 100%);
+      border-bottom:1px solid rgba(255,255,255,.06);
+      padding:14px 16px 10px;
+    }
+    h1{margin:0 0 4px 0; color:var(--hv-yellow); font-size:1.25rem}
+    .sub{margin:0; opacity:.9; font-size:.95rem}
+    .wrap{max-width:980px; margin:0 auto; padding:12px}
+
+    .card{
+      background:var(--card);
+      border:1px solid rgba(255,255,255,.06);
+      border-radius:14px;
+      padding:12px;
+      margin:12px 0;
+    }
+    .card h2{
+      margin:0 0 10px 0; font-size:1.05rem; display:flex; align-items:center; gap:8px;
+    }
+    .badge{
+      background:rgba(255,203,1,.16); color:var(--hv-yellow);
+      padding:3px 8px; border-radius:999px; font-weight:700; font-size:.8rem;
     }
 
-    .chip {
-      background: #0a2240;
-      color: white;
-      padding: 8px 12px;
-      border-radius: 20px;
-      cursor: grab;
-      user-select: none;
-      font-size: 0.9rem;
+    .pool{display:flex; flex-wrap:wrap; gap:8px}
+    .chip{
+      display:inline-flex; align-items:center; gap:8px;
+      background:var(--chip); color:#fff; border:1px solid rgba(255,255,255,.14);
+      padding:8px 12px; border-radius:999px; cursor:pointer; user-select:none;
+      transition:transform .05s ease, box-shadow .05s ease, border-color .05s ease; touch-action:manipulation;
+      font-size:.95rem; line-height:1;
     }
+    .chip:active{transform:scale(.98)}
+    .chip .no{display:inline-block; min-width:26px; height:26px; border-radius:999px;
+      background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.18);
+      text-align:center; line-height:24px; font-weight:800; font-size:.85rem; color:#fff;
+    }
+    .chip.selected{outline:2px solid var(--hv-yellow); box-shadow:0 0 0 2px rgba(255,203,1,.18) inset; border-color:var(--hv-yellow)}
+    .chip.used-lines{opacity:.65}
+    .chip.used-pp{outline:1px dashed rgba(255,255,255,.25)}
 
-    .chip.dragging {
-      opacity: 0.5;
-    }
+    .grid-lines{display:grid; grid-template-columns:1fr; gap:12px}
+    @media (min-width:700px){ .grid-lines{grid-template-columns:1fr 1fr} }
 
-    .line {
-      border: 2px dashed #ccc;
-      border-radius: 10px;
-      padding: 10px;
-      flex: 1 1 100%;
-      display: flex;
-      justify-content: space-around;
-      margin-bottom: 1rem;
-      background: #f9f9f9;
+    .line-card{background:rgba(255,255,255,.02); border:1px solid rgba(255,255,255,.06); border-radius:12px; padding:10px}
+    .line-title{margin:0 0 8px 0; font-weight:800; color:#cfe0ff}
+    .slots{display:grid; grid-template-columns:repeat(3,1fr); gap:8px}
+    .slot{
+      height:52px; border:1px dashed var(--slot-border); background:var(--slot);
+      border-radius:10px; display:flex; align-items:center; justify-content:center; position:relative; cursor:pointer;
     }
+    .slot.filled{border-style:solid; background:#0e2647}
+    .role-label{position:absolute; top:6px; left:8px; font-size:.75rem; color:var(--muted)}
+    .slot .inner{display:flex; align-items:center; gap:8px; font-weight:700}
+    .slot .remove{position:absolute; right:6px; top:6px; background:transparent; border:none; color:#b8c5db; font-size:18px; cursor:pointer}
 
-    .slot {
-      width: 80px;
-      height: 40px;
-      border: 2px dashed #aaa;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: white;
-    }
+    /* PP1 layout: top PNT, middle LFL-BUM-RFL, bottom NET */
+    .pp-layout{display:grid; grid-template-rows:auto auto auto; gap:8px}
+    .pp-row{display:grid; gap:8px}
+    .pp-row.top{grid-template-columns:1fr}
+    .pp-row.mid{grid-template-columns:1fr 1fr 1fr}
+    .pp-row.bot{grid-template-columns:1fr}
 
-    .slot.filled {
-      border: 2px solid #0a2240;
-    }
+    .actions{display:flex; gap:8px; flex-wrap:wrap; margin-top:12px}
+    .btn{border:none; cursor:pointer; border-radius:10px; font-weight:800}
+    .btn.primary{background:var(--hv-yellow); color:#1c1500; padding:12px 14px}
+    .btn.ghost{background:transparent; color:#cfe0ff; border:1px solid rgba(255,255,255,.16); padding:10px 12px}
 
-    button {
-      background: #ffcb01;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 8px;
-      font-weight: bold;
-      cursor: pointer;
-    }
+    .muted{color:var(--muted); font-size:.9rem}
+    pre.out{white-space:pre-wrap; background:#081833; border:1px solid rgba(255,255,255,.12); padding:10px; border-radius:10px; color:#cfe0ff; font-size:.85rem}
   </style>
 </head>
 <body>
-  <h1>Bygg dina HV71-kedjor</h1>
-  <p>Dra spelarna till de fyra kedjorna nedan. En spelare kan bara användas en gång.</p>
+  <header>
+    <h1>Bygg kedjor & PP1</h1>
+    <p class="sub">Tryck på en spelare → tryck på en position. Tryck på positionen igen för att ta bort.</p>
+  </header>
 
-  <div class="player-pool" id="playerPool">
-    <div class="chip" draggable="true">Jonathan Ang</div>
-    <div class="chip" draggable="true">Ludvig Larsson</div>
-    <div class="chip" draggable="true">Kloos</div>
-    <div class="chip" draggable="true">Pasic</div>
-    <div class="chip" draggable="true">Haponiemi</div>
-    <div class="chip" draggable="true">Woods</div>
-    <!-- fler spelare -->
+  <div class="wrap">
+    <!-- Pools -->
+    <div class="card">
+      <h2>Spelarpool för <strong>kedjor (5v5)</strong> <span class="badge">Forwards</span></h2>
+      <div id="pool-lines" class="pool" aria-label="Forwards till kedjor"></div>
+      <p class="muted">Kedjorna är låsta till rollerna LW–C–RW. Samma forward kan bara användas en gång i 5v5.</p>
+    </div>
+
+    <div class="card">
+      <h2>Spelarpool för <strong>PP1 (1–3–1)</strong> <span class="badge">Alla utespelare</span></h2>
+      <div id="pool-pp" class="pool" aria-label="Skaters till PP1"></div>
+      <p class="muted">PP1-roller: PNT (point), LFL (vänster flank), BUM (bumper), RFL (höger flank), NET (framför mål). Samma spelare får gärna vara med både i 5v5 och PP1, men inte på två PP1-roller samtidigt.</p>
+    </div>
+
+    <!-- Lines -->
+    <div class="card">
+      <h2>Kedjor (4 st)</h2>
+      <div class="grid-lines">
+        <div class="line-card" data-line="1">
+          <p class="line-title">Kedja 1</p>
+          <div class="slots">
+            <div class="slot" data-pos="LW"><span class="role-label">LW</span></div>
+            <div class="slot" data-pos="C"><span class="role-label">C</span></div>
+            <div class="slot" data-pos="RW"><span class="role-label">RW</span></div>
+          </div>
+        </div>
+        <div class="line-card" data-line="2">
+          <p class="line-title">Kedja 2</p>
+          <div class="slots">
+            <div class="slot" data-pos="LW"><span class="role-label">LW</span></div>
+            <div class="slot" data-pos="C"><span class="role-label">C</span></div>
+            <div class="slot" data-pos="RW"><span class="role-label">RW</span></div>
+          </div>
+        </div>
+        <div class="line-card" data-line="3">
+          <p class="line-title">Kedja 3</p>
+          <div class="slots">
+            <div class="slot" data-pos="LW"><span class="role-label">LW</span></div>
+            <div class="slot" data-pos="C"><span class="role-label">C</span></div>
+            <div class="slot" data-pos="RW"><span class="role-label">RW</span></div>
+          </div>
+        </div>
+        <div class="line-card" data-line="4">
+          <p class="line-title">Kedja 4</p>
+          <div class="slots">
+            <div class="slot" data-pos="LW"><span class="role-label">LW</span></div>
+            <div class="slot" data-pos="C"><span class="role-label">C</span></div>
+            <div class="slot" data-pos="RW"><span class="role-label">RW</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PP1 -->
+    <div class="card">
+      <h2>PP1 – 1–3–1</h2>
+      <div class="pp-layout" id="pp1">
+        <div class="pp-row top">
+          <div class="slot" data-pp="PNT"><span class="role-label">PNT</span></div>
+        </div>
+        <div class="pp-row mid">
+          <div class="slot" data-pp="LFL"><span class="role-label">LFL</span></div>
+          <div class="slot" data-pp="BUM"><span class="role-label">BUM</span></div>
+          <div class="slot" data-pp="RFL"><span class="role-label">RFL</span></div>
+        </div>
+        <div class="pp-row bot">
+          <div class="slot" data-pp="NET"><span class="role-label">NET</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn primary" id="submitBtn">Skicka</button>
+      <button class="btn ghost" id="resetBtn">Rensa</button>
+      <span id="status" class="muted"></span>
+    </div>
+
+    <div class="card" id="outCard" style="display:none">
+      <h2>Payload (demo)</h2>
+      <pre id="out" class="out"></pre>
+    </div>
   </div>
-
-  <div class="lineup">
-    <div class="line" data-line="1">
-      <div class="slot"></div>
-      <div class="slot"></div>
-      <div class="slot"></div>
-    </div>
-    <div class="line" data-line="2">
-      <div class="slot"></div>
-      <div class="slot"></div>
-      <div class="slot"></div>
-    </div>
-    <div class="line" data-line="3">
-      <div class="slot"></div>
-      <div class="slot"></div>
-      <div class="slot"></div>
-    </div>
-    <div class="line" data-line="4">
-      <div class="slot"></div>
-      <div class="slot"></div>
-      <div class="slot"></div>
-    </div>
-  </div>
-
-  <button id="submitBtn">Skicka in ditt förslag</button>
 
   <script>
-    const chips = document.querySelectorAll(".chip");
-    const slots = document.querySelectorAll(".slot");
-    const pool = document.getElementById("playerPool");
+    // === 0) Hjälp: slug/ID + query ===
+    const slug = s => s.normalize('NFD').replace(/[\\u0300-\\u036f]/g,'')
+      .toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
+    const qp = new URLSearchParams(location.search);
+    const matchId = qp.get('match') || '0';
 
-    chips.forEach(chip => {
-      chip.addEventListener("dragstart", e => {
-        chip.classList.add("dragging");
-        e.dataTransfer.setData("text/plain", chip.textContent);
+    // === 1) Truppen (hårdkodat för första versionen) ===
+    const GOALIES = [
+      {no:60, name:'Hugo Alnefelt', pos:'G'},
+      {no:80, name:'Frederik Dichow', pos:'G'},
+      {no:30, name:'Lassi Lehtinen', pos:'G'}
+    ];
+    const DEFENSE = [
+      {no:38, name:'Olle Alsing', pos:'D'},
+      {no:6,  name:'Karl Annborn', pos:'D'},
+      {no:55, name:'Andreas Borgman', pos:'D'},
+      {no:44, name:'Hugo Fransson', pos:'D'},
+      {no:19, name:'Niklas Hansson', pos:'D'},
+      {no:82, name:'Santeri Hatakka', pos:'D'},
+      {no:8,  name:'Lucas Lagerberg Hoen', pos:'D'},
+      {no:61, name:'Axel Rindell', pos:'D'} // korrigerad tröjnummer
+    ];
+    const FORWARDS = [
+      {no:27, name:'Jonathan Ang', pos:'F'},
+      {no:17, name:'Isac Brännström', pos:'F'},
+      {no:91, name:'Aleksi Heponiemi', pos:'F'},
+      {no:36, name:'Martin Johnsen', pos:'F'},
+      {no:28, name:'Justin Kloos', pos:'F'},
+      {no:16, name:'Linus Lindström', pos:'F'},
+      {no:46, name:'Joona Luoto', pos:'F'},
+      {no:71, name:'William Nilsson Ignberg', pos:'F'},
+      {no:96, name:'Nikola Pasic', pos:'F'},
+      {no:9,  name:'Hugo Pettersson', pos:'F'},
+      {no:39, name:'Jamiro Reber', pos:'F'},
+      {no:70, name:'Lukas Rousek', pos:'F'},
+      {no:40, name:'Oskar Stål Lyrenäs', pos:'F'},
+      {no:21, name:'Mattias Tedenby', pos:'F'},
+      {no:41, name:'Riley Woods', pos:'F'}
+    ];
+    // Tilldela lokala IDs (ersätts av DB-id när vi kopplar API)
+    function withIds(arr){
+      return arr.map(p => ({...p, id: `p-${p.no}-${slug(p.name)}`}));
+    }
+    const FWD = withIds(FORWARDS);
+    const DEF = withIds(DEFENSE);
+    const SKATERS = [...DEF, ...FWD]; // alla utespelare till PP1
+    const fwdById = Object.fromEntries(FWD.map(p=>[p.id,p]));
+    const skaById = Object.fromEntries(SKATERS.map(p=>[p.id,p]));
+
+    // === 2) State ===
+    const state = {
+      selected: null,          // {id, from:'lines'|'pp'}
+      lines: { 1:{LW:null,C:null,RW:null}, 2:{LW:null,C:null,RW:null}, 3:{LW:null,C:null,RW:null}, 4:{LW:null,C:null,RW:null} },
+      pp1: { PNT:null, LFL:null, BUM:null, RFL:null, NET:null }
+    };
+
+    // === 3) Render pools ===
+    const poolLines = document.getElementById('pool-lines');
+    const poolPP    = document.getElementById('pool-pp');
+    function chipHTML(p){ return `<span class="no">${p.no||''}</span><span>${p.name}</span>`; }
+
+    function renderPools(){
+      poolLines.innerHTML = '';
+      FWD.forEach(p=>{
+        const b = document.createElement('button');
+        b.className = 'chip';
+        b.type='button';
+        b.dataset.id = p.id;
+        b.innerHTML = chipHTML(p);
+        b.addEventListener('click', ()=>select(p.id,'lines',b));
+        poolLines.appendChild(b);
       });
-      chip.addEventListener("dragend", () => chip.classList.remove("dragging"));
-    });
 
-    slots.forEach(slot => {
-      slot.addEventListener("dragover", e => e.preventDefault());
-      slot.addEventListener("drop", e => {
-        e.preventDefault();
-        const name = e.dataTransfer.getData("text/plain");
-        const dragged = [...chips].find(c => c.textContent === name);
-        
-        // rensa om slot redan har spelare
-        if (slot.firstChild) {
-          pool.appendChild(slot.firstChild);
-          slot.classList.remove("filled");
+      poolPP.innerHTML = '';
+      SKATERS.forEach(p=>{
+        const b = document.createElement('button');
+        b.className = 'chip';
+        b.type='button';
+        b.dataset.id = p.id;
+        b.innerHTML = chipHTML(p);
+        b.addEventListener('click', ()=>select(p.id,'pp',b));
+        poolPP.appendChild(b);
+      });
+
+      refreshChipUsage();
+    }
+
+    function select(id, from, el){
+      // toggla markering
+      document.querySelectorAll('.chip.selected').forEach(c=>c.classList.remove('selected'));
+      if (state.selected && state.selected.id===id && state.selected.from===from){
+        state.selected=null; return;
+      }
+      state.selected = {id, from};
+      el.classList.add('selected');
+      setStatus(from==='lines' ? 'Vald för kedja' : 'Vald för PP1');
+    }
+
+    function refreshChipUsage(){
+      const usedInLines = new Set(Object.values(state.lines).flatMap(o=>Object.values(o)).filter(Boolean));
+      document.querySelectorAll('#pool-lines .chip').forEach(c=>{
+        c.classList.toggle('used-lines', usedInLines.has(c.dataset.id));
+      });
+      const usedInPP = new Set(Object.values(state.pp1).filter(Boolean));
+      document.querySelectorAll('#pool-pp .chip').forEach(c=>{
+        c.classList.toggle('used-pp', usedInPP.has(c.dataset.id));
+      });
+    }
+
+    // === 4) Slots: placera / rensa ===
+    function slotInner(p){ return `<div class="inner"><span class="no">${p.no||''}</span><span>${p.name}</span></div><button class="remove" aria-label="Ta bort">×</button>`; }
+
+    // Lines (5v5) – samma forward får bara finnas på ett ställe totalt
+    document.querySelectorAll('.line-card .slot').forEach(slot=>{
+      slot.addEventListener('click', (e)=>{
+        const line = slot.closest('.line-card').dataset.line;
+        const pos  = slot.dataset.pos;
+        if (slot.classList.contains('filled')){
+          // ta bort
+          const id = state.lines[line][pos];
+          state.lines[line][pos]=null;
+          slot.classList.remove('filled'); slot.innerHTML = `<span class="role-label">${pos}</span>`;
+          state.selected=null; document.querySelectorAll('.chip.selected').forEach(c=>c.classList.remove('selected'));
+          refreshChipUsage(); return;
         }
-
-        slot.textContent = "";
-        slot.appendChild(dragged);
-        slot.classList.add("filled");
+        if (!state.selected || state.selected.from!=='lines'){ setStatus('Välj en forward i poolen först.'); return; }
+        const id = state.selected.id;
+        // stoppa dubbletter: om id redan finns i någon line -> ta bort därifrån
+        for (const L of ['1','2','3','4']){
+          for (const R of ['LW','C','RW']){
+            if (state.lines[L][R]===id){
+              const oldSlot = document.querySelector(`.line-card[data-line="${L}"] .slot[data-pos="${R}"]`);
+              state.lines[L][R]=null;
+              if (oldSlot){ oldSlot.classList.remove('filled'); oldSlot.innerHTML = `<span class="role-label">${R}</span>`; }
+            }
+          }
+        }
+        // placera
+        const p = fwdById[id];
+        state.lines[line][pos]=id;
+        slot.classList.add('filled');
+        slot.innerHTML = `<span class="role-label">${pos}</span>${slotInner(p)}`;
+        slot.querySelector('.remove').addEventListener('click', (ev)=>{ ev.stopPropagation(); slot.click(); });
+        refreshChipUsage();
       });
     });
 
-    pool.addEventListener("dragover", e => e.preventDefault());
-    pool.addEventListener("drop", e => {
-      e.preventDefault();
-      const name = e.dataTransfer.getData("text/plain");
-      const dragged = [...chips].find(c => c.textContent === name);
-      pool.appendChild(dragged);
+    // PP1 – samma spelare får inte ha två PP1-roller samtidigt (men får vara i både lines och PP1)
+    document.querySelectorAll('[data-pp]').forEach(slot=>{
+      slot.addEventListener('click', ()=>{
+        const role = slot.dataset.pp;
+        if (slot.classList.contains('filled')){
+          const id = state.pp1[role];
+          state.pp1[role]=null;
+          slot.classList.remove('filled'); slot.innerHTML = `<span class="role-label">${role}</span>`;
+          state.selected=null; document.querySelectorAll('.chip.selected').forEach(c=>c.classList.remove('selected'));
+          refreshChipUsage(); return;
+        }
+        if (!state.selected || state.selected.from!=='pp'){ setStatus('Välj en spelare i PP-poolen först.'); return; }
+        const id = state.selected.id;
+        // Om spelaren redan används i annan PP1-roll – flytta
+        for (const r of ['PNT','LFL','BUM','RFL','NET']){
+          if (state.pp1[r]===id){
+            const old = document.querySelector(`[data-pp="${r}"]`);
+            state.pp1[r]=null;
+            if (old){ old.classList.remove('filled'); old.innerHTML = `<span class="role-label">${r}</span>`; }
+          }
+        }
+        const p = skaById[id];
+        state.pp1[role]=id;
+        slot.classList.add('filled');
+        slot.innerHTML = `<span class="role-label">${role}</span>${slotInner(p)}`;
+        slot.querySelector('.remove').addEventListener('click', (ev)=>{ ev.stopPropagation(); slot.click(); });
+        refreshChipUsage();
+      });
     });
 
-    document.getElementById("submitBtn").addEventListener("click", () => {
-      const result = {};
-      document.querySelectorAll(".line").forEach(line => {
-        const lineNum = line.dataset.line;
-        result[lineNum] = [...line.querySelectorAll(".chip")].map(c => c.textContent);
+    // === 5) Reset & Status ===
+    document.getElementById('resetBtn').addEventListener('click', ()=>{
+      state.selected=null;
+      document.querySelectorAll('.chip.selected').forEach(c=>c.classList.remove('selected'));
+      for (const L of ['1','2','3','4']) for (const R of ['LW','C','RW']) state.lines[L][R]=null;
+      for (const r of ['PNT','LFL','BUM','RFL','NET']) state.pp1[r]=null;
+      document.querySelectorAll('.slot').forEach(s=>{
+        if (s.dataset.pos) s.innerHTML = `<span class="role-label">${s.dataset.pos}</span>`;
+        if (s.dataset.pp)  s.innerHTML = `<span class="role-label">${s.dataset.pp}</span>`;
+        s.classList.remove('filled');
       });
-      console.log("Röstning skickad:", result);
-      alert("Tack! Ditt förslag är inskickat.");
-      // här anropar du ditt API med fetch()
+      refreshChipUsage();
+      setStatus('Återställt.');
+      document.getElementById('outCard').style.display='none';
     });
+    const statusEl = document.getElementById('status');
+    function setStatus(s){ statusEl.textContent = s; }
+
+    // === 6) Submit (demo: visa JSON) ===
+    document.getElementById('submitBtn').addEventListener('click', ()=>{
+      // validera
+      for (const L of ['1','2','3','4']){
+        const filled = Object.values(state.lines[L]).filter(Boolean).length;
+        if (filled!==3){ alert(`Fyll tre spelare i Kedja ${L}.`); return; }
+      }
+      for (const r of ['PNT','LFL','BUM','RFL','NET']){
+        if (!state.pp1[r]){ alert('Fyll alla PP1-roller.'); return; }
+      }
+      const payload = {
+        match_id: Number(matchId)||null,
+        lines: {},
+        pp1: [],
+        scratch: []
+      };
+      for (const L of ['1','2','3','4']){
+        payload.lines[L] = ['LW','C','RW'].map(role=>{
+          const id = state.lines[L][role];
+          const p = fwdById[id];
+          return { pos: role, id, name: p.name, jersey: p.no };
+        });
+      }
+      for (const r of ['PNT','LFL','BUM','RFL','NET']){
+        const id = state.pp1[r];
+        const p = skaById[id];
+        payload.pp1.push({ role:r, id, name:p.name, jersey:p.no, position:p.pos });
+      }
+      // Läktaren = forwards som inte placerats i lines
+      const usedFwd = new Set(Object.values(state.lines).flatMap(o=>Object.values(o)));
+      payload.scratch = FWD.filter(p=>!usedFwd.has(p.id)).map(p=>({ id:p.id, name:p.name, jersey:p.no }));
+
+      // Demo: visa på sidan + i konsolen
+      console.log('RÖSTNING:', payload);
+      document.getElementById('out').textContent = JSON.stringify(payload, null, 2);
+      document.getElementById('outCard').style.display='block';
+      setStatus('Payload genererad (demo).');
+      // Nästa steg: koppla till backend:
+      // fetch(`/api/match/${matchId}/lines-vote`, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload)})
+    });
+
+    // init
+    renderPools();
+    setStatus(matchId!=='0' ? `Match #${matchId}` : 'Ingen match-id i URL: använd ?match=4');
   </script>
 </body>
 </html>
