@@ -14,12 +14,21 @@
   *{box-sizing:border-box}
   body{margin:0;background:var(--hv-blue);color:var(--ink);font-family:system-ui,-apple-system,Inter,Roboto,Segoe UI,Helvetica,Arial,sans-serif}
   header{position:sticky;top:0;z-index:10;background:linear-gradient(180deg,#09203b 0%,#0a2240 100%);border-bottom:1px solid rgba(255,255,255,.06);padding:12px 14px 10px}
-  h1{margin:0 0 4px;color:var(--hv-yellow);font-size:1.2rem}
+  h1{margin:0 0 4px;color:var(--hv-yellow);font-size:1.35rem}
   .wrap{max-width:980px;margin:0 auto;padding:12px}
 
   .card{background:var(--card);border:1px solid rgba(255,255,255,.10);border-radius:14px;padding:12px;margin:12px 0;box-shadow:0 2px 0 rgba(0,0,0,.25)}
-  .card h2{margin:0 0 8px;font-size:1.02rem;display:flex;gap:8px;align-items:center}
-  .badge{background:rgba(255,203,1,.16);color:var(--hv-yellow);padding:2px 8px;border-radius:999px;font-weight:700;font-size:.78rem}
+  .card h2{margin:0 0 8px;display:flex;gap:8px;align-items:center}
+  .title-chip{
+    display:inline-flex;align-items:center;gap:10px;background:var(--chip);
+    border:1px solid rgba(255,255,255,.14);border-radius:999px;padding:8px 14px;
+    color:#fff; font-weight:900; font-size:1.05rem; letter-spacing:.2px;
+  }
+  .title-chip .dot{
+    width:26px;height:26px;border-radius:999px;background:var(--hv-yellow);color:#1c1500;
+    font-weight:900;display:inline-flex;align-items:center;justify-content:center;
+    box-shadow:0 1px 0 rgba(0,0,0,.25)
+  }
 
   /* PP1: distinkt kort */
   .card.alt{
@@ -54,14 +63,14 @@
   .grid-lines{display:grid;grid-template-columns:1fr;gap:10px}
   @media(min-width:720px){.grid-lines{grid-template-columns:1fr 1fr}}
   .line-card{background:var(--card-strong);border:1px solid rgba(255,255,255,.10);border-radius:12px;padding:10px}
-  .line-title{margin:0 0 6px;font-weight:800;color:#cfe0ff}
+  .line-title{margin:0 0 6px;color:var(--hv-yellow);font-weight:900;font-size:1.05rem}
   .slots{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
   .slot{
     height:50px;border:1px dashed var(--slot-b);background:var(--slot);
     border-radius:10px;display:flex;align-items:center;justify-content:center;position:relative;cursor:pointer
   }
   .slot.filled{border-style:solid;background:#0e2647}
-  .role{position:absolute;top:6px;left:8px;font-size:.75rem;color:var(--muted)}
+  .role{position:absolute;top:6px;left:8px;font-size:.8rem;color:var(--hv-yellow);font-weight:800}
   .slot .inner{display:flex;align-items:center;gap:6px;font-weight:800}
   .slot .inner .no{
     min-width:22px;height:22px;line-height:22px;border-radius:999px;background:var(--hv-yellow);color:#1c1500;font-size:.78rem;text-align:center
@@ -96,7 +105,7 @@
   .pp-row.top{grid-template-columns:1fr}
   .pp-row.mid{grid-template-columns:1fr 1fr 1fr}
   .pp-row.bot{grid-template-columns:1fr}
-  .pp-slot label{display:block;font-size:.85rem;color:#e5efff;margin-bottom:4px}
+  .pp-slot label{display:block;font-size:.95rem;color:var(--hv-yellow);font-weight:900;margin-bottom:4px}
   select{width:100%;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,.18);background:#0e2445;color:#e5efff}
   optgroup[label]{color:#cfe0ff}
 
@@ -105,6 +114,7 @@
   .btn{border:none;cursor:pointer;border-radius:10px;font-weight:800}
   .btn.primary{background:var(--hv-yellow);color:#1c1500;padding:12px 14px}
   .btn.ghost{background:transparent;color:#cfe0ff;border:1px solid rgba(255,255,255,.16);padding:10px 12px}
+  a.btn{display:inline-flex;align-items:center;text-decoration:none}
   #outCard{display:none}
   pre{white-space:pre-wrap;background:#081833;border:1px solid rgba(255,255,255,.12);padding:10px;border-radius:10px;color:#cfe0ff;font-size:.85rem}
 </style>
@@ -114,16 +124,16 @@
 
 <div class="wrap">
 
-  <!-- A. POOL (forwards) – kompakt och först -->
+  <!-- A. POOL (forwards) -->
   <div class="card">
-    <h2>Spelarpool <span class="badge">Forwards</span></h2>
+    <h2><span class="title-chip"><span class="dot">F</span>Forwards</span></h2>
     <div class="pool-controls"><button id="togglePool" class="toggle">Visa alla</button></div>
     <div id="pool-lines" class="pool" aria-label="Forwards till kedjor"></div>
   </div>
 
   <!-- B. KEDJORNA -->
   <div class="card">
-    <h2>Kedjor</h2>
+    <h2><span class="title-chip"><span class="dot">K</span>Kedjor</span></h2>
     <div class="grid-lines">
       <div class="line-card" data-line="1">
         <p class="line-title">Kedja 1</p>
@@ -160,9 +170,9 @@
     </div>
   </div>
 
-  <!-- C. PP1 – tydlig formation (egen färg + mållinje) -->
+  <!-- C. PP1 -->
   <div class="card alt">
-    <h2>PP1 – 1–3–1</h2>
+    <h2><span class="title-chip"><span class="dot">P</span>PP1</span></h2>
     <div class="pp-rink">
       <div class="rink-decor"></div>
       <div class="goal-line"></div>
@@ -184,21 +194,33 @@
         </div>
       </div>
     </div>
-    <p class="muted" style="margin-top:8px">Målet är längst ned i rutan.</p>
   </div>
 
   <!-- D. Actions -->
   <div class="actions">
     <button class="btn primary" id="submitBtn">Skicka</button>
     <button class="btn ghost" id="resetBtn">Rensa</button>
+    <a class="btn ghost" id="liveLink" href="#">Resultat just nu</a>
     <span id="status" class="muted"></span>
   </div>
 
-  <!-- E. Demo-output -->
+  <!-- E. Demo-output (kan döljas när du är live) -->
   <div class="card" id="outCard"><h2>Payload (demo)</h2><pre id="out"></pre></div>
 </div>
 
 <script>
+  /* ===== Helper: match-id + fingerprint ===== */
+  const qp = new URLSearchParams(location.search);
+  const matchId = qp.get('match') || '0';
+  function getFingerprint(){
+    const KEY='hv71_fp';
+    try{
+      let v = localStorage.getItem(KEY);
+      if(!v){ v = (crypto.randomUUID?.() || String(Math.random())).replace(/-/g,''); localStorage.setItem(KEY, v); }
+      return v + ':' + (navigator.userAgent || '');
+    }catch(_){ return (navigator.userAgent||'ua') + ':' + Date.now(); }
+  }
+
   /* ===== Trupp (hårdkodat) ===== */
   const DEFENSE = [
     {no:38, name:'Olle Alsing', pos:'D'},
@@ -265,7 +287,6 @@
     state.selected = was ? null : id;
     poolEl.querySelectorAll('.chip').forEach(c=>c.classList.remove('selected'));
     if(!was) el.classList.add('selected');
-    setStatus(state.selected? 'Forward vald – tryck LW/C/RW.' : '');
   }
   toggleEl.addEventListener('click', ()=>{
     poolEl.classList.toggle('expanded');
@@ -283,7 +304,7 @@
         slot.classList.remove('filled'); slot.innerHTML=`<span class="role">${pos}</span>`;
         refreshPoolUsage(); return;
       }
-      if(!state.selected){ setStatus('Välj forward i poolen först.'); return; }
+      if(!state.selected){ return; }
       // ta bort om forward redan finns någonstans
       for(const L of ['1','2','3','4']) for(const R of ['LW','C','RW']){
         if(state.lines[L][R]===state.selected){
@@ -299,7 +320,7 @@
     });
   });
 
-  /* ===== PP1 dropdowns (Forwards först, Backar sen) ===== */
+  /* ===== PP1 dropdowns ===== */
   const ppIds = ['PNT','LFL','BUM','RFL','NET'];
   const selects = Object.fromEntries(ppIds.map(id=>[id, document.getElementById('pp-'+id)]));
   function buildPPSelects(){
@@ -324,9 +345,13 @@
     });
   }
 
-  /* ===== Submit/Reset/Status ===== */
+  /* ===== Actions + POST till backend ===== */
   const statusEl = document.getElementById('status');
   function setStatus(s){statusEl.textContent=s||'';}
+
+  // "Resultat just nu" – pekar på framtida sida
+  const liveLink = document.getElementById('liveLink');
+  liveLink.href = `/resultat-lines.html?match=${encodeURIComponent(matchId)}`;
 
   document.getElementById('resetBtn').addEventListener('click', ()=>{
     state.selected=null;
@@ -338,7 +363,7 @@
     setStatus('Återställt.');
   });
 
-  document.getElementById('submitBtn').addEventListener('click', ()=>{
+  document.getElementById('submitBtn').addEventListener('click', async ()=>{
     // validering
     for(const L of ['1','2','3','4']){
       const filled = Object.values(state.lines[L]).filter(Boolean).length;
@@ -363,10 +388,30 @@
     const usedFwd = new Set(Object.values(state.lines).flatMap(o=>Object.values(o)));
     payload.scratch = FORWARDS.filter(p=>!usedFwd.has(p.id)).map(p=>({id:p.id,name:p.name,jersey:p.no}));
 
-    document.getElementById('out').textContent = JSON.stringify(payload,null,2);
+    const body = {
+      anon_fingerprint: getFingerprint(),
+      ...payload
+    };
+
+    // visa lokalt (kan tas bort)
+    document.getElementById('out').textContent = JSON.stringify({match_id:matchId, ...body}, null, 2);
     document.getElementById('outCard').style.display='block';
-    console.log('RÖSTNING:', payload);
-    setStatus('Payload genererad (demo).');
+
+    // POST till backend
+    try{
+      const resp = await fetch(`/api/match/${encodeURIComponent(matchId)}/lines-vote`, {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify(body)
+      });
+      const data = await resp.json();
+      if(!resp.ok) throw new Error(data?.error || `HTTP ${resp.status}`);
+      setStatus('✅ Tack! Rösten är sparad.');
+    }catch(e){
+      console.error(e);
+      setStatus('❌ Kunde inte spara. Försök igen om en stund.');
+      alert('Kunde inte spara röstningen: ' + e.message);
+    }
   });
 
   // init
