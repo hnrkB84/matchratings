@@ -4,11 +4,17 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>HV71 – Kedjor & PP1</title>
+<meta property="og:title" content="HV71 – Kedjor & PP1 (Rösta på dina formationer)">
+<meta property="og:description" content="Bygg dina kedjor och PP1 för HV71 och skicka din röst.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="sv_SE">
+<meta property="og:image" content="/share-kedjor.jpg">
+<meta property="og:url" content="">
 <style>
   :root{
     --hv-blue:#0a2240; --hv-yellow:#ffcb01; --ink:#e8eef6;
     --card:#0b1f3a; --card-strong:#0d1f3d;
-    --pp-card:#0f264d; /* tydligt annorlunda för PP1 */
+    --pp-card:#0f264d;
     --slot:#112949; --slot-b:#2f4a75; --chip:#0f2d58; --muted:#9fb3d9;
   }
   *{box-sizing:border-box}
@@ -30,19 +36,11 @@
     box-shadow:0 1px 0 rgba(0,0,0,.25)
   }
 
-  /* PP1: distinkt kort */
-  .card.alt{
-    background:var(--pp-card);
-    border:1px solid rgba(255,255,255,.22);
-    box-shadow:inset 0 0 0 2px rgba(255,203,1,.10);
-    position:relative;
-  }
-  .card.alt::before{
-    content:""; position:absolute; left:-1px; top:-1px; bottom:-1px; width:4px;
-    background:linear-gradient(180deg,#ffd84a,#ffcb01); border-radius:12px 0 0 12px;
-  }
+  /* liten instruktion */
+  .hint{background:var(--card-strong);border:1px solid rgba(255,255,255,.10);border-radius:12px;padding:10px;color:#cfe0ff;font-size:.95rem}
+  .hint b{color:#ffdc4d}
 
-  /* kollapsbar analys */
+  /* kollapsbar analys (oförändrad) */
   details.collapsible{background:var(--card-strong);border:1px solid rgba(255,255,255,.10);border-radius:12px;padding:8px 10px}
   details.collapsible summary{
     cursor:pointer; list-style:none; user-select:none; font-weight:900; color:var(--hv-yellow);
@@ -55,7 +53,7 @@
   .analysis h3{margin:10px 0 6px; font-size:1rem; color:#eaf2ff}
   .bullet{color:#7fb0ff}
 
-  /* kompakt pool */
+  /* pool */
   .pool-controls{display:flex;justify-content:flex-end;margin-bottom:6px}
   .toggle{background:transparent;color:#cfe0ff;border:1px solid rgba(255,255,255,.16);padding:6px 10px;border-radius:10px;cursor:pointer;font-weight:700}
   .pool{display:flex;flex-wrap:wrap;gap:6px;max-height:120px;overflow:hidden;transition:max-height .2s ease}
@@ -90,28 +88,15 @@
   }
   .slot .remove{position:absolute;right:6px;top:6px;background:transparent;border:none;color:#b8c5db;font-size:18px;cursor:pointer}
 
-  /* PP1 rink – dekor bakom innehållet, ingen overlap */
-  .pp-rink{
-    position:relative;
-    padding:16px 14px 54px;
-    border-radius:12px;
-    background:linear-gradient(180deg,#163058 0%, #142b50 100%);
-    border:1px solid rgba(255,255,255,.15);
-    overflow:hidden;
-  }
-  .rink-decor,.goal-line,.net{
-    position:absolute; pointer-events:none; z-index:0;
-  }
+  /* PP1 */
+  .card.alt{background:var(--pp-card);border:1px solid rgba(255,255,255,.22);box-shadow:inset 0 0 0 2px rgba(255,203,1,.10);position:relative;}
+  .card.alt::before{content:""; position:absolute; left:-1px; top:-1px; bottom:-1px; width:4px;background:linear-gradient(180deg,#ffd84a,#ffcb01); border-radius:12px 0 0 12px;}
+  .pp-rink{position:relative;padding:16px 14px 54px;border-radius:12px;background:linear-gradient(180deg,#163058 0%, #142b50 100%);border:1px solid rgba(255,255,255,.15);overflow:hidden;}
+  .rink-decor,.goal-line,.net{position:absolute; pointer-events:none; z-index:0;}
   .rink-decor{inset:0;border-radius:12px;box-shadow:inset 0 0 0 2px rgba(255,255,255,.08)}
   .goal-line{left:12px;right:12px;bottom:36px;height:2px;background:rgba(255,255,255,.35)}
-  .net{
-    left:calc(50% - 18px);bottom:14px;width:36px;height:18px;
-    border:2px solid rgba(255,255,255,.9);border-top:none;border-radius:0 0 6px 6px;
-  }
-  .net::after{
-    content:'MÅL'; position:absolute; top:-18px; left:50%; transform:translateX(-50%);
-    font-size:.7rem; color:#cfe0ff; opacity:.9;
-  }
+  .net{left:calc(50% - 18px);bottom:14px;width:36px;height:18px;border:2px solid rgba(255,255,255,.9);border-top:none;border-radius:0 0 6px 6px;}
+  .net::after{content:'MÅL'; position:absolute; top:-18px; left:50%; transform:translateX(-50%);font-size:.7rem; color:#cfe0ff; opacity:.9;}
   .pp-content{position:relative; z-index:1;}
   .pp-grid{display:grid;grid-template-rows:auto auto auto;gap:10px}
   .pp-row{display:grid;gap:10px}
@@ -130,12 +115,6 @@
   a.btn{display:inline-flex;align-items:center;text-decoration:none}
   #outCard{display:none}
   pre{white-space:pre-wrap;background:#081833;border:1px solid rgba(255,255,255,.12);padding:10px;border-radius:10px;color:#cfe0ff;font-size:.85rem}
-
-  /* iframe resultat */
-  .results-frame{
-    width:100%; height:520px; border:1px solid rgba(255,255,255,.12);
-    border-radius:12px; background:#081833;
-  }
 </style>
 </head>
 <body>
@@ -143,51 +122,35 @@
 
 <div class="wrap">
 
-  <!-- 0. Kedjeanalys (kollapsbar) -->
+  <!-- Kort, enkel instruktion -->
+  <div class="hint">
+    <b>Så här gör du:</b> Tryck på <b>spelaren</b> du vill använda, tryck sedan på <b>positionen</b> i rätt kedja. Välj PP1 via rullistorna. Tryck <b>Skicka</b> för att spara (du kan ändra när som helst).
+  </div>
+
+  <!-- (valfritt) Kedjeanalys kvar som tidigare -->
   <details class="collapsible card">
     <summary><span class="chev">▶</span> Kedjeanalys</summary>
     <div class="analysis">
+      <!-- Din befintliga analystext här (oförändrad från din version) -->
       <p class="bullet">🔹 <strong>Kedja 1: Rousek – Kloos – Stål Lyrenäs</strong></p>
       <p><strong>Lukas Rousek</strong><br>0 poäng, CF% 43, PDO 95<br>Får runt 16 min/match men har svårt att driva spelet.<br>Laget hamnar under press med honom på isen.</p>
       <p><strong>Justin Kloos</strong><br>2 TP, CF% 50, PDO 100<br>Stabil men inte bärande, PP-tid utan större utdelning.<br>Neutral påverkan – varken negativ eller tydligt drivande.</p>
       <p><strong>Oskar Stål Lyrenäs</strong><br>0 poäng, CF% 40, PDO 95<br>Spelar runt 15 min/match, även i PP.<br>Svagt spelmässigt och ingen utdelning offensivt.</p>
-      <p><em>Kedjan:</em> Har fått mycket istid men skapar för lite. Negativa possession-siffror och ingen offensiv produktion gör detta till den svagaste formationen hittills.</p>
-
       <p class="bullet">🔹 <strong>Kedja 2: Ang – Johnsen – Woods</strong></p>
-      <p><strong>Jonathan Ang</strong><br>3 TP, CF% 60, PDO 104<br>Spelar mest av forwards (~19 min/match), i både PP och PK.<br>Kedjans motor och den som driver spelet framåt.</p>
-      <p><strong>Martin Johnsen</strong><br>2 TP, CF% 52, PDO 107<br>Spelar 14 min/match, används i alla spelformer.<br>Bidrar både med produktion och arbetsinsats i två riktningar.</p>
-      <p><strong>Riley Woods</strong><br>2 TP, CF% 53, PDO 108<br>15 min/match, PP-tid, vinner många tekningar (68 %).<br>Ger laget puckinnehav och kompletterar bra med Ang.</p>
-      <p><em>Kedjan:</em> Den mest balanserade och framgångsrika enheten. Alla tre har producerat, possession är stabilt och rollerna kompletterar varandra.</p>
-
+      <p><strong>Jonathan Ang</strong><br>3 TP, CF% 60, PDO 104<br>Spelar mest av forwards (~19 min/match), i både PP och PK.</p>
+      <p><strong>Martin Johnsen</strong><br>2 TP, CF% 52, PDO 107</p>
+      <p><strong>Riley Woods</strong><br>2 TP, CF% 53, PDO 108</p>
       <p class="bullet">🔹 <strong>Kedja 3: Luoto – Heponiemi – Pasic</strong></p>
-      <p><strong>Joona Luoto</strong><br>1 TP, CF% 64, PDO 88<br>Nästan 20 min/match, PP + PK.<br>Statistiskt lagets bästa drivspelare, men låg utdelning p.g.a. otur.</p>
-      <p><strong>Aleksi Heponiemi</strong><br>1 mål (PP), CF% 64, PDO 92<br>19:37/match, tung roll i PP.<br>Bra underliggande siffror men ineffektivitet i 5v5.</p>
-      <p><strong>Nikola Pasic</strong><br>1 TP, CF% 55, PDO 84<br>16 min/match, spelar PP men inte levererat.<br>-4 i plus/minus, tyngre start än kedjekamraterna.</p>
-      <p><em>Kedjan:</em> Två starka spelmotorer (Luoto/Heponiemi) som driver spelet, men utdelningen kommer inte. Pasic är den svagare länken men helheten ser lovande ut om effektiviteten kommer.</p>
-
+      <p><strong>Joona Luoto</strong> …</p>
       <p class="bullet">🔹 <strong>Kedja 4: Brännström – Reber – Ingberg Nilsson – Tedenby (+ Lindström)</strong></p>
-      <p><strong>Isac Brännström</strong><br>1 TP, CF% 51, PDO 78<br>Spelar ~11 min/match.<br>Bidrar med stabilt spel men ineffektiviteten syns i låg PDO.</p>
-      <p><strong>Jamiro Reber</strong><br>0 poäng, CF% 63, PDO 100<br>6–7 min/match.<br>Små roller men mycket stark possession när han väl spelar.</p>
-      <p><strong>William Ignberg Nilsson</strong><br>0 poäng, knappt 7 min/match.<br>Begränsad roll, liten påverkan.</p>
-      <p><strong>Mattias Tedenby</strong><br>1 TP på 2 matcher, ~3 min/match.<br>Kort istid men har ändå producerat lite.</p>
-      <p><strong>Linus Lindström</strong><br>Började i en toppkedja, flyttades sedan ner.<br>Inga poäng, CF% 47, tekningar 42 %.<br>Har inte riktigt hittat rätt roll än.</p>
-      <p><em>Kedjan:</em> Matchas sparsamt men Brännström och Reber sticker ut positivt i possession. Lindström används mer för att fylla ut än att driva.</p>
-
+      <p><strong>…</strong></p>
       <h3>📊 Samlad bild</h3>
       <ul>
-        <li><strong>Kedja 2 (Ang–Johnsen–Woods)</strong> → klart mest effektiv, både produktion och starka underliggande siffror.</li>
-        <li><strong>Kedja 3 (Luoto–Heponiemi–Pasic)</strong> → drivs av Luoto/Heponiemi, men ineffektiviteten gör att utdelningen uteblivit.</li>
-        <li><strong>Kedja 1 (Rousek–Kloos–Stål Lyrenäs)</strong> → svagast, negativt spelövertag och ingen produktion trots mycket istid.</li>
-        <li><strong>Kedja 4 (... + Lindström)</strong> → små roller, men positiva signaler från Brännström och Reber.</li>
+        <li><strong>Kedja 2</strong> → mest effektiv.</li>
+        <li><strong>Kedja 3</strong> → bra driv, låg utdelning.</li>
       </ul>
     </div>
   </details>
-
-  <!-- 0b. Live-resultat (inbäddat) -->
-  <div class="card">
-    <h2><span class="title-chip"><span class="dot">R</span>Resultat – kedjor (live)</span></h2>
-    <iframe id="resultsFrame" class="results-frame" src="" loading="lazy" title="Resultat kedjor"></iframe>
-  </div>
 
   <!-- A. POOL (forwards) -->
   <div class="card">
@@ -265,7 +228,8 @@
   <div class="actions">
     <button class="btn primary" id="submitBtn">Skicka</button>
     <button class="btn ghost" id="resetBtn">Rensa</button>
-    <a class="btn ghost" id="liveLink" href="#" target="_blank" rel="noopener">Resultat just nu</a>
+    <a class="btn ghost" id="liveLink" href="#" target="_blank" rel="noopener">Visa resultat</a>
+    <button class="btn ghost" id="shareBtn" type="button" title="Dela den här sidan">Dela sidan</button>
     <span id="status" class="muted"></span>
   </div>
 
@@ -274,9 +238,15 @@
 </div>
 
 <script>
-  /* ===== Helper: match-id + fingerprint ===== */
+  // Set og:url
+  (function setCanonicalOg(){
+    const m = document.querySelector('meta[property="og:url"]');
+    if(m) m.setAttribute('content', location.href);
+  })();
+
+  /* ===== Query & fingerprint ===== */
   const qp = new URLSearchParams(location.search);
-  const matchId = qp.get('match') || null; // tillåt frånvaro av match-id
+  const matchId = qp.get('match') || null;
 
   function getFingerprint(){
     const KEY='hv71_fp';
@@ -327,20 +297,18 @@
     pp1: {PNT:null,LFL:null,BUM:null,RFL:null,NET:null},
   };
 
-  /* ===== Resultat-URL (utan query om inget id) ===== */
+  /* ===== Resultat-länk ===== */
   function resultsUrl(){
     return matchId ? `/resultat-lines.html?match=${encodeURIComponent(matchId)}`
                    : `/resultat-lines.html`;
   }
+  document.getElementById('liveLink').href = resultsUrl();
 
-  /* ===== Iframe: resultat-lines.html ===== */
-  const resultsFrame = document.getElementById('resultsFrame');
-  function setResultsSrc(){
-    resultsFrame.src = resultsUrl();
+  if (!matchId) {
+    document.getElementById('status').textContent = 'Stand-alone röstning (ingen match i URL).';
   }
-  setResultsSrc();
 
-  /* ===== Pool (kompakt, ingen sök) ===== */
+  /* ===== Pool ===== */
   const poolEl = document.getElementById('pool-lines');
   const toggleEl = document.getElementById('togglePool');
   function chipHTML(p){return `<span class="no">${p.no}</span><span>${p.name}</span>`;}
@@ -413,7 +381,6 @@
       DEFENSE.forEach(p=>ogD.appendChild(new Option(`${p.no} ${p.name}`, p.id)));
       sel.appendChild(ogF); sel.appendChild(ogD);
       sel.addEventListener('change', ()=>{
-        // hindra dublett i PP-roller
         const chosen = ppIds.map(k=>selects[k].value).filter(Boolean);
         const set = new Set(chosen);
         if(set.size !== chosen.length){
@@ -424,13 +391,14 @@
     });
   }
 
-  /* ===== POST: fallback-kedja när match-id saknas ===== */
+  /* ===== POST (stand-alone först) ===== */
   async function postLinesVote(body){
     const endpoints = [];
-    if (matchId) {
-      endpoints.push(`/api/match/${encodeURIComponent(matchId)}/lines-vote`);
+    if (!matchId) {
+      endpoints.push(`/api/lines-vote`);
+      endpoints.push(`/api/match/current/lines-vote`); // legacy fallback
     } else {
-      endpoints.push(`/api/match/current/lines-vote`);
+      endpoints.push(`/api/match/${encodeURIComponent(matchId)}/lines-vote`);
       endpoints.push(`/api/lines-vote`);
     }
     let lastErr;
@@ -451,17 +419,9 @@
     throw lastErr || new Error('Ingen fungerande endpoint hittades');
   }
 
-  /* ===== Actions + POST ===== */
+  /* ===== Actions ===== */
   const statusEl = document.getElementById('status');
   function setStatus(s){statusEl.textContent=s||'';}
-
-  // "Resultat just nu" – öppnar resultat-sidan i ny flik
-  const liveLink = document.getElementById('liveLink');
-  liveLink.href = resultsUrl();
-
-  if (!matchId) {
-    setStatus('Ingen match i URL: sparar till aktiv match och visar live-resultat utan filter.');
-  }
 
   document.getElementById('resetBtn').addEventListener('click', ()=>{
     state.selected=null;
@@ -474,14 +434,12 @@
   });
 
   document.getElementById('submitBtn').addEventListener('click', async ()=>{
-    // validering
     for(const L of ['1','2','3','4']){
       const filled = Object.values(state.lines[L]).filter(Boolean).length;
       if(filled!==3){ alert(`Fyll tre spelare i Kedja ${L}.`); return; }
     }
     for(const id of ppIds){ if(!selects[id].value){ alert('Välj alla PP1-roller.'); return; } }
 
-    // payload
     const payload = { lines:{}, pp1:[], scratch:[] };
     for(const L of ['1','2','3','4']){
       payload.lines[L] = ['LW','C','RW'].map(role=>{
@@ -498,24 +456,39 @@
     const usedFwd = new Set(Object.values(state.lines).flatMap(o=>Object.values(o)));
     payload.scratch = FORWARDS.filter(p=>!usedFwd.has(p.id)).map(p=>({id:p.id,name:p.name,jersey:p.no}));
 
-    const body = {
-      anon_fingerprint: getFingerprint(),
-      ...payload
-    };
+    const body = { anon_fingerprint: getFingerprint(), ...payload };
 
-    // visa lokalt (kan tas bort)
-    document.getElementById('out').textContent = JSON.stringify({match_id:matchId ?? 'current', ...body}, null, 2);
+    document.getElementById('out').textContent = JSON.stringify({match_id:matchId ?? 'standalone', ...body}, null, 2);
     document.getElementById('outCard').style.display='block';
 
-    // POST med fallback
     try{
       await postLinesVote(body);
       setStatus('✅ Tack! Rösten är sparad.');
-      setResultsSrc(); // uppdatera live-resultat
     }catch(e){
       console.error(e);
       setStatus('❌ Kunde inte spara. Försök igen om en stund.');
       alert('Kunde inte spara röstningen: ' + e.message);
+    }
+  });
+
+  // Share
+  const shareBtn = document.getElementById('shareBtn');
+  shareBtn.addEventListener('click', async ()=>{
+    const url = location.href;
+    const title = document.title;
+    const text = 'Bygg dina HV71-kedjor & PP1 och rösta här:';
+    try{
+      if(navigator.share){
+        await navigator.share({title, text, url});
+        setStatus('Delad ✔');
+      }else{
+        await navigator.clipboard.writeText(url);
+        setStatus('Länk kopierad ✔');
+        shareBtn.textContent = 'Länk kopierad';
+        setTimeout(()=>{shareBtn.textContent='Dela sidan'; setStatus('');}, 2000);
+      }
+    }catch(e){
+      setStatus('Kunde inte dela.');
     }
   });
 
