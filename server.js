@@ -57,6 +57,7 @@ const voteLimiter = rateLimit({
 });
 app.use("/api/submit", voteLimiter);
 app.use("/api/rate", voteLimiter);
+app.use("/api/lines-vote", voteLimiter); // återanvänd limiter för stand-alone kedjor/PP
 
 // (valfritt men bra): mild limiter för admin-API
 const adminLimiter = rateLimit({
@@ -141,24 +142,23 @@ CREATE TABLE IF NOT EXISTS vote_context (
   FOREIGN KEY(match_id) REFERENCES matches(id) ON DELETE CASCADE
 );
 
--- Fansens röster för kedjor + PP1 (en per match & fingerprint)
+-- Ny STAND-ALONE-tabell för kedjor/PP1 utan match_id
 CREATE TABLE IF NOT EXISTS line_pp_votes (
   id INTEGER PRIMARY KEY,
-  match_id INTEGER NOT NULL,
   anon_fingerprint TEXT NOT NULL,
   payload_json TEXT NOT NULL, -- {"lines":{...},"pp1":[...],"scratch":[...]}
   created_at TEXT DEFAULT CURRENT_TIMESTAMP,
   updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
-  UNIQUE(match_id, anon_fingerprint),
-  FOREIGN KEY(match_id) REFERENCES matches(id) ON DELETE CASCADE
+  UNIQUE(anon_fingerprint)
 );
+
+CREATE INDEX IF NOT EXISTS idx_linepp_fingerprint ON line_pp_votes(anon_fingerprint);
 
 CREATE INDEX IF NOT EXISTS idx_ratings_match ON ratings(match_id);
 CREATE INDEX IF NOT EXISTS idx_ratings_player ON ratings(player_id);
 CREATE INDEX IF NOT EXISTS idx_context_match ON vote_context(match_id);
 CREATE INDEX IF NOT EXISTS idx_stars_match ON stars(match_id);
 CREATE INDEX IF NOT EXISTS idx_roster_match ON match_roster(match_id);
-CREATE INDEX IF NOT EXISTS idx_linepp_match ON line_pp_votes(match_id);
 `);
 
 // Lägg till nya tidskolumner om de saknas
@@ -189,6 +189,55 @@ CREATE INDEX IF NOT EXISTS idx_linepp_match ON line_pp_votes(match_id);
         e.message
       );
     }
+  }
+})();
+
+// Migration: säkerställ att line_pp_votes är STAND-ALONE (utan match_id)
+(function migrateLinePPVotesStandalone() {
+  try {
+    const cols = db.prepare(`PRAGMA table_info(line_pp_votes)`).all();
+    if (!cols.length) return; // tabellen skapades ovan om den inte fanns
+    const hasMatchId = cols.some((c) => c.name === "match_id");
+    if (!hasMatchId) return; // redan stand-alone
+
+    console.log("[MIGRATE] Converting line_pp_votes to stand-alone (dropping match_id)");
+    const tx = db.transaction(() => {
+      // Byt namn på gamla tabellen
+      db.exec(`ALTER TABLE line_pp_votes RENAME TO line_pp_votes_old;`);
+
+      // Skapa nya stand-alone
+      db.exec(`
+        CREATE TABLE line_pp_votes (
+          id INTEGER PRIMARY KEY,
+          anon_fingerprint TEXT NOT NULL,
+          payload_json TEXT NOT NULL,
+          created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+          updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
+          UNIQUE(anon_fingerprint)
+        );
+      `);
+
+      // Migrera data: ta senaste posten per fingerprint
+      db.exec(`
+        INSERT INTO line_pp_votes (anon_fingerprint, payload_json, created_at, updated_at)
+        SELECT anon_fingerprint,
+               payload_json,
+               MAX(created_at) AS created_at,
+               MAX(updated_at) AS updated_at
+        FROM line_pp_votes_old
+        GROUP BY anon_fingerprint;
+      `);
+
+      // Index
+      db.exec(`CREATE INDEX IF NOT EXISTS idx_linepp_fingerprint ON line_pp_votes(anon_fingerprint);`);
+
+      // Rensa gammal tabell
+      db.exec(`DROP TABLE line_pp_votes_old;`);
+    });
+    tx();
+    console.log("[MIGRATE] line_pp_votes migration complete");
+  } catch (e) {
+    console.warn("[MIGRATE] line_pp_votes migration skipped/error:", e.message);
   }
 })();
 
@@ -427,51 +476,72 @@ app.post("/api/submit", (req, res) => {
   res.json({ ok: true, saved: ratings.length, starred: Number.isInteger(star_player_id) && rosterIds.has(star_player_id) });
 });
 
-// --- Lines/PP votes (fansens kedjor + PP1) ---
-app.post("/api/match/:id/lines-vote", voteLimiter, (req, res) => {
-  const match_id = parseInt(req.params.id, 10);
-  const { anon_fingerprint, lines, pp1, scratch } = req.body || {};
+// --- STAND-ALONE Lines/PP votes (fansens kedjor + PP1) ---
+// OBS: tidigare /api/match/:id/lines-vote är borttagen – inget match_id längre.
 
-  if (!match_id || !anon_fingerprint) {
-    return res.status(400).json({ error: "match_id (param) och anon_fingerprint krävs" });
+// Enkel schema-validering för lines/pp1
+function validateLinesPayload(body) {
+  const { anon_fingerprint, lines, pp1, scratch } = body || {};
+  if (!anon_fingerprint || typeof anon_fingerprint !== "string" || !anon_fingerprint.trim()) {
+    throw new Error("anon_fingerprint krävs");
   }
 
-  // är matchen öppen?
-  const m = matchByIdStmt.get(match_id);
-  if (!m || !isVotingOpen(m)) return res.status(403).json({ error: "Voting closed" });
+  const Ls = ["1", "2", "3", "4"];
+  const Rs = ["LW", "C", "RW"];
+  if (!lines || typeof lines !== "object") throw new Error("lines saknas");
+  for (const L of Ls) {
+    if (!Array.isArray(lines[L]) || lines[L].length !== 3)
+      throw new Error(`lines.${L} måste ha exakt 3 poster`);
+    for (const item of lines[L]) {
+      if (!item || !Rs.includes(item.pos) || typeof item.id !== "string" || !item.id.trim())
+        throw new Error(`lines.${L} fel format`);
+    }
+  }
 
-  // enkel formvalidering
+  const PP = ["PNT", "LFL", "BUM", "RFL", "NET"];
+  if (!Array.isArray(pp1) || pp1.length !== 5) throw new Error("pp1 måste ha exakt 5 poster");
+  for (const item of pp1) {
+    if (!item || !PP.includes(item.role) || typeof item.id !== "string" || !item.id.trim())
+      throw new Error("pp1 fel format");
+  }
+
+  if (!Array.isArray(scratch)) throw new Error("scratch måste vara array");
+
+  return { anon_fingerprint: anon_fingerprint.trim(), lines, pp1, scratch };
+}
+
+app.post("/api/lines-vote", (req, res) => {
+  let payload;
   try {
-    const Ls = ["1", "2", "3", "4"];
-    const Rs = ["LW", "C", "RW"];
-    if (!lines || typeof lines !== "object") throw new Error("lines saknas");
-    for (const L of Ls) {
-      if (!Array.isArray(lines[L]) || lines[L].length !== 3) throw new Error("lines." + L + " måste ha 3 poster");
-      for (const item of lines[L]) {
-        if (!item || !Rs.includes(item.pos) || !item.id) throw new Error("lines." + L + " fel format");
-      }
-    }
-
-    const PP = ["PNT", "LFL", "BUM", "RFL", "NET"];
-    if (!Array.isArray(pp1) || pp1.length !== 5) throw new Error("pp1 måste ha 5 poster");
-    for (const item of pp1) {
-      if (!item || !PP.includes(item.role) || !item.id) throw new Error("pp1 fel format");
-    }
-
-    if (!Array.isArray(scratch)) throw new Error("scratch måste vara array");
+    payload = validateLinesPayload(req.body);
   } catch (e) {
     return res.status(400).json({ error: String(e.message || e) });
   }
 
   const upsert = db.prepare(`
-    INSERT INTO line_pp_votes (match_id, anon_fingerprint, payload_json)
-    VALUES (?, ?, json(?))
-    ON CONFLICT(match_id, anon_fingerprint)
+    INSERT INTO line_pp_votes (anon_fingerprint, payload_json)
+    VALUES (?, json(?))
+    ON CONFLICT(anon_fingerprint)
     DO UPDATE SET payload_json=excluded.payload_json, updated_at=CURRENT_TIMESTAMP
   `);
-  upsert.run(match_id, anon_fingerprint, JSON.stringify({ lines, pp1, scratch }));
+  upsert.run(payload.anon_fingerprint, JSON.stringify({ lines: payload.lines, pp1: payload.pp1, scratch: payload.scratch }));
 
   res.json({ ok: true });
+});
+
+app.get("/api/lines-results", (_req, res) => {
+  const rows = db
+    .prepare(
+      `
+      SELECT id, anon_fingerprint, payload_json, created_at, updated_at
+      FROM line_pp_votes
+      ORDER BY updated_at DESC, id DESC
+    `
+    )
+    .all();
+
+  // Returnera count och hela listan (payload som sträng för enkelhet; klient kan JSON.parse)
+  res.json({ count: rows.length, votes: rows });
 });
 
 // --- Averages (attendance-filter) ---

@@ -42,6 +42,19 @@
     background:linear-gradient(180deg,#ffd84a,#ffcb01); border-radius:12px 0 0 12px;
   }
 
+  /* kollapsbar analys */
+  details.collapsible{background:var(--card-strong);border:1px solid rgba(255,255,255,.10);border-radius:12px;padding:8px 10px}
+  details.collapsible summary{
+    cursor:pointer; list-style:none; user-select:none; font-weight:900; color:var(--hv-yellow);
+    display:flex; gap:8px; align-items:center; margin:4px 0;
+  }
+  details.collapsible summary::-webkit-details-marker{display:none}
+  .chev{display:inline-block; transition:transform .2s ease}
+  details[open] .chev{transform:rotate(90deg)}
+  .analysis{padding:6px 2px 2px 2px; line-height:1.45}
+  .analysis h3{margin:10px 0 6px; font-size:1rem; color:#eaf2ff}
+  .bullet{color:#7fb0ff}
+
   /* kompakt pool */
   .pool-controls{display:flex;justify-content:flex-end;margin-bottom:6px}
   .toggle{background:transparent;color:#cfe0ff;border:1px solid rgba(255,255,255,.16);padding:6px 10px;border-radius:10px;cursor:pointer;font-weight:700}
@@ -80,14 +93,14 @@
   /* PP1 rink – dekor bakom innehållet, ingen overlap */
   .pp-rink{
     position:relative;
-    padding:16px 14px 54px; /* extra bottenpadding så nätet får plats */
+    padding:16px 14px 54px;
     border-radius:12px;
     background:linear-gradient(180deg,#163058 0%, #142b50 100%);
     border:1px solid rgba(255,255,255,.15);
     overflow:hidden;
   }
   .rink-decor,.goal-line,.net{
-    position:absolute; pointer-events:none; z-index:0; /* bakom all form */
+    position:absolute; pointer-events:none; z-index:0;
   }
   .rink-decor{inset:0;border-radius:12px;box-shadow:inset 0 0 0 2px rgba(255,255,255,.08)}
   .goal-line{left:12px;right:12px;bottom:36px;height:2px;background:rgba(255,255,255,.35)}
@@ -117,12 +130,64 @@
   a.btn{display:inline-flex;align-items:center;text-decoration:none}
   #outCard{display:none}
   pre{white-space:pre-wrap;background:#081833;border:1px solid rgba(255,255,255,.12);padding:10px;border-radius:10px;color:#cfe0ff;font-size:.85rem}
+
+  /* iframe resultat */
+  .results-frame{
+    width:100%; height:520px; border:1px solid rgba(255,255,255,.12);
+    border-radius:12px; background:#081833;
+  }
 </style>
 </head>
 <body>
 <header><h1>Bygg kedjor & PP1</h1></header>
 
 <div class="wrap">
+
+  <!-- 0. Kedjeanalys (kollapsbar) -->
+  <details class="collapsible card">
+    <summary><span class="chev">▶</span> Kedjeanalys</summary>
+    <div class="analysis">
+      <p class="bullet">🔹 <strong>Kedja 1: Rousek – Kloos – Stål Lyrenäs</strong></p>
+      <p><strong>Lukas Rousek</strong><br>0 poäng, CF% 43, PDO 95<br>Får runt 16 min/match men har svårt att driva spelet.<br>Laget hamnar under press med honom på isen.</p>
+      <p><strong>Justin Kloos</strong><br>2 TP, CF% 50, PDO 100<br>Stabil men inte bärande, PP-tid utan större utdelning.<br>Neutral påverkan – varken negativ eller tydligt drivande.</p>
+      <p><strong>Oskar Stål Lyrenäs</strong><br>0 poäng, CF% 40, PDO 95<br>Spelar runt 15 min/match, även i PP.<br>Svagt spelmässigt och ingen utdelning offensivt.</p>
+      <p><em>Kedjan:</em> Har fått mycket istid men skapar för lite. Negativa possession-siffror och ingen offensiv produktion gör detta till den svagaste formationen hittills.</p>
+
+      <p class="bullet">🔹 <strong>Kedja 2: Ang – Johnsen – Woods</strong></p>
+      <p><strong>Jonathan Ang</strong><br>3 TP, CF% 60, PDO 104<br>Spelar mest av forwards (~19 min/match), i både PP och PK.<br>Kedjans motor och den som driver spelet framåt.</p>
+      <p><strong>Martin Johnsen</strong><br>2 TP, CF% 52, PDO 107<br>Spelar 14 min/match, används i alla spelformer.<br>Bidrar både med produktion och arbetsinsats i två riktningar.</p>
+      <p><strong>Riley Woods</strong><br>2 TP, CF% 53, PDO 108<br>15 min/match, PP-tid, vinner många tekningar (68 %).<br>Ger laget puckinnehav och kompletterar bra med Ang.</p>
+      <p><em>Kedjan:</em> Den mest balanserade och framgångsrika enheten. Alla tre har producerat, possession är stabilt och rollerna kompletterar varandra.</p>
+
+      <p class="bullet">🔹 <strong>Kedja 3: Luoto – Heponiemi – Pasic</strong></p>
+      <p><strong>Joona Luoto</strong><br>1 TP, CF% 64, PDO 88<br>Nästan 20 min/match, PP + PK.<br>Statistiskt lagets bästa drivspelare, men låg utdelning p.g.a. otur.</p>
+      <p><strong>Aleksi Heponiemi</strong><br>1 mål (PP), CF% 64, PDO 92<br>19:37/match, tung roll i PP.<br>Bra underliggande siffror men ineffektivitet i 5v5.</p>
+      <p><strong>Nikola Pasic</strong><br>1 TP, CF% 55, PDO 84<br>16 min/match, spelar PP men inte levererat.<br>-4 i plus/minus, tyngre start än kedjekamraterna.</p>
+      <p><em>Kedjan:</em> Två starka spelmotorer (Luoto/Heponiemi) som driver spelet, men utdelningen kommer inte. Pasic är den svagare länken men helheten ser lovande ut om effektiviteten kommer.</p>
+
+      <p class="bullet">🔹 <strong>Kedja 4: Brännström – Reber – Ingberg Nilsson – Tedenby (+ Lindström)</strong></p>
+      <p><strong>Isac Brännström</strong><br>1 TP, CF% 51, PDO 78<br>Spelar ~11 min/match.<br>Bidrar med stabilt spel men ineffektiviteten syns i låg PDO.</p>
+      <p><strong>Jamiro Reber</strong><br>0 poäng, CF% 63, PDO 100<br>6–7 min/match.<br>Små roller men mycket stark possession när han väl spelar.</p>
+      <p><strong>William Ignberg Nilsson</strong><br>0 poäng, knappt 7 min/match.<br>Begränsad roll, liten påverkan.</p>
+      <p><strong>Mattias Tedenby</strong><br>1 TP på 2 matcher, ~3 min/match.<br>Kort istid men har ändå producerat lite.</p>
+      <p><strong>Linus Lindström</strong><br>Började i en toppkedja, flyttades sedan ner.<br>Inga poäng, CF% 47, tekningar 42 %.<br>Har inte riktigt hittat rätt roll än.</p>
+      <p><em>Kedjan:</em> Matchas sparsamt men Brännström och Reber sticker ut positivt i possession. Lindström används mer för att fylla ut än att driva.</p>
+
+      <h3>📊 Samlad bild</h3>
+      <ul>
+        <li><strong>Kedja 2 (Ang–Johnsen–Woods)</strong> → klart mest effektiv, både produktion och starka underliggande siffror.</li>
+        <li><strong>Kedja 3 (Luoto–Heponiemi–Pasic)</strong> → drivs av Luoto/Heponiemi, men ineffektiviteten gör att utdelningen uteblivit.</li>
+        <li><strong>Kedja 1 (Rousek–Kloos–Stål Lyrenäs)</strong> → svagast, negativt spelövertag och ingen produktion trots mycket istid.</li>
+        <li><strong>Kedja 4 (... + Lindström)</strong> → små roller, men positiva signaler från Brännström och Reber.</li>
+      </ul>
+    </div>
+  </details>
+
+  <!-- 0b. Live-resultat (inbäddat) -->
+  <div class="card">
+    <h2><span class="title-chip"><span class="dot">R</span>Resultat – kedjor (live)</span></h2>
+    <iframe id="resultsFrame" class="results-frame" src="" loading="lazy" title="Resultat kedjor"></iframe>
+  </div>
 
   <!-- A. POOL (forwards) -->
   <div class="card">
@@ -200,7 +265,7 @@
   <div class="actions">
     <button class="btn primary" id="submitBtn">Skicka</button>
     <button class="btn ghost" id="resetBtn">Rensa</button>
-    <a class="btn ghost" id="liveLink" href="#">Resultat just nu</a>
+    <a class="btn ghost" id="liveLink" href="#" target="_blank" rel="noopener">Resultat just nu</a>
     <span id="status" class="muted"></span>
   </div>
 
@@ -211,7 +276,8 @@
 <script>
   /* ===== Helper: match-id + fingerprint ===== */
   const qp = new URLSearchParams(location.search);
-  const matchId = qp.get('match') || '0';
+  const matchId = qp.get('match') || null; // tillåt frånvaro av match-id
+
   function getFingerprint(){
     const KEY='hv71_fp';
     try{
@@ -260,6 +326,19 @@
     lines: {1:{LW:null,C:null,RW:null},2:{LW:null,C:null,RW:null},3:{LW:null,C:null,RW:null},4:{LW:null,C:null,RW:null}},
     pp1: {PNT:null,LFL:null,BUM:null,RFL:null,NET:null},
   };
+
+  /* ===== Resultat-URL (utan query om inget id) ===== */
+  function resultsUrl(){
+    return matchId ? `/resultat-lines.html?match=${encodeURIComponent(matchId)}`
+                   : `/resultat-lines.html`;
+  }
+
+  /* ===== Iframe: resultat-lines.html ===== */
+  const resultsFrame = document.getElementById('resultsFrame');
+  function setResultsSrc(){
+    resultsFrame.src = resultsUrl();
+  }
+  setResultsSrc();
 
   /* ===== Pool (kompakt, ingen sök) ===== */
   const poolEl = document.getElementById('pool-lines');
@@ -345,13 +424,44 @@
     });
   }
 
-  /* ===== Actions + POST till backend ===== */
+  /* ===== POST: fallback-kedja när match-id saknas ===== */
+  async function postLinesVote(body){
+    const endpoints = [];
+    if (matchId) {
+      endpoints.push(`/api/match/${encodeURIComponent(matchId)}/lines-vote`);
+    } else {
+      endpoints.push(`/api/match/current/lines-vote`);
+      endpoints.push(`/api/lines-vote`);
+    }
+    let lastErr;
+    for (const url of endpoints) {
+      try {
+        const resp = await fetch(url, {
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body: JSON.stringify(body)
+        });
+        const data = await resp.json();
+        if (!resp.ok) throw new Error(data?.error || `HTTP ${resp.status}`);
+        return data;
+      } catch (e) {
+        lastErr = e;
+      }
+    }
+    throw lastErr || new Error('Ingen fungerande endpoint hittades');
+  }
+
+  /* ===== Actions + POST ===== */
   const statusEl = document.getElementById('status');
   function setStatus(s){statusEl.textContent=s||'';}
 
-  // "Resultat just nu" – pekar på framtida sida
+  // "Resultat just nu" – öppnar resultat-sidan i ny flik
   const liveLink = document.getElementById('liveLink');
-  liveLink.href = `/resultat-lines.html?match=${encodeURIComponent(matchId)}`;
+  liveLink.href = resultsUrl();
+
+  if (!matchId) {
+    setStatus('Ingen match i URL: sparar till aktiv match och visar live-resultat utan filter.');
+  }
 
   document.getElementById('resetBtn').addEventListener('click', ()=>{
     state.selected=null;
@@ -394,19 +504,14 @@
     };
 
     // visa lokalt (kan tas bort)
-    document.getElementById('out').textContent = JSON.stringify({match_id:matchId, ...body}, null, 2);
+    document.getElementById('out').textContent = JSON.stringify({match_id:matchId ?? 'current', ...body}, null, 2);
     document.getElementById('outCard').style.display='block';
 
-    // POST till backend
+    // POST med fallback
     try{
-      const resp = await fetch(`/api/match/${encodeURIComponent(matchId)}/lines-vote`, {
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body: JSON.stringify(body)
-      });
-      const data = await resp.json();
-      if(!resp.ok) throw new Error(data?.error || `HTTP ${resp.status}`);
+      await postLinesVote(body);
       setStatus('✅ Tack! Rösten är sparad.');
+      setResultsSrc(); // uppdatera live-resultat
     }catch(e){
       console.error(e);
       setStatus('❌ Kunde inte spara. Försök igen om en stund.');
