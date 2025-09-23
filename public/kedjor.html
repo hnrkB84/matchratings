@@ -4,12 +4,28 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>HV71 – Kedjor & PP1</title>
-<meta property="og:title" content="HV71 – Kedjor & PP1 (Rösta på dina formationer)">
-<meta property="og:description" content="Bygg dina kedjor och PP1 för HV71 och skicka din röst.">
+
+<!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:locale" content="sv_SE">
-<meta property="og:image" content="/share-kedjor.jpg">
-<meta property="og:url" content="">
+<meta property="og:title" content="HV71 – Kedjor & PP1 (Rösta på dina formationer)">
+<meta property="og:description" content="Bygg dina kedjor och PP1 för HV71 och skicka din röst.">
+<meta property="og:url" content="https://matchratings.onrender.com/kedjor.html">
+<meta property="og:image" content="https://matchratings.onrender.com/kedjorog.jpeg">
+<meta property="og:image:alt" content="HV71 – Bygg kedjor & PP1">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="HV71 – Kedjor & PP1 (Rösta på dina formationer)">
+<meta name="twitter:description" content="Bygg dina kedjor och PP1 för HV71 och skicka din röst.">
+<meta name="twitter:image" content="https://matchratings.onrender.com/kedjorog.jpeg">
+<meta name="twitter:url" content="https://matchratings.onrender.com/kedjor.html">
+
+<link rel="canonical" href="https://matchratings.onrender.com/kedjor.html">
+
 <style>
   :root{
     --hv-blue:#0a2240; --hv-yellow:#ffcb01; --ink:#e8eef6;
@@ -224,12 +240,6 @@
 </div>
 
 <script>
-  // Set og:url
-  (function setCanonicalOg(){
-    const m = document.querySelector('meta[property="og:url"]');
-    if(m) m.setAttribute('content', location.href);
-  })();
-
   /* ===== Query & fingerprint ===== */
   const qp = new URLSearchParams(location.search);
   const matchId = qp.get('match') || null;
