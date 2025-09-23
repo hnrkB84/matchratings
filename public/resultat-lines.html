@@ -17,17 +17,20 @@
   .sub{margin:0;color:#bdd1f6;font-weight:600;font-size:.95rem}
   .wrap{max-width:980px;margin:0 auto;padding:12px}
 
+  /* Share bar */
+  .sharebar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:10px 0 14px}
+  .btn{border:none;cursor:pointer;border-radius:10px;font-weight:800}
+  .btn.primary{background:var(--hv-yellow);color:#1c1500;padding:10px 12px}
+  .btn.ghost{background:transparent;color:#cfe0ff;border:1px solid rgba(255,255,255,.16);padding:10px 12px}
+  .muted{color:#9fb3d9}
+  .ok{color:#b6ffb3}
+  .err{color:#ffd1d1}
+
   .row{display:grid;gap:10px}
   @media(min-width:780px){.row.two{grid-template-columns:1fr 1fr}}
   @media(min-width:980px){.row.three{grid-template-columns:1fr 1fr 1fr}}
   .card{background:var(--card);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:12px;box-shadow:0 2px 0 rgba(0,0,0,.25)}
   .card h2{margin:0 0 8px;color:var(--hv-yellow);font-size:1.05rem}
-  .meta{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-  .pill{display:inline-flex;align-items:center;gap:6px;background:#0f2d58;border:1px solid rgba(255,255,255,.12);color:#e8f0ff;border-radius:999px;padding:6px 10px;font-weight:800}
-  .btn{border:none;cursor:pointer;border-radius:10px;font-weight:800}
-  .btn.ghost{background:transparent;color:#cfe0ff;border:1px solid rgba(255,255,255,.16);padding:8px 10px}
-  .switch{display:inline-flex;align-items:center;gap:8px}
-  .switch input{transform:scale(1.2)}
 
   .grid-lines{display:grid;grid-template-columns:1fr;gap:10px}
   @media(min-width:760px){.grid-lines{grid-template-columns:1fr 1fr}}
@@ -50,27 +53,23 @@
   @media(min-width:760px){.pp-grid{grid-template-columns:repeat(5,1fr)}}
   .pp-role{background:var(--card-strong);border:1px solid rgba(255,255,255,.10);border-radius:12px;padding:10px}
   .pp-role h3{margin:0 0 6px;color:#ffdc4d;font-size:.95rem}
-  .muted{color:#9fb3d9}
 
   .scratch-list li{display:flex;gap:8px;align-items:center;margin:4px 0}
-  footer{opacity:.85;margin:16px 0 8px;font-size:.85rem;color:#a9c0e9}
 </style>
 </head>
 <body>
   <header>
     <h1>Resultat – Kedjor & PP1</h1>
-    <p class="sub">Live-sammanställning av röster</p>
+    <p class="sub">Sammanställning av röstning</p>
   </header>
 
   <div class="wrap">
-    <div class="card">
-      <div class="meta">
-        <span id="voteCount" class="pill">Röster: –</span>
-        <span id="lastUpdated" class="pill">Uppdaterad: –</span>
-        <button id="refreshBtn" class="btn ghost">Uppdatera</button>
-        <label class="switch pill"><input id="autoChk" type="checkbox" /> Auto-refresh</label>
-        <span id="scope" class="muted"></span>
-      </div>
+    <!-- Share / Länk -->
+    <div class="sharebar">
+      <button id="shareBtn" class="btn primary">Dela denna sida</button>
+      <button id="copyBtn" class="btn ghost">Kopiera länk</button>
+      <a class="btn ghost" href="https://matchratings.onrender.com/kedjor.html" target="_blank" rel="noopener">Öppna delningssida</a>
+      <span id="shareMsg" class="muted"></span>
     </div>
 
     <div class="row">
@@ -93,35 +92,64 @@
         <ul id="scratch" class="scratch-list"></ul>
         <p class="muted small" id="scratchNote">Visas om rådata innehåller scratch-val.</p>
       </div>
-      <div class="card">
-        <h2>Teknik</h2>
-        <p class="muted small">Denna vy försöker först hämta aggregerade resultat. Om servern istället ger råa röster (t.ex. <code>{ count, votes:[{payload_json:...}] }</code>) summeras de i webbläsaren.</p>
-      </div>
+      <!-- Teknik-kortet borttaget -->
     </div>
-
-    <footer>HV-tema ©</footer>
   </div>
 
 <script>
 (() => {
-  // ===== URL & scope =====
+  // ===== URL (stöd för ?match=) =====
   const qp = new URLSearchParams(location.search);
-  const matchId = qp.get('match') || null; // stöder ev. äldre länkning
-  const scopeEl = document.getElementById('scope');
-  scopeEl.textContent = matchId ? `(match ${matchId})` : '(stand-alone)';
+  const matchId = qp.get('match') || null;
 
   // ===== Elements =====
   const linesEl   = document.getElementById('lines');
   const ppEl      = document.getElementById('pp1');
   const scratchEl = document.getElementById('scratch');
-  const voteCountEl = document.getElementById('voteCount');
-  const updatedEl   = document.getElementById('lastUpdated');
-  const refreshBtn  = document.getElementById('refreshBtn');
-  const autoChk     = document.getElementById('autoChk');
+  const shareBtn  = document.getElementById('shareBtn');
+  const copyBtn   = document.getElementById('copyBtn');
+  const shareMsg  = document.getElementById('shareMsg');
+
+  // ===== Share handlers =====
+  shareBtn.addEventListener('click', async () => {
+    const shareData = { title: document.title, text: 'Kolla in HV71-fansens kedjeresultat', url: location.href };
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+        shareMsg.textContent = 'Delat!';
+        shareMsg.className = 'ok';
+      } catch {
+        shareMsg.textContent = 'Delning avbröts.';
+        shareMsg.className = 'muted';
+      }
+    } else {
+      // fallback: kopiera länk
+      try {
+        await navigator.clipboard.writeText(location.href);
+        shareMsg.textContent = 'Länk kopierad!';
+        shareMsg.className = 'ok';
+      } catch {
+        shareMsg.textContent = 'Kunde inte kopiera länken.';
+        shareMsg.className = 'err';
+      }
+    }
+    setTimeout(()=>{ shareMsg.textContent=''; shareMsg.className='muted'; }, 3000);
+  });
+
+  copyBtn.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(location.href);
+      shareMsg.textContent = 'Länk kopierad!';
+      shareMsg.className = 'ok';
+    } catch {
+      shareMsg.textContent = 'Kunde inte kopiera länken.';
+      shareMsg.className = 'err';
+    }
+    setTimeout(()=>{ shareMsg.textContent=''; shareMsg.className='muted'; }, 3000);
+  });
 
   // ===== Helpers =====
   const fmtPct = (x)=> (x*100).toFixed(0) + '%';
-  const nowStr = ()=> new Date().toLocaleString();
 
   function blankAgg(){
     return {
@@ -139,17 +167,9 @@
   }
 
   // ---- Server svar -> normaliserad struktur ----
-  // Format som stöds:
-  //  A) Stand-alone (från /api/lines-results):
-  //     { count:<n>, votes:[ { id, anon_fingerprint, payload_json:'{"lines":...,"pp1":...,"scratch":[...]}' } ] }
-  //  B) Aggregat:
-  //     { total_votes, players, lines:{...}, pp1:{...}, scratch? }
-  //  C) Rå utan omslag: { votes:[ {lines, pp1, scratch} ] }
   function normalizeResponse(data){
-    // B) redan aggregerat
-    if (data && data.total_votes !== undefined && data.lines && data.pp1) {
-      return data;
-    }
+    // Redan aggregerat format
+    if (data && data.total_votes !== undefined && data.lines && data.pp1) return data;
     if (data && data.counts && data.players) {
       const A = blankAgg();
       A.total_votes = data.counts.total_votes ?? 0;
@@ -159,28 +179,22 @@
       if (data.scratch) A.scratch = data.scratch;
       return A;
     }
-
-    // A/C) aggregera i klient
+    // Annars – samla från råa röster
     return aggregateFromRaw(data);
   }
 
   function aggregateFromRaw(raw){
     const A = blankAgg();
-
-    // Om servern skickar {count, votes:[rows]}
     let votes = [];
     if (raw && Array.isArray(raw.votes)) {
-      // Rader kan innehålla payload_json (string). Mappa till rena objekt.
       votes = raw.votes.map(row => {
         if (row && typeof row.payload_json === 'string') {
-          try { return JSON.parse(row.payload_json); }
-          catch { return null; }
+          try { return JSON.parse(row.payload_json); } catch { return null; }
         }
-        // Eller redan objekt (lines, pp1, scratch)
         return row || null;
       }).filter(Boolean);
     } else if (raw && Array.isArray(raw)) {
-      votes = raw; // redan array
+      votes = raw;
     } else if (raw && raw.lines && raw.pp1) {
       votes = [raw];
     }
@@ -243,6 +257,7 @@
       <span class="pct">${fmtPct(leader.c/total)}</span>
     `;
     container.appendChild(leaderLine);
+
     const bar = document.createElement('div'); bar.className='bar';
     const span = document.createElement('span'); span.style.width = (leader.c/total*100)+'%';
     bar.appendChild(span); container.appendChild(bar);
@@ -311,14 +326,14 @@
     }
   }
 
-  // ===== Fetch logic (med fallback) =====
+  // ===== Fetch (enkel hämtning utan refresh/auto) =====
   async function fetchResults(){
     const urls = [];
     if (matchId) {
-      urls.push(`/api/match/${encodeURIComponent(matchId)}/lines-results`); // om du i framtiden vill segmentera per match
+      urls.push(`/api/match/${encodeURIComponent(matchId)}/lines-results`);
     } else {
-      urls.push(`/api/lines-results`); // stand-alone primärt
-      urls.push(`/api/match/current/lines-results`); // legacy fallback
+      urls.push(`/api/lines-results`);
+      urls.push(`/api/match/current/lines-results`);
     }
     let lastErr;
     for (const u of urls) {
@@ -332,39 +347,22 @@
     throw lastErr || new Error('Ingen fungerande results-endpoint hittades');
   }
 
-  async function refresh(){
+  async function init(){
     try{
       const raw = await fetchResults();
       const A = normalizeResponse(raw);
-
-      voteCountEl.textContent = `Röster: ${A.total_votes}`;
-      updatedEl.textContent   = `Uppdaterad: ${nowStr()}`;
-
       renderLines(A);
       renderPP(A);
       renderScratch(A);
     }catch(e){
       console.error(e);
-      updatedEl.textContent = 'Uppdaterad: fel vid hämtning';
       linesEl.innerHTML = `<div class="small">Kunde inte hämta resultat: ${e.message}</div>`;
       ppEl.innerHTML    = '';
       scratchEl.innerHTML = '';
     }
   }
 
-  // Init
-  refresh();
-  refreshBtn.addEventListener('click', refresh);
-
-  // Auto refresh
-  let timer = null;
-  autoChk.addEventListener('change', ()=>{
-    if (autoChk.checked) {
-      timer = setInterval(refresh, 15000); // 15 s
-    } else {
-      clearInterval(timer); timer=null;
-    }
-  });
+  init();
 })();
 </script>
 </body>

@@ -40,18 +40,17 @@
   .hint{background:var(--card-strong);border:1px solid rgba(255,255,255,.10);border-radius:12px;padding:10px;color:#cfe0ff;font-size:.95rem}
   .hint b{color:#ffdc4d}
 
-  /* kollapsbar analys (oförändrad) */
+  /* kollapsbar analys */
   details.collapsible{background:var(--card-strong);border:1px solid rgba(255,255,255,.10);border-radius:12px;padding:8px 10px}
   details.collapsible summary{
-    cursor:pointer; list-style:none; user-select:none; font-weight:900; color:var(--hv-yellow);
+    cursor:pointer; list-style:none; user-select:none; font-weight:900; color:#fff;
     display:flex; gap:8px; align-items:center; margin:4px 0;
   }
   details.collapsible summary::-webkit-details-marker{display:none}
   .chev{display:inline-block; transition:transform .2s ease}
   details[open] .chev{transform:rotate(90deg)}
   .analysis{padding:6px 2px 2px 2px; line-height:1.45}
-  .analysis h3{margin:10px 0 6px; font-size:1rem; color:#eaf2ff}
-  .bullet{color:#7fb0ff}
+  .analysis p{margin:6px 0}
 
   /* pool */
   .pool-controls{display:flex;justify-content:flex-end;margin-bottom:6px}
@@ -81,7 +80,7 @@
     border-radius:10px;display:flex;align-items:center;justify-content:center;position:relative;cursor:pointer
   }
   .slot.filled{border-style:solid;background:#0e2647}
-  .role{position:absolute;top:6px;left:8px;font-size:.8rem;color:var(--hv-yellow);font-weight:800}
+  .role{position:absolute;top:6px;left:8px;font-size:.8rem;color:#ffdc4d;font-weight:800}
   .slot .inner{display:flex;align-items:center;gap:6px;font-weight:800}
   .slot .inner .no{
     min-width:22px;height:22px;line-height:22px;border-radius:999px;background:var(--hv-yellow);color:#1c1500;font-size:.78rem;text-align:center
@@ -103,7 +102,7 @@
   .pp-row.top{grid-template-columns:1fr}
   .pp-row.mid{grid-template-columns:1fr 1fr 1fr}
   .pp-row.bot{grid-template-columns:1fr}
-  .pp-slot label{display:block;font-size:.95rem;color:var(--hv-yellow);font-weight:900;margin-bottom:4px}
+  .pp-slot label{display:block;font-size:.95rem;color:#ffdc4d;font-weight:900;margin-bottom:4px}
   select{width:100%;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,.18);background:#0e2445;color:#e5efff}
   optgroup[label]{color:#cfe0ff}
 
@@ -127,28 +126,15 @@
     <b>Så här gör du:</b> Tryck på <b>spelaren</b> du vill använda, tryck sedan på <b>positionen</b> i rätt kedja. Välj PP1 via rullistorna. Tryck <b>Skicka</b> för att spara (du kan ändra när som helst).
   </div>
 
-  <!-- (valfritt) Kedjeanalys kvar som tidigare -->
+  <!-- Kedjeanalys -->
   <details class="collapsible card">
     <summary><span class="chev">▶</span> Kedjeanalys</summary>
     <div class="analysis">
-      <!-- Din befintliga analystext här (oförändrad från din version) -->
-      <p class="bullet">🔹 <strong>Kedja 1: Rousek – Kloos – Stål Lyrenäs</strong></p>
-      <p><strong>Lukas Rousek</strong><br>0 poäng, CF% 43, PDO 95<br>Får runt 16 min/match men har svårt att driva spelet.<br>Laget hamnar under press med honom på isen.</p>
-      <p><strong>Justin Kloos</strong><br>2 TP, CF% 50, PDO 100<br>Stabil men inte bärande, PP-tid utan större utdelning.<br>Neutral påverkan – varken negativ eller tydligt drivande.</p>
-      <p><strong>Oskar Stål Lyrenäs</strong><br>0 poäng, CF% 40, PDO 95<br>Spelar runt 15 min/match, även i PP.<br>Svagt spelmässigt och ingen utdelning offensivt.</p>
-      <p class="bullet">🔹 <strong>Kedja 2: Ang – Johnsen – Woods</strong></p>
-      <p><strong>Jonathan Ang</strong><br>3 TP, CF% 60, PDO 104<br>Spelar mest av forwards (~19 min/match), i både PP och PK.</p>
-      <p><strong>Martin Johnsen</strong><br>2 TP, CF% 52, PDO 107</p>
-      <p><strong>Riley Woods</strong><br>2 TP, CF% 53, PDO 108</p>
-      <p class="bullet">🔹 <strong>Kedja 3: Luoto – Heponiemi – Pasic</strong></p>
-      <p><strong>Joona Luoto</strong> …</p>
-      <p class="bullet">🔹 <strong>Kedja 4: Brännström – Reber – Ingberg Nilsson – Tedenby (+ Lindström)</strong></p>
-      <p><strong>…</strong></p>
-      <h3>📊 Samlad bild</h3>
-      <ul>
-        <li><strong>Kedja 2</strong> → mest effektiv.</li>
-        <li><strong>Kedja 3</strong> → bra driv, låg utdelning.</li>
-      </ul>
+      <p><b>Rousek – Kloos – (Lindström) – Stål-Lyrenäs:</b> Kedjan har topp-6-förtroende men nästan ingen 5v5-produktion. Lindströms frånvaro och rollbyte har rört om, men framför allt saknas målchanser som omsätts i poäng.</p>
+      <p><b>Ang – Johnsen – Woods:</b> Ska vara en bärande offensiv kedja men levererar inte i 5v5. Ang spelar närmast 20 min per match utan att skapa utdelning – ett tydligt exempel på toppkedjornas problem.</p>
+      <p><b>Luoto – Heponiemi – Pasic:</b> Får mest istid i hela laget men producerar lika lite som de andra toppformationerna. Det ser mer ut som en effektivitetsdipp än att de inte kan skapa, men resultatet är ändå att kedjan inte driver HV71 framåt.</p>
+      <p><b>Brännström – Reber – Ingberg Nilsson – Tedenby:</b> Fjärdekedjan spelar lite och påverkar inte helheten. Här finns inget större problem – men de kan inte väga upp när toppkedjorna inte levererar.</p>
+      <p><b>👉 Huvudproblemet:</b> HV71:s toppkedjor producerar inte i 5v5 trots stort förtroende och mycket istid. När PP inte heller bär fullt ut blir det naturligt att laget hamnar i en förlustsvit.</p>
     </div>
   </details>
 
@@ -304,10 +290,6 @@
   }
   document.getElementById('liveLink').href = resultsUrl();
 
-  if (!matchId) {
-    document.getElementById('status').textContent = 'Stand-alone röstning (ingen match i URL).';
-  }
-
   /* ===== Pool ===== */
   const poolEl = document.getElementById('pool-lines');
   const toggleEl = document.getElementById('togglePool');
@@ -391,7 +373,7 @@
     });
   }
 
-  /* ===== POST (stand-alone först) ===== */
+  /* ===== POST (stand-alone + match-aware) ===== */
   async function postLinesVote(body){
     const endpoints = [];
     if (!matchId) {
