@@ -225,23 +225,32 @@
     return A;
   }
 
-  // ===== Rendering (leader only + optional details) =====
+  // ===== Helpers =====
   function entriesSorted(countMap, players){
-    return Object.entries(countMap || {}).map(([id,c])=>({id, c, p:players[id]})).sort((a,b)=>b.c-a.c);
+    return Object.entries(countMap || {})
+      .map(([id,c])=>({id, c, p:players[id]}))
+      .sort((a,b)=>b.c-a.c);
+  }
+
+  function pickFirstNotUsed(items, usedSet){
+    for (const it of items) {
+      if (!usedSet.has(it.id)) return it;
+    }
+    return null;
   }
 
   function renderLeaderSlot(holder, item){
     const row = document.createElement('div');
     row.className = 'slot';
     row.innerHTML = `
-      <span class="jersey">${item.p?.jersey ?? '?'}</span>
-      <span class="name">${item.p?.name ?? item.id}</span>
+      <span class="jersey">${item?.p?.jersey ?? '?'}</span>
+      <span class="name">${item?.p?.name ?? item?.id ?? '—'}</span>
     `;
     holder.appendChild(row);
   }
 
   function renderTop3Details(holder, items){
-    if (items.length <= 1) return;
+    if (!items || items.length <= 1) return;
     const det = document.createElement('details');
     det.innerHTML = `<summary>Visa topp 3</summary>`;
     const ul = document.createElement('ul');
@@ -259,8 +268,10 @@
     holder.appendChild(det);
   }
 
+  // ===== Rendering (utan dubletter per sektion) =====
   function renderLines(A){
     linesEl.innerHTML='';
+    const used = new Set(); // hindra dubletter över alla kedjor & positioner
     for (const L of ['1','2','3','4']) {
       const card = document.createElement('div');
       card.className = 'line-card';
@@ -273,10 +284,13 @@
         const holder = row.querySelector('.pos-holder');
 
         const items = entriesSorted(A.lines[L][pos], A.players);
-        if (items.length === 0){
+        const pick = pickFirstNotUsed(items, used);
+
+        if (!pick){
           holder.innerHTML = `<span class="muted">—</span>`;
         } else {
-          renderLeaderSlot(holder, items[0]);
+          used.add(pick.id);
+          renderLeaderSlot(holder, pick);
           renderTop3Details(holder, items);
         }
         card.appendChild(row);
@@ -289,6 +303,7 @@
   function renderPP(A){
     ppEl.innerHTML='';
     const roles = ['PNT','LFL','BUM','RFL','NET'];
+    const used = new Set(); // hindra dubletter inom PP1
     roles.forEach(role=>{
       const r = document.createElement('div');
       r.className = 'pp-role';
@@ -296,10 +311,13 @@
       const holder = document.createElement('div');
 
       const items = entriesSorted(A.pp1[role], A.players);
-      if (items.length === 0){
+      const pick = pickFirstNotUsed(items, used);
+
+      if (!pick){
         holder.innerHTML = `<span class="muted">—</span>`;
       } else {
-        renderLeaderSlot(holder, items[0]);
+        used.add(pick.id);
+        renderLeaderSlot(holder, pick);
         renderTop3Details(holder, items);
       }
       r.appendChild(holder);
