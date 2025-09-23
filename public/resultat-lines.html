@@ -8,11 +8,11 @@
   :root{
     --hv-blue:#0a2240; --hv-yellow:#ffcb01; --ink:#e8eef6;
     --card:#0b1f3a; --card-strong:#0d1f3d; --muted:#9fb3d9;
-    --bar:#3a64a8; --barTop:#ffcb01;
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--hv-blue);color:var(--ink);font-family:system-ui,-apple-system,Inter,Roboto,Segoe UI,Helvetica,Arial,sans-serif}
-  header{position:sticky;top:0;z-index:10;background:linear-gradient(180deg,#09203b 0%,#0a2240 100%);border-bottom:1px solid rgba(255,255,255,.06);padding:12px 14px 10px}
+  header{position:sticky;top:0;z-index:10;background:linear-gradient(180deg,#09203b 0%,#0a2240 100%);
+    border-bottom:1px solid rgba(255,255,255,.06);padding:12px 14px 10px}
   h1{margin:0 0 2px;color:var(--hv-yellow);font-size:1.3rem}
   .sub{margin:0;color:#bdd1f6;font-weight:600;font-size:.95rem}
   .wrap{max-width:980px;margin:0 auto;padding:12px}
@@ -26,34 +26,43 @@
   .ok{color:#b6ffb3}
   .err{color:#ffd1d1}
 
-  .row{display:grid;gap:10px}
+  .row{display:grid;gap:12px}
   @media(min-width:780px){.row.two{grid-template-columns:1fr 1fr}}
-  @media(min-width:980px){.row.three{grid-template-columns:1fr 1fr 1fr}}
   .card{background:var(--card);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:12px;box-shadow:0 2px 0 rgba(0,0,0,.25)}
-  .card h2{margin:0 0 8px;color:var(--hv-yellow);font-size:1.05rem}
+  .card h2{margin:0 0 10px;color:var(--hv-yellow);font-size:1.05rem}
 
-  .grid-lines{display:grid;grid-template-columns:1fr;gap:10px}
+  /* Lines grid */
+  .grid-lines{display:grid;grid-template-columns:1fr;gap:12px}
   @media(min-width:760px){.grid-lines{grid-template-columns:1fr 1fr}}
-  .line-card{background:var(--card-strong);border:1px solid rgba(255,255,255,.10);border-radius:12px;padding:10px}
-  .line-title{margin:0 0 8px;color:#ffdc4d;font-weight:900}
-  .pos-group{margin:8px 0 6px}
-  .pos-title{margin:0 0 6px;font-weight:900;color:#eaf2ff}
-  .leader{display:flex;align-items:center;gap:8px;margin-bottom:6px}
-  .jersey{min-width:22px;height:22px;line-height:22px;text-align:center;background:var(--hv-yellow);color:#1c1500;border-radius:999px;font-weight:900;font-size:.78rem}
-  .leader .name{font-weight:900}
-  .bar{height:8px;background:var(--bar);border-radius:999px;position:relative;overflow:hidden}
-  .bar>span{position:absolute;left:0;top:0;bottom:0;background:var(--barTop)}
-  .small{font-size:.9rem;color:#cfe0ff}
+  .line-card{background:var(--card-strong);border:1px solid rgba(255,255,255,.10);border-radius:12px;padding:12px}
+  .line-title{margin:0 10px 8px;color:#ffdc4d;font-weight:900}
 
-  .top3{margin:4px 0 0 0;padding:0;list-style:none}
-  .top3 li{display:flex;align-items:center;gap:8px;margin:4px 0}
-  .top3 .pct{margin-left:auto;color:#cfe0ff;font-variant-numeric:tabular-nums}
+  /* Compact slots */
+  .pos-row{display:grid;grid-template-columns:64px 1fr;gap:8px;align-items:center;padding:6px 8px;border-radius:10px}
+  .pos-row + .pos-row{margin-top:6px}
+  .pos-tag{font-size:.8rem;color:#cfe0ff;opacity:.9}
+  .slot{
+    display:flex;align-items:center;gap:8px;background:#0f2d58;border:1px solid rgba(255,255,255,.12);
+    border-radius:999px;padding:8px 10px;font-weight:800
+  }
+  .jersey{min-width:22px;height:22px;line-height:22px;text-align:center;background:var(--hv-yellow);
+    color:#1c1500;border-radius:999px;font-weight:900;font-size:.78rem}
+  .name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-  .pp-grid{display:grid;gap:10px}
+  /* details (optional) */
+  details{margin-top:6px}
+  details summary{cursor:pointer;color:#cfe0ff;font-size:.9rem}
+  .alt-list{margin:6px 0 0 0;padding:0;list-style:none}
+  .alt-list li{display:flex;align-items:center;gap:8px;margin:4px 0;color:#cfe0ff}
+  .alt-list .count{margin-left:auto;opacity:.8}
+
+  /* PP grid */
+  .pp-grid{display:grid;gap:12px}
   @media(min-width:760px){.pp-grid{grid-template-columns:repeat(5,1fr)}}
-  .pp-role{background:var(--card-strong);border:1px solid rgba(255,255,255,.10);border-radius:12px;padding:10px}
+  .pp-role{background:var(--card-strong);border:1px solid rgba(255,255,255,.10);border-radius:12px;padding:12px}
   .pp-role h3{margin:0 0 6px;color:#ffdc4d;font-size:.95rem}
 
+  .scratch-list{margin:0;padding:0;list-style:none}
   .scratch-list li{display:flex;gap:8px;align-items:center;margin:4px 0}
 </style>
 </head>
@@ -64,7 +73,7 @@
   </header>
 
   <div class="wrap">
-    <!-- Share / Länk -->
+    <!-- Share / Länkar -->
     <div class="sharebar">
       <button id="shareVoteBtn"   class="btn primary">Dela röstningssidan</button>
       <button id="copyVoteBtn"    class="btn ghost">Kopiera länk (röstning)</button>
@@ -92,23 +101,18 @@
       <div class="card">
         <h2>Oanvända forwards (scratch)</h2>
         <ul id="scratch" class="scratch-list"></ul>
-        <p class="muted small" id="scratchNote">Visas om rådata innehåller scratch-val.</p>
+        <p class="muted" id="scratchNote">Visas om rådata innehåller scratch-val.</p>
       </div>
-      <!-- Teknik-kortet borttaget -->
     </div>
   </div>
 
 <script>
 (() => {
-  // ===== Konstanter för delning =====
+  // Delningslänkar
   const VOTE_URL   = "https://matchratings.onrender.com/kedjor.html";
   const RESULT_URL = location.href;
 
-  // ===== URL (stöd för ?match=) =====
-  const qp = new URLSearchParams(location.search);
-  const matchId = qp.get('match') || null;
-
-  // ===== Elements =====
+  // Elements
   const linesEl        = document.getElementById('lines');
   const ppEl           = document.getElementById('pp1');
   const scratchEl      = document.getElementById('scratch');
@@ -118,7 +122,7 @@
   const copyResultBtn  = document.getElementById('copyResultBtn');
   const shareMsg       = document.getElementById('shareMsg');
 
-  // ===== Share helpers =====
+  // Share helpers
   async function shareOrCopy(url, titleText, fallbackLabel){
     if (navigator.share) {
       try {
@@ -127,7 +131,7 @@
         shareMsg.className = 'ok';
         setTimeout(()=>{ shareMsg.textContent=''; shareMsg.className='muted'; }, 3000);
         return;
-      } catch { /* fallthrough to copy */ }
+      } catch { /* fall-through */ }
     }
     try {
       await navigator.clipboard.writeText(url);
@@ -140,54 +144,40 @@
     setTimeout(()=>{ shareMsg.textContent=''; shareMsg.className='muted'; }, 3000);
   }
 
-  // ===== Share handlers =====
   shareVoteBtn.addEventListener('click', () => {
     shareOrCopy(VOTE_URL, 'Rösta på HV71-kedjor här', 'Röstningslänk');
   });
-  copyVoteBtn.addEventListener('click', async () => {
+  copyVoteBtn.addEventListener('click', () => {
     shareOrCopy(VOTE_URL, '', 'Röstningslänk');
   });
-
   shareResultBtn.addEventListener('click', () => {
     shareOrCopy(RESULT_URL, 'Se resultat för HV71-kedjor här', 'Resultatlänk');
   });
-  copyResultBtn.addEventListener('click', async () => {
+  copyResultBtn.addEventListener('click', () => {
     shareOrCopy(RESULT_URL, '', 'Resultatlänk');
   });
 
-  // ===== Helpers =====
-  const fmtPct = (x)=> (x*100).toFixed(0) + '%';
+  // ===== Databearbetning =====
+  const qp = new URLSearchParams(location.search);
+  const matchId = qp.get('match') || null;
 
   function blankAgg(){
     return {
-      total_votes: 0,
-      players: {}, // id -> {name, jersey, pos}
+      players: {}, // id -> {id,name,jersey,pos}
       lines: { '1':{LW:{},C:{},RW:{}}, '2':{LW:{},C:{},RW:{}}, '3':{LW:{},C:{},RW:{}}, '4':{LW:{},C:{},RW:{}} },
       pp1:   { PNT:{}, LFL:{}, BUM:{}, RFL:{}, NET:{} },
-      scratch: {} // id -> count
+      scratch: {}
     };
   }
-
   function ensurePlayer(map, p){
     if(!p || !p.id) return;
     if(!map[p.id]) map[p.id] = { id:p.id, name:p.name, jersey:p.jersey, pos:p.position || p.pos || '?' };
   }
 
-  // ---- Server svar -> normaliserad struktur ----
   function normalizeResponse(data){
-    if (data && data.total_votes !== undefined && data.lines && data.pp1) return data;
-    if (data && data.counts && data.players) {
-      const A = blankAgg();
-      A.total_votes = data.counts.total_votes ?? 0;
-      A.players = data.players || {};
-      A.lines   = data.counts.lines || A.lines;
-      A.pp1     = data.counts.pp1   || A.pp1;
-      if (data.scratch) A.scratch = data.scratch;
-      return A;
-    }
+    if (data && data.lines && data.pp1 && data.players) return data;
     return aggregateFromRaw(data);
   }
-
   function aggregateFromRaw(raw){
     const A = blankAgg();
     let votes = [];
@@ -203,8 +193,6 @@
     } else if (raw && raw.lines && raw.pp1) {
       votes = [raw];
     }
-
-    A.total_votes = votes.length;
 
     for (const v of votes) {
       if (v.lines) {
@@ -237,44 +225,38 @@
     return A;
   }
 
-  // ===== Rendering =====
-  function topN(countMap, players, n=3){
-    const arr = Object.entries(countMap || {}).map(([id,c])=>({id, c, p:players[id]}));
-    arr.sort((a,b)=>b.c-a.c);
-    return arr.slice(0,n);
+  // ===== Rendering (leader only + optional details) =====
+  function entriesSorted(countMap, players){
+    return Object.entries(countMap || {}).map(([id,c])=>({id, c, p:players[id]})).sort((a,b)=>b.c-a.c);
   }
 
-  function renderBars(container, items, total){
-    container.innerHTML = '';
-    if (!items.length || total<=0) {
-      container.innerHTML = '<div class="small muted">Inga röster än.</div>';
-      return;
-    }
-    const leader = items[0];
-    const leaderLine = document.createElement('div');
-    leaderLine.className = 'leader';
-    leaderLine.innerHTML = `
-      <span class="jersey">${leader.p?.jersey ?? '?'}</span>
-      <span class="name">${leader.p?.name ?? leader.id}</span>
-      <span class="pct">${fmtPct(leader.c/total)}</span>
+  function renderLeaderSlot(holder, item){
+    const row = document.createElement('div');
+    row.className = 'slot';
+    row.innerHTML = `
+      <span class="jersey">${item.p?.jersey ?? '?'}</span>
+      <span class="name">${item.p?.name ?? item.id}</span>
     `;
-    container.appendChild(leaderLine);
+    holder.appendChild(row);
+  }
 
-    const bar = document.createElement('div'); bar.className='bar';
-    const span = document.createElement('span'); span.style.width = (leader.c/total*100)+'%';
-    bar.appendChild(span); container.appendChild(bar);
-
-    const ul = document.createElement('ul'); ul.className='top3';
-    items.forEach((it)=>{
+  function renderTop3Details(holder, items){
+    if (items.length <= 1) return;
+    const det = document.createElement('details');
+    det.innerHTML = `<summary>Visa topp 3</summary>`;
+    const ul = document.createElement('ul');
+    ul.className = 'alt-list';
+    items.slice(0,3).forEach((it,idx)=>{
       const li = document.createElement('li');
       li.innerHTML = `
         <span class="jersey">${it.p?.jersey ?? '?'}</span>
         <span>${it.p?.name ?? it.id}</span>
-        <span class="pct">${fmtPct(it.c/total)}</span>
+        <span class="count">${idx===0 ? 'vanligast' : ''}</span>
       `;
       ul.appendChild(li);
     });
-    container.appendChild(ul);
+    det.appendChild(ul);
+    holder.appendChild(det);
   }
 
   function renderLines(A){
@@ -283,15 +265,23 @@
       const card = document.createElement('div');
       card.className = 'line-card';
       card.innerHTML = `<p class="line-title">Kedja ${L}</p>`;
+
       ['LW','C','RW'].forEach(pos=>{
-        const box = document.createElement('div');
-        box.className = 'pos-group';
-        box.innerHTML = `<p class="pos-title">${pos}</p>`;
-        const holder = document.createElement('div');
-        renderBars(holder, topN(A.lines[L][pos], A.players, 3), A.total_votes);
-        box.appendChild(holder);
-        card.appendChild(box);
+        const row = document.createElement('div');
+        row.className = 'pos-row';
+        row.innerHTML = `<div class="pos-tag">${pos}</div><div class="pos-holder"></div>`;
+        const holder = row.querySelector('.pos-holder');
+
+        const items = entriesSorted(A.lines[L][pos], A.players);
+        if (items.length === 0){
+          holder.innerHTML = `<span class="muted">—</span>`;
+        } else {
+          renderLeaderSlot(holder, items[0]);
+          renderTop3Details(holder, items);
+        }
+        card.appendChild(row);
       });
+
       linesEl.appendChild(card);
     }
   }
@@ -304,7 +294,14 @@
       r.className = 'pp-role';
       r.innerHTML = `<h3>${role}</h3>`;
       const holder = document.createElement('div');
-      renderBars(holder, topN(A.pp1[role], A.players, 3), A.total_votes);
+
+      const items = entriesSorted(A.pp1[role], A.players);
+      if (items.length === 0){
+        holder.innerHTML = `<span class="muted">—</span>`;
+      } else {
+        renderLeaderSlot(holder, items[0]);
+        renderTop3Details(holder, items);
+      }
       r.appendChild(holder);
       ppEl.appendChild(r);
     });
@@ -312,31 +309,27 @@
 
   function renderScratch(A){
     scratchEl.innerHTML='';
-    const entries = Object.entries(A.scratch || {}).map(([id,c])=>({id,c,p:A.players[id]})).sort((a,b)=>b.c-a.c).slice(0,10);
+    const entries = Object.entries(A.scratch || {}).map(([id,c])=>({id,c,p:A.players[id]})).sort((a,b)=>b.c-a.c);
     if (!entries.length) {
-      scratchEl.innerHTML = '<li class="muted small">Ingen scratch-data tillgänglig.</li>';
+      scratchEl.innerHTML = '<li class="muted">Ingen scratch-data.</li>';
       return;
     }
-    for (const it of entries) {
+    entries.forEach(it=>{
       const li = document.createElement('li');
       li.innerHTML = `
         <span class="jersey">${it.p?.jersey ?? '?'}</span>
         <span>${it.p?.name ?? it.id}</span>
-        <span class="pct">${it.c}×</span>
+        <span class="muted" style="margin-left:auto">${it.c}×</span>
       `;
       scratchEl.appendChild(li);
-    }
+    });
   }
 
-  // ===== Fetch (enkel hämtning) =====
+  // ===== Fetch & init =====
   async function fetchResults(){
     const urls = [];
-    if (matchId) {
-      urls.push(`/api/match/${encodeURIComponent(matchId)}/lines-results`);
-    } else {
-      urls.push(`/api/lines-results`);
-      urls.push(`/api/match/current/lines-results`);
-    }
+    if (matchId) urls.push(`/api/match/${encodeURIComponent(matchId)}/lines-results`);
+    else { urls.push(`/api/lines-results`); urls.push(`/api/match/current/lines-results`); }
     let lastErr;
     for (const u of urls) {
       try{
@@ -358,7 +351,7 @@
       renderScratch(A);
     }catch(e){
       console.error(e);
-      linesEl.innerHTML = `<div class="small">Kunde inte hämta resultat: ${e.message}</div>`;
+      linesEl.innerHTML = `<div class="muted">Kunde inte hämta resultat: ${e.message}</div>`;
       ppEl.innerHTML    = '';
       scratchEl.innerHTML = '';
     }
