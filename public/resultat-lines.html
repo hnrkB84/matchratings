@@ -66,9 +66,11 @@
   <div class="wrap">
     <!-- Share / Länk -->
     <div class="sharebar">
-      <button id="shareBtn" class="btn primary">Dela denna sida</button>
-      <button id="copyBtn" class="btn ghost">Kopiera länk</button>
-      <a class="btn ghost" href="https://matchratings.onrender.com/kedjor.html" target="_blank" rel="noopener">Öppna delningssida</a>
+      <button id="shareVoteBtn"   class="btn primary">Dela röstningssidan</button>
+      <button id="copyVoteBtn"    class="btn ghost">Kopiera länk (röstning)</button>
+      <button id="shareResultBtn" class="btn primary">Dela resultatsidan</button>
+      <button id="copyResultBtn"  class="btn ghost">Kopiera länk (resultat)</button>
+      <a class="btn ghost" href="https://matchratings.onrender.com/kedjor.html" target="_blank" rel="noopener">Öppna röstningssidan</a>
       <span id="shareMsg" class="muted"></span>
     </div>
 
@@ -98,54 +100,59 @@
 
 <script>
 (() => {
+  // ===== Konstanter för delning =====
+  const VOTE_URL   = "https://matchratings.onrender.com/kedjor.html";
+  const RESULT_URL = location.href;
+
   // ===== URL (stöd för ?match=) =====
   const qp = new URLSearchParams(location.search);
   const matchId = qp.get('match') || null;
 
   // ===== Elements =====
-  const linesEl   = document.getElementById('lines');
-  const ppEl      = document.getElementById('pp1');
-  const scratchEl = document.getElementById('scratch');
-  const shareBtn  = document.getElementById('shareBtn');
-  const copyBtn   = document.getElementById('copyBtn');
-  const shareMsg  = document.getElementById('shareMsg');
+  const linesEl        = document.getElementById('lines');
+  const ppEl           = document.getElementById('pp1');
+  const scratchEl      = document.getElementById('scratch');
+  const shareVoteBtn   = document.getElementById('shareVoteBtn');
+  const copyVoteBtn    = document.getElementById('copyVoteBtn');
+  const shareResultBtn = document.getElementById('shareResultBtn');
+  const copyResultBtn  = document.getElementById('copyResultBtn');
+  const shareMsg       = document.getElementById('shareMsg');
 
-  // ===== Share handlers =====
-  shareBtn.addEventListener('click', async () => {
-    const shareData = { title: document.title, text: 'Kolla in HV71-fansens kedjeresultat', url: location.href };
+  // ===== Share helpers =====
+  async function shareOrCopy(url, titleText, fallbackLabel){
     if (navigator.share) {
       try {
-        await navigator.share(shareData);
+        await navigator.share({ title: document.title, text: titleText, url });
         shareMsg.textContent = 'Delat!';
         shareMsg.className = 'ok';
-      } catch {
-        shareMsg.textContent = 'Delning avbröts.';
-        shareMsg.className = 'muted';
-      }
-    } else {
-      // fallback: kopiera länk
-      try {
-        await navigator.clipboard.writeText(location.href);
-        shareMsg.textContent = 'Länk kopierad!';
-        shareMsg.className = 'ok';
-      } catch {
-        shareMsg.textContent = 'Kunde inte kopiera länken.';
-        shareMsg.className = 'err';
-      }
+        setTimeout(()=>{ shareMsg.textContent=''; shareMsg.className='muted'; }, 3000);
+        return;
+      } catch { /* fallthrough to copy */ }
     }
-    setTimeout(()=>{ shareMsg.textContent=''; shareMsg.className='muted'; }, 3000);
-  });
-
-  copyBtn.addEventListener('click', async () => {
     try {
-      await navigator.clipboard.writeText(location.href);
-      shareMsg.textContent = 'Länk kopierad!';
+      await navigator.clipboard.writeText(url);
+      shareMsg.textContent = `${fallbackLabel} kopierad!`;
       shareMsg.className = 'ok';
     } catch {
       shareMsg.textContent = 'Kunde inte kopiera länken.';
       shareMsg.className = 'err';
     }
     setTimeout(()=>{ shareMsg.textContent=''; shareMsg.className='muted'; }, 3000);
+  }
+
+  // ===== Share handlers =====
+  shareVoteBtn.addEventListener('click', () => {
+    shareOrCopy(VOTE_URL, 'Rösta på HV71-kedjor här', 'Röstningslänk');
+  });
+  copyVoteBtn.addEventListener('click', async () => {
+    shareOrCopy(VOTE_URL, '', 'Röstningslänk');
+  });
+
+  shareResultBtn.addEventListener('click', () => {
+    shareOrCopy(RESULT_URL, 'Se resultat för HV71-kedjor här', 'Resultatlänk');
+  });
+  copyResultBtn.addEventListener('click', async () => {
+    shareOrCopy(RESULT_URL, '', 'Resultatlänk');
   });
 
   // ===== Helpers =====
@@ -168,7 +175,6 @@
 
   // ---- Server svar -> normaliserad struktur ----
   function normalizeResponse(data){
-    // Redan aggregerat format
     if (data && data.total_votes !== undefined && data.lines && data.pp1) return data;
     if (data && data.counts && data.players) {
       const A = blankAgg();
@@ -179,7 +185,6 @@
       if (data.scratch) A.scratch = data.scratch;
       return A;
     }
-    // Annars – samla från råa röster
     return aggregateFromRaw(data);
   }
 
@@ -202,7 +207,6 @@
     A.total_votes = votes.length;
 
     for (const v of votes) {
-      // lines
       if (v.lines) {
         for (const L of ['1','2','3','4']) {
           const arr = v.lines[L] || [];
@@ -214,7 +218,6 @@
           }
         }
       }
-      // pp1
       if (Array.isArray(v.pp1)) {
         for (const pick of v.pp1) {
           if (!pick || !pick.id || !pick.role) continue;
@@ -223,7 +226,6 @@
           A.pp1[pick.role][pick.id] = (A.pp1[pick.role][pick.id] || 0) + 1;
         }
       }
-      // scratch (valfritt)
       if (Array.isArray(v.scratch)) {
         for (const s of v.scratch) {
           if (!s || !s.id) continue;
@@ -326,7 +328,7 @@
     }
   }
 
-  // ===== Fetch (enkel hämtning utan refresh/auto) =====
+  // ===== Fetch (enkel hämtning) =====
   async function fetchResults(){
     const urls = [];
     if (matchId) {
