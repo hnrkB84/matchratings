@@ -1,7 +1,3 @@
-// server.js — HV71 Ratings: tidsstyrd röstning, trupp per match, sammanställning, export
-// Install: npm i express better-sqlite3 cors express-rate-limit
-// Start:   node server.js
-
 const fs = require("fs");
 const express = require("express");
 const Database = require("better-sqlite3");
@@ -817,7 +813,8 @@ app.post("/api/admin/bulk-upsert-players", requireAdmin, (req, res) => {
   res.json({ ok: true, count: players.length });
 });
 
-app.post("roster/api/admin/set-", requireAdmin, (req, res) => {
+// >>> FIXAD ROUTE HÄR <<<
+app.post("/api/admin/set-roster", requireAdmin, (req, res) => {
   const { match_id, player_ids, dressed_default = 1 } = req.body || {};
   if (!match_id || !Array.isArray(player_ids))
     return res.status(400).json({ error: "match_id & player_ids[]" });
