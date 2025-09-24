@@ -648,8 +648,7 @@ canvas,img,video{ max-width:100%; height:auto; display:block; }
   position:absolute;
   inset:0 auto 0 0;
   width:84px;
-  background:linear-gradient(180deg,#0b2a4f 0%, #08233f 100%);
-  box-shadow: inset -1px 0 rgba(255,255,255,.08); /* mjuk, ej ful linje */
+  background:#08233f;
   border-top-left-radius:16px;
   border-bottom-left-radius:16px;
   pointer-events:none;
