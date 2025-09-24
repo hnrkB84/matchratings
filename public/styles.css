@@ -50,7 +50,7 @@ h1{ margin:0; color:var(--yellow); font-size:1.6rem; }
   gap:.8rem;
 }
 
-/* Vänster innehåll + höger stjärn/ikon-kolumn */
+/* Vänster innehåll + höger stjärn/ikon-kolumn — ursprungsstil (kommer att ersättas längre ner) */
 .p-card{
   position:relative;
   background:#08233f;
@@ -71,7 +71,7 @@ h1{ margin:0; color:var(--yellow); font-size:1.6rem; }
   pointer-events:none;
 }
 
-/* Stjärnknapp för Matchens lirare */
+/* Stjärnknapp för Matchens lirare — (kommer att göras grid-baserad längre ner) */
 .p-star{
   position:absolute;
   top:0; right:0; bottom:0;
@@ -112,7 +112,7 @@ h1{ margin:0; color:var(--yellow); font-size:1.6rem; }
 }
 .p-pos{ font-size:12px; opacity:.9; color:#fff; }
 
-/* Slider + värde */
+/* Slider + värde (ersätts av steppers men låter stilen vara kvar) */
 .p-rate{
   display:grid;
   grid-template-columns: 1fr auto;
@@ -152,7 +152,7 @@ h1{ margin:0; color:var(--yellow); font-size:1.6rem; }
 /* Media får inte spräcka bredden */
 canvas,img,video{ max-width:100%; height:auto; display:block; }
 
-/* ===== Mobil ===== */
+/* ===== Mobil (ursprung) ===== */
 @media (max-width:520px){
   .wrap{ padding:.6rem; }
   h1{ font-size:1.35rem; }
@@ -312,6 +312,7 @@ canvas,img,video{ max-width:100%; height:auto; display:block; }
 .material-symbols-outlined{
   font-family:'Material Symbols Outlined' !important;
 }
+
 /* ===== Toppnavigering på latestmatch.html ===== */
 .top-links{
   margin-top:.5rem;
@@ -411,6 +412,7 @@ canvas,img,video{ max-width:100%; height:auto; display:block; }
   display:flex; flex-wrap:wrap; gap:.6rem; margin-top:1rem;
 }
 .after-links .btn{ font-weight:700; }
+
 /* Blå huvudrubrik */
 .section-title--blue{ color: var(--blue); }
 
@@ -492,6 +494,7 @@ canvas,img,video{ max-width:100%; height:auto; display:block; }
 
 /* Säkerställ att inget pseudo-element i kortet täcker knapparna */
 .card{ position:relative; z-index:1; }
+
 /* ===== Steppers (ersätter sliders) ===== */
 .stepper{
   display:inline-grid;
@@ -538,3 +541,97 @@ canvas,img,video{ max-width:100%; height:auto; display:block; }
 
 /* (valfritt) tona ned gamla range-styles ifall något finns kvar i DOM */
 .p-range input[type="range"]{ display:none !important; }
+
+/* ========================= */
+/* ===== NY 3-KOLUMNS P-KORT LAYOUT (OVERRIDES) ===== */
+/* ========================= */
+
+.p-card{
+  display:grid;
+  grid-template-columns: 82px 1fr 96px; /* vänster siffra | innehåll | star-zon */
+  padding:0;                 /* hanteras i cellerna */
+  align-items:stretch;
+}
+
+/* pseudo-högerzon behövs inte längre */
+.p-card::after{ display:none; }
+
+/* höger stjärnkolumn — gör den grid-baserad och fullhöjd */
+.p-star{
+  position:relative;         /* inte absolut längre */
+  grid-column: 3 / 4;
+  width:100%;
+  height:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:42px;
+}
+
+/* Vänster “remsa” med tröjnumret */
+.p-left{
+  grid-column: 1 / 2;
+  display:flex; align-items:center; justify-content:center;
+  background: linear-gradient(180deg, #0b2a4f 0%, #08233f 100%);
+  border-right: 1px solid rgba(255,255,255,.10);
+  border-top-left-radius: 16px;
+  border-bottom-left-radius: 16px;
+  padding:.6rem .4rem;
+}
+
+/* Större nummer i remsan */
+.p-nr{
+  font-size:56px;            /* större siffra */
+  line-height:1;
+  letter-spacing:.8px;
+  color:var(--yellow);
+  text-shadow:0 2px 10px rgba(0,0,0,.25);
+}
+
+/* Mitteninnehållet */
+.p-main{
+  grid-column: 2 / 3;
+  display:grid;
+  grid-template-rows: auto auto;
+  gap:.45rem;
+  padding: .85rem 1rem;       /* inner-padding för text/stepper */
+}
+
+/* Justeringar för name/pos/stepper i mitten */
+.p-top{
+  display:flex; align-items:baseline; gap:.6rem; min-width:0;
+}
+.p-name{ font-size:24px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.p-pos{ font-size:12px; opacity:.9; }
+
+/* Stepper-raden */
+.p-rate{
+  display:flex; align-items:center; gap:.55rem; margin-top:.45rem;
+}
+.stepper-btn{ width:40px; height:40px; }
+.stepper-val{ min-width:68px; }
+
+/* Rundade hörn på höger sida av kortet */
+.p-card{
+  border-top-right-radius:16px;
+  border-bottom-right-radius:16px;
+}
+
+/* ===== Mobilanpassning för nya layouten ===== */
+@media (max-width:520px){
+  .p-card{
+    grid-template-columns: 72px 1fr 84px;
+    border-radius:14px;
+  }
+  .p-left{ padding:.5rem .35rem; }
+  .p-nr{ font-size:48px; }
+  .p-main{ padding:.75rem .8rem; }
+  .p-star{ font-size:28px; }
+}
+
+/* Skydda meta-korten – behåll deras gamla layout */
+.p-card.meta{
+  display:block;                   /* återställ */
+  padding:1rem 108px 1rem 1rem;    /* deras egna inre marginaler */
+  border-radius:16px;
+}
