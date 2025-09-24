@@ -635,67 +635,65 @@ canvas,img,video{ max-width:100%; height:auto; display:block; }
   padding:1rem 108px 1rem 1rem;    /* deras egna inre marginaler */
   border-radius:16px;
 }
-/* === HOTFIX: 3-delad layout utan att ändra HTML === */
-
-/* Återställ kortet till blocklayout och gör plats för en vänsterremsa */
-.p-card{
-  display:block !important;
-  padding:.9rem 108px .9rem 116px !important; /* plats för vänsterremsa + innehåll */
+/* === SPELARKORT: vänster sifferremsa (endast i .players-grid) === */
+.players-grid .p-card{
+  display:block;
+  padding:.9rem 108px .9rem 116px; /* plats för remsa + stjärna */
   border-radius:16px;
 }
 
-/* Vänster siffer-remsa */
-.p-card::before{
+/* Vänster remsa – utan hård kant, mjuk inre skugga */
+.players-grid .p-card::before{
   content:"";
   position:absolute;
-  inset:0 auto 0 0;           /* top:0; right:auto; bottom:0; left:0 */
+  inset:0 auto 0 0;
   width:84px;
   background:linear-gradient(180deg,#0b2a4f 0%, #08233f 100%);
-  border-right:1px solid rgba(255,255,255,.10);
+  box-shadow: inset -1px 0 rgba(255,255,255,.08); /* mjuk, ej ful linje */
   border-top-left-radius:16px;
   border-bottom-left-radius:16px;
   pointer-events:none;
 }
 
-/* Placera numret centrerat i vänsterremsan */
-.p-nr{
+/* Numret centrerat i remsan */
+.players-grid .p-card .p-nr{
   position:absolute;
   left:0; top:0; bottom:0;
   width:84px;
   display:flex; align-items:center; justify-content:center;
-  font-size:56px !important;
+  font-size:56px;
   color:var(--yellow);
   text-shadow:0 2px 10px rgba(0,0,0,.25);
-  margin:0 !important;
+  margin:0;
   pointer-events:none;
 }
 
-/* Mitteninnehållet (namn/position + stepper) */
-.p-top{ align-items:baseline; gap:.6rem; }
-.p-name{ font-size:24px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.p-pos{ font-size:12px; opacity:.9; }
+/* Mitteninnehåll – oförändrat men lite tätare */
+.players-grid .p-card .p-top{ align-items:baseline; gap:.6rem; }
+.players-grid .p-card .p-name{ font-size:24px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.players-grid .p-card .p-pos{ font-size:12px; opacity:.9; }
 
 /* Stepper-raden */
-.p-rate{ display:flex; align-items:center; gap:.55rem; margin-top:.45rem; }
-.stepper-btn{ width:40px; height:40px; }
-.stepper-val{ min-width:68px; }
+.players-grid .p-card .p-rate{ display:flex; align-items:center; gap:.55rem; margin-top:.45rem; }
+.players-grid .p-card .stepper-btn{ width:40px; height:40px; }
+.players-grid .p-card .stepper-val{ min-width:68px; }
 
-/* Höger stjärnkolumn tillbaka till absolut position så den fyller höjden */
-.p-star{
-  position:absolute !important;
+/* Stjärnan fyller höjden till höger */
+.players-grid .p-card .p-star{
+  position:absolute;
   top:0; right:0; bottom:0;
-  width:96px !important;
+  width:96px;
   display:flex; align-items:center; justify-content:center;
   font-size:42px;
 }
 
-/* Pseudo-högerzon från äldre stil ska inte störa */
-.p-card::after{ width:96px; }
+/* Se till att gamla ::after-zonen inte krockar */
+.players-grid .p-card::after{ width:96px; }
 
-/* Mobiljusteringar */
+/* Mobiljusteringar för spelarkort */
 @media (max-width:520px){
-  .p-card{ padding:.8rem 96px .8rem 104px !important; border-radius:14px; }
-  .p-card::before{ width:74px; }
-  .p-nr{ width:74px; font-size:48px !important; }
-  .p-star{ width:84px !important; font-size:28px; }
+  .players-grid .p-card{ padding:.8rem 96px .8rem 104px; border-radius:14px; }
+  .players-grid .p-card::before{ width:74px; }
+  .players-grid .p-card .p-nr{ width:74px; font-size:48px; }
+  .players-grid .p-card .p-star{ width:84px; font-size:28px; }
 }
