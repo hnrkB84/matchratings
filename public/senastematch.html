@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8" />
+  <!-- Rubriktypsnitt -->
+  <link href="https://fonts.googleapis.com/css2?family=Teko:wght@600;700&family=Oswald:wght@600;700&display=swap" rel="stylesheet">
+  <!-- Material Symbols -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,500,1,0&display=swap" />
+
+  <title>Senaste matchen – Spelarbetyg HV71</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/styles.css">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="sv_SE">
+  <meta property="og:site_name" content="Spelarbetyg – HV71">
+  <meta property="og:title" content="Senaste matchen – Spelarbetyg HV71">
+  <meta property="og:description" content="">
+  <meta property="og:url" content="https://matchratings.onrender.com/latestmatch.html">
+  <meta property="og:image" content="https://matchratings.onrender.com/resog.jpeg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="HV71 Spelarbetyg – blågul bakgrund">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Senaste matchen – Spelarbetyg HV71">
+  <meta name="twitter:description" content="">
+  <meta name="twitter:image" content="https://matchratings.onrender.com/resog.jpeg">
+</head>
+<body>
+  <header>
+    <h1>Senaste matchen – Spelarbetyg</h1>
+    <nav class="top-links">
+      <a id="nextMatchLink" href="/index.html" class="chip">Nästa match</a>
+      <span class="sep">•</span>
+      <a href="/omprojektet.html" class="chip secondary">Om projektet</a>
+    </nav>
+  </header>
+
+  <div class="wrap">
+    <section class="card">
+      <h2 class="section-title section-title--blue">Resultat & Analys
+        <span id="metaBadge" class="badge"></span>
+      </h2>
+
+      <!-- Spelarbetyg -->
+      <details class="acc">
+        <summary class="acc-sum">
+          <span class="material-symbols-outlined">star</span>
+          Spelarbetyg <span class="muted">(bäst → sämst)</span>
+        </summary>
+        <ol id="spelarbetygList" class="ranking">
+          <!-- Fylls av data -->
+        </ol>
+      </details>
+
+      <!-- Tränarbänken -->
+      <details class="acc">
+        <summary class="acc-sum">
+          <span class="material-symbols-outlined">sports_hockey</span>
+          Tränarbänken
+        </summary>
+        <dl id="tranarbankenKV" class="kv">
+          <!-- Fylls av data -->
+        </dl>
+      </details>
+
+      <!-- Matchomdömen -->
+      <details class="acc">
+        <summary class="acc-sum">
+          <span class="material-symbols-outlined">sports_hockey</span>
+          Matchomdömen
+        </summary>
+        <dl id="matchomdomenKV" class="kv">
+          <!-- Fylls av data -->
+        </dl>
+      </details>
+
+      <!-- Snitt per lagdel -->
+      <details class="acc">
+        <summary class="acc-sum">
+          <span class="material-symbols-outlined">bar_chart</span>
+          Snitt per lagdel
+        </summary>
+        <dl id="snittKV" class="kv">
+          <!-- Fylls av data -->
+        </dl>
+      </details>
+
+      <!-- Statistik Vs Ögat -->
+      <details class="acc">
+        <summary class="acc-sum">
+          <span class="material-symbols-outlined">trending_up</span>
+          Statistik Vs Ögat
+        </summary>
+        <div id="statProse" class="prose">
+          <!-- Fylls av data (HTML) -->
+        </div>
+      </details>
+
+      <!-- Nedersta länkar -->
+      <div class="after-links after-links--pretty" id="afterLinks">
+        <a class="btn share-btn" id="shareBtn" href="#" role="button" aria-label="Dela denna sida">
+          <span class="material-symbols-outlined" aria-hidden="true">share</span>
+          Dela denna sida
+        </a>
+        <a class="btn secondary" id="fallbackNext" href="/index.html" aria-label="Gå till nästa match">
+          <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+          Nästa match
+        </a>
+      </div>
+      <div id="toast" class="toast" role="status" aria-live="polite">Länk kopierad!</div>
+    </section>
+  </div>
+
+  <script>
+  (function(){
+    const DATA_URL = '/data/senaste_match.json';
+
+    const $ = sel => document.querySelector(sel);
+    const spelarbetygList = $('#spelarbetygList');
+    const tranarbankenKV  = $('#tranarbankenKV');
+    const matchomdomenKV  = $('#matchomdomenKV');
+    const snittKV         = $('#snittKV');
+    const statProse       = $('#statProse');
+    const metaBadge       = $('#metaBadge');
+    const nextMatchLink   = $('#nextMatchLink');    // top-nav
+    const fallbackNext    = $('#fallbackNext');     // bottom button
+    const shareBtn        = $('#shareBtn');
+    const toast           = $('#toast');
+
+    // Håll alla details stängda som default (skulle någon få "open" i HTML av misstag)
+    document.querySelectorAll('details.acc').forEach(d => d.open = false);
+
+    async function load() {
+      const res = await fetch(DATA_URL, { cache: 'no-cache' });
+      if (!res.ok) throw new Error('Kunde inte läsa ' + DATA_URL);
+      return res.json();
+    }
+
+    function fillKV(dl, pairs) {
+      dl.innerHTML = '';
+      (pairs || []).forEach(({k, v}) => {
+        const dt = document.createElement('dt'); dt.textContent = k ?? '';
+        const dd = document.createElement('dd'); dd.textContent = v ?? '';
+        dl.appendChild(dt); dl.appendChild(dd);
+      });
+    }
+
+    function fillList(ol, items) {
+      ol.innerHTML = '';
+      (items || []).forEach(it => {
+        const li = document.createElement('li');
+        const name = it.name ?? '';
+        const rating = (it.rating != null) ? Number(it.rating).toFixed(2) : '';
+        li.textContent = rating ? `${name} – ${rating}` : name;
+        ol.appendChild(li);
+      });
+    }
+
+    function applyMeta(meta) {
+      if (!meta) return;
+      const opp  = meta.opponent ? ` ${meta.opponent}` : '';
+      const score = meta.score ? ` — ${meta.score}` : '';
+      const venue = meta.venue ? ` · ${meta.venue}` : '';
+      if (metaBadge) metaBadge.textContent = `${opp}${score}${venue}`.trim();
+
+      if (meta.next_match_url) {
+        if (nextMatchLink) nextMatchLink.href = meta.next_match_url;
+        if (fallbackNext)  fallbackNext.href  = meta.next_match_url;
+      }
+      // Share text används i share-btn nedan (fallback om inte finns)
+      shareBtn.dataset.shareText = meta.share_text || '';
+    }
+
+    function bindShare() {
+      if (!shareBtn || shareBtn.dataset.bound) return;
+      shareBtn.dataset.bound = "1";
+      shareBtn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        const txt = shareBtn.dataset.shareText || document.title;
+        const shareData = { title: document.title, text: txt, url: location.href };
+        try {
+          if (navigator.share) {
+            await navigator.share(shareData);
+          } else if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(`${txt} ${location.href}`);
+            if (toast) { toast.classList.add('show'); setTimeout(()=>toast.classList.remove('show'), 1400); }
+          } else {
+            const ta = document.createElement('textarea');
+            ta.value = `${txt} ${location.href}`;
+            document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+            if (toast) { toast.classList.add('show'); setTimeout(()=>toast.classList.remove('show'), 1400); }
+          }
+        } catch { /* avbrutet */ }
+      });
+    }
+
+    (async function boot(){
+      try {
+        const data = await load();
+
+        // meta
+        applyMeta(data.meta);
+
+        // paneler
+        fillList(spelarbetygList, data.spelarbetyg);
+        fillKV(tranarbankenKV, data.tranarbanken?.kv);
+        fillKV(matchomdomenKV, data.matchomdomen?.kv);
+        fillKV(snittKV, data.snitt?.kv);
+        if (data.stat_vs_ogat?.html) { statProse.innerHTML = data.stat_vs_ogat.html; }
+
+        bindShare();
+      } catch (e) {
+        console.error(e);
+        // Minimal fallback-UI
+        if (statProse) statProse.innerHTML = '<p class="muted">Kunde inte ladda data. Kontrollera <code>/data/senaste_match.json</code>.</p>';
+      }
+    })();
+  })();
+  </script>
+</body>
+</html>
