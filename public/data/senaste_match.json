@@ -1,38 +1,53 @@
 {
-    "meta": {
-      "date": "2025-09-30",
-      "opponent": "Malmö",
-      "venue": "Hemma",
-      "score": "2–3",
-      "next_match_url": "/index.html",
-      "share_text": "HV71–Malmö 2–3: spelarbetyg, tränarbänken och stat vs ögat."
-    },
-    "spelarbetyg": [
-      { "name": "Lassi Lehtinen (m)", "rating": 6.17 },
-      { "name": "Isac Brännström (f)", "rating": 6.08 },
-      { "name": "Jonathan Ang (f)", "rating": 5.67 }
-    ],
-    "tranarbanken": {
-      "kv": [
-        { "k": "Snitt (Tränarbänken)", "v": "3.40" }
-      ]
-    },
-    "matchomdomen": {
-      "kv": [
-        { "k": "Matchens helhetsintryck", "v": "4.0" },
-        { "k": "Speglade resultatet insatsen?", "v": "5.92" },
-        { "k": "Domarnivån", "v": "6.46" }
-      ]
-    },
-    "snitt": {
-      "kv": [
-        { "k": "Målvakt", "v": "6.17" },
-        { "k": "Backar",  "v": "4.88" },
-        { "k": "Forwards","v": "4.96" }
-      ]
-    },
-    "stat_vs_ogat": {
-      "html": "<h3>HV71 spelarbetyg mot Malmö (förlust 2–3)</h3><p>Exempeltext – ersätt med din analys.</p>"
+  "meta": {
+    "date": "2025-09-30",
+    "opponent": "Leksand",
+    "venue": "Hemma",
+    "score": "2–1",
+    "next_match_url": "/index.html",
+    "share_text": "HV71–Leksand 2–1: spelarbetyg, tränarbänken och stat vs ögat."
+  },
+  "spelarbetyg": [
+    { "name": "Frederik Dichow (G)", "rating": 7.69 },
+    { "name": "Hugo Fransson (D)", "rating": 6.59 },
+    { "name": "Lucas Lagerberg (D)", "rating": 6.43 },
+    { "name": "Jonathan Ang (F)", "rating": 6.41 },
+    { "name": "Aleksi Heponiemi (F)", "rating": 6.40 },
+    { "name": "Justin Kloos (F)", "rating": 6.38 },
+    { "name": "Karl Annborn (D)", "rating": 6.34 },
+    { "name": "Olle Alsing (D)", "rating": 6.31 },
+    { "name": "Joona Luoto (F)", "rating": 6.24 },
+    { "name": "Mattias Tedenby (F)", "rating": 6.10 },
+    { "name": "Nikola Pasic (F)", "rating": 6.09 },
+    { "name": "Isac Brännström (F)", "rating": 6.00 },
+    { "name": "Riley Woods (F)", "rating": 5.90 },
+    { "name": "Linus Lindström (F)", "rating": 5.76 },
+    { "name": "Niklas Hansson (D)", "rating": 5.72 },
+    { "name": "Lukas Rousek (F)", "rating": 5.50 },
+    { "name": "Martin Johnsen (F)", "rating": 5.43 },
+    { "name": "Oskar Stål Lyrenäs (F)", "rating": 5.24 },
+    { "name": "Axel Rindell (D)", "rating": 4.90 }
+  ],
+  "tranarbanken": {
+    "kv": [
+      { "k": "Betyg", "v": "5.91" }
+    ]
+  },
+  "matchomdomen": {
+    "kv": [
+      { "k": "Matchens helhetsintryck", "v": "6.16" },
+      { "k": "Speglade resultat matchen", "v": "6.86" },
+      { "k": "Domarnivå", "v": "5.41" }
+    ]
+  },
+  "snitt": {
+    "kv": [
+      { "k": "Backar", "v": "6.05" },
+      { "k": "Forwards", "v": "5.95" },
+      { "k": "Målvakter", "v": "7.69" }
+    ]
+  },
+  "stat_vs_ogat": {
+    "html": "<h3>Statistik vs ögat</h3><div><p><strong>📌 Fotnot:</strong></p><ul class=\"tight\"><li><strong>CF% (Corsi%)</strong>: Andel skottförsök framåt när spelaren är på isen. &gt;50% = laget driver spelet.</li><li><strong>FF% (Fenwick%)</strong>: Som Corsi men utan blockerade skott; något bättre mått på offensiv kvalitet.</li><li><strong>PDO</strong>: Skotteffektivitet + räddningsprocent när spelaren är på isen. ~100 = normalt; mycket högre/lägre kan tyda på tur/oflyt.</li></ul></div><h4>Backar</h4><ul class=\"tight\"><li><strong>Olle Alsing (24:27 TOI)</strong>: BP 3:22, PP 2:05, +1, 2 block, 1 SOG. CF% 63,33 – trygg med pucken och drev spelet.</li><li><strong>Axel Rindell (22:04)</strong>: 3 SOG, -1, PP 1:55, ej BP. CF% 51,52 – spelmässigt jämnt.</li><li><strong>Hugo Fransson (20:05)</strong>: 1 assist, +1, 1 SOG, 1 tackling, 1 block; BP 0:38, PP 2:05. CF% 52,94 – på rätt sida.</li><li><strong>Lucas Lagerberg (19:01)</strong>: 2 SOG, 1 block; BP 3:19. CF% 45,83 – mer försvar än offensiv.</li><li><strong>Niklas Hansson (18:54)</strong>: PP 2:05, +1, 1 block. CF% 48,28 – strax under balans men nyttig i special teams.</li><li><strong>Karl Annborn (11:20)</strong>: 1 SOG, ±0. CF% 64,29 – tydligt övertag på begränsad TOI.</li><li><strong>Vashek Blanar (0:00) &amp; Noel Skarby (0:00)</strong>: Användes inte i matchen.</li></ul><h4>Forwards</h4><ul class=\"tight\"><li><strong>Linus Lindström (18:16)</strong>: 1 tackling, BP 3:15. CF% 46,67 – defensiva uppdrag, lite efter i spelövertag.</li><li><strong>Jonathan Ang (18:09)</strong>: 1 PP-mål, 4 SOG, +1; PP 2:14. CF% 55,56 – skapade mycket.</li><li><strong>Joona Luoto (18:08)</strong>: 3 SF, 2 tacklingar, 1 block, +1; PP 2:14, BP 0:44. CF% 52,17 – strax över balans.</li><li><strong>Aleksi Heponiemi (18:04)</strong>: 1 mål, +1; PP 2:14, BP 0:45. CF% 60,00 – stark offensiv påverkan.</li><li><strong>Lukas Rousek (18:03)</strong>: 2 SOG; PP 1:46. CF% 66,67 – stark puckkontroll.</li><li><strong>Justin Kloos (15:50)</strong>: 5 SOG (flest), PP 1:46. CF% 69,57 – mycket driv.</li><li><strong>Riley Woods (14:20)</strong>: 2 SOG, -1; PP 1:46. CF% 69,57 – offensivt stark, men baklängesmål i hans istid.</li><li><strong>Oskar Stål Lyrenäs (13:17)</strong>: 1 tackling; BP 2:45. CF% 23,81 – tillbakapressad.</li><li><strong>Isac Brännström (13:09)</strong>: 1 assist, 3 skott, 2 tacklingar, +1; BP 0:31. CF% 66,67 – stark på kortare TOI.</li><li><strong>Nikola Pasic (12:02)</strong>: Inga poäng/avslut. CF% 34,78 – mycket tillbakapressad.</li><li><strong>Mattias Tedenby (11:30)</strong>: 2 tacklingar, +1. CF% 72,73 – bästa possession-siffran trots begränsad TOI.</li><li><strong>Martin Johnsen (9:23)</strong>: Minst TOI, -1, 0 SOG. CF% 21,43 – hårt pressad bakåt.</li></ul><h4>Positivt 🌟</h4><ul class=\"tight\"><li>Olle Alsing bar tung istid och levererade starka siffror.</li><li>Heponiemi och Ang gjorde mål och drev spelet.</li><li>Kloos och Rousek skapade mycket offensivt och dominerade puckinnehavet.</li><li>Brännström och Tedenby med starka insatser trots mindre istid.</li></ul><h4>Negativt ⚠️</h4><ul class=\"tight\"><li>Stål Lyrenäs, Pasic och Johnsen med mycket låga CF% och tillbakapressat spel.</li><li>Rindell och Woods hamnade på minus i plus/minus trots offensivt övertag.</li></ul>"
     }
   }
-  
