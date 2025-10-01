@@ -1,0 +1,38 @@
+{
+    "meta": {
+      "date": "2025-09-30",
+      "opponent": "Malmö",
+      "venue": "Hemma",
+      "score": "2–3",
+      "next_match_url": "/index.html",
+      "share_text": "HV71–Malmö 2–3: spelarbetyg, tränarbänken och stat vs ögat."
+    },
+    "spelarbetyg": [
+      { "name": "Lassi Lehtinen (m)", "rating": 6.17 },
+      { "name": "Isac Brännström (f)", "rating": 6.08 },
+      { "name": "Jonathan Ang (f)", "rating": 5.67 }
+    ],
+    "tranarbanken": {
+      "kv": [
+        { "k": "Snitt (Tränarbänken)", "v": "3.40" }
+      ]
+    },
+    "matchomdomen": {
+      "kv": [
+        { "k": "Matchens helhetsintryck", "v": "4.0" },
+        { "k": "Speglade resultatet insatsen?", "v": "5.92" },
+        { "k": "Domarnivån", "v": "6.46" }
+      ]
+    },
+    "snitt": {
+      "kv": [
+        { "k": "Målvakt", "v": "6.17" },
+        { "k": "Backar",  "v": "4.88" },
+        { "k": "Forwards","v": "4.96" }
+      ]
+    },
+    "stat_vs_ogat": {
+      "html": "<h3>HV71 spelarbetyg mot Malmö (förlust 2–3)</h3><p>Exempeltext – ersätt med din analys.</p>"
+    }
+  }
+  
