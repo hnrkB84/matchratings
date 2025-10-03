@@ -1,53 +1,54 @@
 {
   "meta": {
-    "date": "2025-09-30",
-    "opponent": "Leksand",
+    "date": "2025-10-02",
+    "opponent": "Färjestad",
     "venue": "Hemma",
-    "score": "2–1",
+    "score": "2–0",
     "next_match_url": "/index.html",
-    "share_text": "HV71–Leksand 2–1: spelarbetyg, tränarbänken och stat vs ögat."
+    "share_text": "HV71–Färjestad 2–0: spelarbetyg, tränarbänken och stat vs ögat."
   },
   "spelarbetyg": [
-    { "name": "Frederik Dichow (G)", "rating": 7.69 },
-    { "name": "Hugo Fransson (D)", "rating": 6.59 },
-    { "name": "Lucas Lagerberg (D)", "rating": 6.43 },
-    { "name": "Jonathan Ang (F)", "rating": 6.41 },
-    { "name": "Aleksi Heponiemi (F)", "rating": 6.40 },
-    { "name": "Justin Kloos (F)", "rating": 6.38 },
-    { "name": "Karl Annborn (D)", "rating": 6.34 },
-    { "name": "Olle Alsing (D)", "rating": 6.31 },
-    { "name": "Joona Luoto (F)", "rating": 6.24 },
-    { "name": "Mattias Tedenby (F)", "rating": 6.10 },
-    { "name": "Nikola Pasic (F)", "rating": 6.09 },
-    { "name": "Isac Brännström (F)", "rating": 6.00 },
-    { "name": "Riley Woods (F)", "rating": 5.90 },
-    { "name": "Linus Lindström (F)", "rating": 5.76 },
-    { "name": "Niklas Hansson (D)", "rating": 5.72 },
-    { "name": "Lukas Rousek (F)", "rating": 5.50 },
-    { "name": "Martin Johnsen (F)", "rating": 5.43 },
-    { "name": "Oskar Stål Lyrenäs (F)", "rating": 5.24 },
-    { "name": "Axel Rindell (D)", "rating": 4.90 }
+    { "name": "Frederik Dichow (G)", "rating": 9.02 },
+    { "name": "Jonathan Ang (F)", "rating": 7.32 },
+    { "name": "Hugo Fransson (D)", "rating": 7.32 },
+    { "name": "Joona Luoto (F)", "rating": 7.10 },
+    { "name": "Riley Woods (F)", "rating": 7.00 },
+    { "name": "Justin Kloos (F)", "rating": 6.94 },
+    { "name": "Linus Lindström (F)", "rating": 6.92 },
+    { "name": "Olle Alsing (D)", "rating": 6.88 },
+    { "name": "Aleksi Heponiemi (F)", "rating": 6.78 },
+    { "name": "Santeri Hatakka (D)", "rating": 6.70 },
+    { "name": "Lucas Lagerberg (D)", "rating": 6.64 },
+    { "name": "Nikola Pasic (F)", "rating": 6.56 },
+    { "name": "Niklas Hansson (D)", "rating": 6.52 },
+    { "name": "Lukas Rousek (F)", "rating": 6.46 },
+    { "name": "Isac Brännström (F)", "rating": 6.44 },
+    { "name": "Axel Rindell (D)", "rating": 6.32 },
+    { "name": "Mattias Tedenby (F)", "rating": 6.32 },
+    { "name": "Martin Johnsen (F)", "rating": 5.94 },
+    { "name": "Oskar Stål Lyrenäs (F)", "rating": 5.80 },
+    { "name": "Jamiro Reber (F)", "rating": 5.74 }
   ],
   "tranarbanken": {
     "kv": [
-      { "k": "Betyg", "v": "5.91" }
+      { "k": "Betyg", "v": "7.50" }
     ]
   },
   "matchomdomen": {
     "kv": [
-      { "k": "Matchens helhetsintryck", "v": "6.16" },
-      { "k": "Speglade resultat matchen", "v": "6.86" },
-      { "k": "Domarnivå", "v": "5.41" }
+      { "k": "Matchens helhetsintryck", "v": "6.92" },
+      { "k": "Speglade resultat matchen", "v": "5.26" },
+      { "k": "Domarnivå", "v": "6.14" }
     ]
   },
   "snitt": {
     "kv": [
-      { "k": "Backar", "v": "6.05" },
-      { "k": "Forwards", "v": "5.95" },
-      { "k": "Målvakter", "v": "7.69" }
+      { "k": "Backar", "v": "6.73" },
+      { "k": "Forwards", "v": "6.56" },
+      { "k": "Målvakter", "v": "9.02" }
     ]
   },
   "stat_vs_ogat": {
-    "html": "<h3>Statistik vs ögat</h3><div><p><strong>Fotnot:</strong></p><ul class=\"tight\"><li><strong>CF% (Corsi%)</strong>: Andel skottförsök framåt när spelaren är på isen. &gt;50% = laget driver spelet.</li><li><strong>FF% (Fenwick%)</strong>: Som Corsi men utan blockerade skott; något bättre mått på offensiv kvalitet.</li><li><strong>PDO</strong>: Skotteffektivitet + räddningsprocent när spelaren är på isen. ~100 = normalt; mycket högre/lägre kan tyda på tur/oflyt.</li></ul></div><h4>Backar</h4><ul class=\"tight\"><li><strong>Olle Alsing (24:27 TOI)</strong>: BP 3:22, PP 2:05, +1, 2 block, 1 SOG. CF% 63,33 – trygg med pucken och drev spelet.</li><li><strong>Axel Rindell (22:04)</strong>: 3 SOG, -1, PP 1:55, ej BP. CF% 51,52 – spelmässigt jämnt.</li><li><strong>Hugo Fransson (20:05)</strong>: 1 assist, +1, 1 SOG, 1 tackling, 1 block; BP 0:38, PP 2:05. CF% 52,94 – på rätt sida.</li><li><strong>Lucas Lagerberg (19:01)</strong>: 2 SOG, 1 block; BP 3:19. CF% 45,83 – mer försvar än offensiv.</li><li><strong>Niklas Hansson (18:54)</strong>: PP 2:05, +1, 1 block. CF% 48,28 – strax under balans men nyttig i special teams.</li><li><strong>Karl Annborn (11:20)</strong>: 1 SOG, ±0. CF% 64,29 – tydligt övertag på begränsad TOI.</li><li><strong>Vashek Blanar (0:00) &amp; Noel Skarby (0:00)</strong>: Användes inte i matchen.</li></ul><h4>Forwards</h4><ul class=\"tight\"><li><strong>Linus Lindström (18:16)</strong>: 1 tackling, BP 3:15. CF% 46,67 – defensiva uppdrag, lite efter i spelövertag.</li><li><strong>Jonathan Ang (18:09)</strong>: 1 PP-mål, 4 SOG, +1; PP 2:14. CF% 55,56 – skapade mycket.</li><li><strong>Joona Luoto (18:08)</strong>: 3 SF, 2 tacklingar, 1 block, +1; PP 2:14, BP 0:44. CF% 52,17 – strax över balans.</li><li><strong>Aleksi Heponiemi (18:04)</strong>: 1 mål, +1; PP 2:14, BP 0:45. CF% 60,00 – stark offensiv påverkan.</li><li><strong>Lukas Rousek (18:03)</strong>: 2 SOG; PP 1:46. CF% 66,67 – stark puckkontroll.</li><li><strong>Justin Kloos (15:50)</strong>: 5 SOG (flest), PP 1:46. CF% 69,57 – mycket driv.</li><li><strong>Riley Woods (14:20)</strong>: 2 SOG, -1; PP 1:46. CF% 69,57 – offensivt stark, men baklängesmål i hans istid.</li><li><strong>Oskar Stål Lyrenäs (13:17)</strong>: 1 tackling; BP 2:45. CF% 23,81 – tillbakapressad.</li><li><strong>Isac Brännström (13:09)</strong>: 1 assist, 3 skott, 2 tacklingar, +1; BP 0:31. CF% 66,67 – stark på kortare TOI.</li><li><strong>Nikola Pasic (12:02)</strong>: Inga poäng/avslut. CF% 34,78 – mycket tillbakapressad.</li><li><strong>Mattias Tedenby (11:30)</strong>: 2 tacklingar, +1. CF% 72,73 – bästa possession-siffran trots begränsad TOI.</li><li><strong>Martin Johnsen (9:23)</strong>: Minst TOI, -1, 0 SOG. CF% 21,43 – hårt pressad bakåt.</li></ul><h4>Positivt</h4><ul class=\"tight\"><li>Olle Alsing bar tung istid och levererade starka siffror.</li><li>Heponiemi och Ang gjorde mål och drev spelet.</li><li>Kloos och Rousek skapade mycket offensivt och dominerade puckinnehavet.</li><li>Brännström och Tedenby med starka insatser trots mindre istid.</li></ul><h4>Negativt</h4><ul class=\"tight\"><li>Stål Lyrenäs, Pasic och Johnsen med mycket låga CF% och tillbakapressat spel.</li><li>Rindell och Woods hamnade på minus i plus/minus trots offensivt övertag.</li></ul><h4>Betygen vs statistiken</h4><h5>Där det stämmer</h5><ul class=\"tight\"><li>Dichow – högsta betyg, och siffrorna visar att målvaktsspelet var avgörande för segern.</li><li>Fransson – bra betyg, vilket matchas av en stabil insats med assist, +1 och spel i både PP/BP.</li><li>Ang &amp; Heponiemi – höga betyg, helt i linje med målskyttar som också hade starka underliggande siffror.</li></ul><h5>Där det skiljer sig</h5><ul class=\"tight\"><li>Alsing (6.31) – spelade mest, var +1 och hade hög CF% → statistiken visar en större insats än betyget antyder.</li><li>Rindell (4.90) – lägst betyg, men statistiken säger ”helt okej” snarare än svag.</li><li>Tedenby (6.10) – bäst CF% i laget (72,7), men betyget placerar honom bara i mitten.</li></ul>"
+    "html": "<h3>Statistik vs ögat</h3><div><p><strong>Fotnot</strong></p><ul class=\"tight\"><li><strong>Corsi (CF%)</strong> = andel av alla skottförsök som laget hade när spelaren var på isen (mått på puckinnehav).</li><li><strong>Fenwick (FF%)</strong> = samma men räknar bort blockerade skott (farligare chanser).</li><li><strong>PDO</strong> = skotteffektivitet + räddningsprocent. Runt 100 = normalt, högre = flyt/målvaktsspel, lägre = otur/svaga avslut.</li><li><strong>xG (Expected Goals)</strong> = förväntade mål baserat på chansernas kvalitet.</li></ul><p class=\"note\">(Karl Annborn och Fabian Reber spelade för lite för att räknas in. Tränarbänken redovisas separat.)</p></div><h4>1) Målen</h4><ul class=\"tight\"><li>HV gjorde 2–0 redan i mitten av första perioden, båda i powerplay.</li><li>Avsluten som blev mål kom från högkvalitativa ytor nära mål, vilket var undantag i en match där HV annars mest sköt från distans.</li><li>Efter dessa mål upphörde nästan all offensiv produktion från HV i spel fem mot fem.</li></ul><h4>2) Försvaret</h4><ul class=\"tight\"><li>HV tillät 58 skottförsök och ett förväntat målutfall (xGA) på 2,41, men höll nollan.</li><li>Fördelningen av istid visar att Lagerberg, Hatakka och Fransson fick störst belastning i boxplay, där laget klarade 12 motståndarförsök utan att släppa in mål.</li><li>Blockerade skott och att hålla motståndarna på utsidan blev en central del av strategin efter 2–0.</li></ul><h4>3) Målvakten</h4><ul class=\"tight\"><li>Räddade nästan 2,5 mål mer än förväntat (GSax +2,41).</li><li>Det är andra gången denna säsong som en HV-målvakt överträffat förväntad nivå på det sättet – båda gångerna i lagets segrar.</li><li>Siffrorna visar tydligt att målvaktsspelet är en nyckelfaktor i de poäng laget tagit.</li></ul><h4>Spelarnas roller &amp; istid</h4><ul class=\"tight\"><li><strong>Powerplay:</strong> Jonathan Ang (18:53, PP 4:24) och Riley Woods (15:19, PP 4:01) producerade poäng. Niklas Hansson (19:46, PP 3:23) användes som primär back i PP.</li><li><strong>Boxplay:</strong> Lucas Lagerberg (18:14, BP 4:06), Santeri Hatakka (17:45, BP 2:50) och Joona Luoto (22:21, BP 2:28) fick mest ansvar. Hatakka noterades för fyra blockade skott.</li><li><strong>Hög totalbelastning:</strong> Aleksi Heponiemi (21:17) spelade både 4:20 i PP och 3:08 i BP. Hugo Fransson (22:02) och Luoto (22:21) ledde istiden totalt. Övriga forwards som Brännström, Johnsen, Lindström och Reber användes i kortare byten och påverkade inte matchen nämnvärt offensivt.</li></ul><h4>Slutsats</h4><p>Matchen avgjordes tidigt med två powerplaymål. Efter ledningen försköts spelbilden mer och mer åt Färjestads håll – dels på grund av deras spelstyrka, men sannolikt också för att HV i sitt poängmässiga läge prioriterade att bevaka resultat snarare än att driva spelet framåt. Skottkartan och xG visar en tydlig skillnad: Färjestad skapade återkommande farliga chanser centralt, HV nästan inga i spel fem mot fem.</p><p><em>Enligt statistiken var det en stöld.</em> Frågan är om den tidiga 2–0-ledningen låste matchbilden (HV föll hem och försvarade), om Färjestad helt enkelt var för bra – eller en kombination som tillsammans skapade utfallet.</p><ul class=\"tight\"><li>Effektivt powerplay i första perioden.</li><li>Ett boxplay som stod emot trots många chanser emot.</li><li>Ett målvaktsspel som räddade nästan 2,5 mål mer än förväntat – samma mönster som i lagets tidigare seger.</li></ul><p class=\"note\">Data: shl.se och hockeysiffror.se.</p>"
   }
 }
