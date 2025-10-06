@@ -1,54 +1,56 @@
 {
   "meta": {
-    "date": "2025-10-02",
-    "opponent": "Färjestad",
-    "venue": "Hemma",
-    "score": "2–0",
+    "date": "2025-10-04",
+    "opponent": "Linköping",
+    "venue": "Borta",
+    "score": "1–4",
     "next_match_url": "/index.html",
-    "share_text": "HV71–Färjestad 2–0: spelarbetyg, tränarbänken och stat vs ögat."
+    "share_text": "Linköping–HV71 4–1: spelarbetyg, tränarbänken och stat vs ögat."
   },
   "spelarbetyg": [
-    { "name": "Frederik Dichow (G)", "rating": 9.02 },
-    { "name": "Jonathan Ang (F)", "rating": 7.32 },
-    { "name": "Hugo Fransson (D)", "rating": 7.32 },
-    { "name": "Joona Luoto (F)", "rating": 7.10 },
-    { "name": "Riley Woods (F)", "rating": 7.00 },
-    { "name": "Justin Kloos (F)", "rating": 6.94 },
-    { "name": "Linus Lindström (F)", "rating": 6.92 },
-    { "name": "Olle Alsing (D)", "rating": 6.88 },
-    { "name": "Aleksi Heponiemi (F)", "rating": 6.78 },
-    { "name": "Santeri Hatakka (D)", "rating": 6.70 },
-    { "name": "Lucas Lagerberg (D)", "rating": 6.64 },
-    { "name": "Nikola Pasic (F)", "rating": 6.56 },
-    { "name": "Niklas Hansson (D)", "rating": 6.52 },
-    { "name": "Lukas Rousek (F)", "rating": 6.46 },
-    { "name": "Isac Brännström (F)", "rating": 6.44 },
-    { "name": "Axel Rindell (D)", "rating": 6.32 },
-    { "name": "Mattias Tedenby (F)", "rating": 6.32 },
-    { "name": "Martin Johnsen (F)", "rating": 5.94 },
-    { "name": "Oskar Stål Lyrenäs (F)", "rating": 5.80 },
-    { "name": "Jamiro Reber (F)", "rating": 5.74 }
+    { "name": "Lassi Lehtinen (G)", "rating": 6.20 },
+    { "name": "Lucas Lagerberg (D)", "rating": 6.15 },
+    { "name": "Hugo Fransson (D)", "rating": 5.90 },
+    { "name": "Joona Luoto (F)", "rating": 5.75 },
+    { "name": "Niklas Hansson (D)", "rating": 5.60 },
+    { "name": "Santeri Hatakka (D)", "rating": 5.55 },
+    { "name": "Karl Annborn (D)", "rating": 5.55 },
+    { "name": "Olle Alsing (D)", "rating": 5.50 },
+    { "name": "Axel Rindell (D)", "rating": 5.45 },
+    { "name": "Linus Lindström (F)", "rating": 5.40 },
+    { "name": "Martin Johnsen (F)", "rating": 5.35 },
+    { "name": "Jonathan Ang (F)", "rating": 5.25 },
+    { "name": "Justin Kloos (F)", "rating": 5.20 },
+    { "name": "Nikola Pasic (F)", "rating": 5.20 },
+    { "name": "Riley Woods (F)", "rating": 5.10 },
+    { "name": "Aleksi Heponiemi (F)", "rating": 4.95 },
+    { "name": "Jamiro Reber (F)", "rating": 4.95 },
+    { "name": "Oskar Stål Lyrenäs (F)", "rating": 4.70 },
+    { "name": "Lukas Rousek (F)", "rating": 4.65 },
+    { "name": "Frederik Dichow (G)", "rating": 4.60 },
+    { "name": "Isac Brännström (F)", "rating": 4.25 },
+    { "name": "Mattias Tedenby (F)", "rating": 4.10 }
   ],
   "tranarbanken": {
     "kv": [
-      { "k": "Betyg", "v": "7.50" }
+      { "k": "Betyg", "v": "4.85" }
     ]
   },
   "matchomdomen": {
     "kv": [
-      { "k": "Matchens helhetsintryck", "v": "6.92" },
-      { "k": "Speglade resultat matchen", "v": "5.26" },
-      { "k": "Domarnivå", "v": "6.14" }
+      { "k": "Matchens helhetsintryck", "v": "5.35" },
+      { "k": "Speglade resultat matchen", "v": "4.60" },
+      { "k": "Domarnivå", "v": "5.70" }
     ]
   },
   "snitt": {
     "kv": [
-      { "k": "Backar", "v": "6.73" },
-      { "k": "Forwards", "v": "6.56" },
-      { "k": "Målvakter", "v": "9.02" }
+      { "k": "Målvakter", "v": "5.40" },
+      { "k": "Backar", "v": "5.67" },
+      { "k": "Forwards", "v": "4.98" }
     ]
   },
-  "stat_vs_ogat": {
-    "html": "<h3>Statistik vs ögat</h3><div><p><strong>Fotnot</strong></p><ul class=\"tight\"><li><strong>Corsi (CF%)</strong> = andel av alla skottförsök som laget hade när spelaren var på isen (mått på puckinnehav).</li><li><strong>Fenwick (FF%)</strong> = samma men räknar bort blockerade skott (farligare chanser).</li><li><strong>PDO</strong> = skotteffektivitet + räddningsprocent. Runt 100 = normalt, högre = flyt/målvaktsspel, lägre = otur/svaga avslut.</li><li><strong>xG (Expected Goals)</strong> = förväntade mål baserat på chansernas kvalitet.</li></ul><p class=\"note\">(Karl Annborn och Fabian Reber spelade för lite för att räknas in. Tränarbänken redovisas separat.)</p></div><h4>1) Målen</h4><ul class=\"tight\"><li>HV gjorde 2–0 redan i mitten av första perioden, båda i powerplay.</li><li>Avsluten som blev mål kom från högkvalitativa ytor nära mål, vilket var undantag i en match där HV annars mest sköt från distans.</li><li>Efter dessa mål upphörde nästan all offensiv produktion från HV i spel fem mot fem.</li></ul><h4>2) Försvaret</h4><ul class=\"tight\"><li>HV tillät 58 skottförsök och ett förväntat målutfall (xGA) på 2,41, men höll nollan.</li><li>Fördelningen av istid visar att Lagerberg, Hatakka och Fransson fick störst belastning i boxplay, där laget klarade 12 motståndarförsök utan att släppa in mål.</li><li>Blockerade skott och att hålla motståndarna på utsidan blev en central del av strategin efter 2–0.</li></ul><h4>3) Målvakten</h4><ul class=\"tight\"><li>Räddade nästan 2,5 mål mer än förväntat (GSax +2,41).</li><li>Det är andra gången denna säsong som en HV-målvakt överträffat förväntad nivå på det sättet – båda gångerna i lagets segrar.</li><li>Siffrorna visar tydligt att målvaktsspelet är en nyckelfaktor i de poäng laget tagit.</li></ul><h4>Spelarnas roller &amp; istid</h4><ul class=\"tight\"><li><strong>Powerplay:</strong> Jonathan Ang (18:53, PP 4:24) och Riley Woods (15:19, PP 4:01) producerade poäng. Niklas Hansson (19:46, PP 3:23) användes som primär back i PP.</li><li><strong>Boxplay:</strong> Lucas Lagerberg (18:14, BP 4:06), Santeri Hatakka (17:45, BP 2:50) och Joona Luoto (22:21, BP 2:28) fick mest ansvar. Hatakka noterades för fyra blockade skott.</li><li><strong>Hög totalbelastning:</strong> Aleksi Heponiemi (21:17) spelade både 4:20 i PP och 3:08 i BP. Hugo Fransson (22:02) och Luoto (22:21) ledde istiden totalt. Övriga forwards som Brännström, Johnsen, Lindström och Reber användes i kortare byten och påverkade inte matchen nämnvärt offensivt.</li></ul><h4>Slutsats</h4><p>Matchen avgjordes tidigt med två powerplaymål. Efter ledningen försköts spelbilden mer och mer åt Färjestads håll – dels på grund av deras spelstyrka, men sannolikt också för att HV i sitt poängmässiga läge prioriterade att bevaka resultat snarare än att driva spelet framåt. Skottkartan och xG visar en tydlig skillnad: Färjestad skapade återkommande farliga chanser centralt, HV nästan inga i spel fem mot fem.</p><p><em>Enligt statistiken var det en stöld.</em> Frågan är om den tidiga 2–0-ledningen låste matchbilden (HV föll hem och försvarade), om Färjestad helt enkelt var för bra – eller en kombination som tillsammans skapade utfallet.</p><ul class=\"tight\"><li>Effektivt powerplay i första perioden.</li><li>Ett boxplay som stod emot trots många chanser emot.</li><li>Ett målvaktsspel som räddade nästan 2,5 mål mer än förväntat – samma mönster som i lagets tidigare seger.</li></ul><p class=\"note\">Data: shl.se och hockeysiffror.se.</p>"
-  }
+"stat_vs_ogat": {
+  "html": "<h3>Statistik vs ögat</h3><h4>🧊 MATCHRAPPORT – Linköping 4, HV71 1 (2025-10-04)</h4><p>(Två av Linköpings mål i tom kasse)</p><h4>📘 Statistik-termer</h4><ul class=\"tight\"><li><strong>CF% (Corsi %)</strong> – andel av alla skottförsök som går HV71:s väg när spelaren är på isen.</li><li><strong>xG (Expected Goals)</strong> – förväntat antal mål baserat på skottens position och kvalitet.</li><li><strong>ixG</strong> – spelarens egna förväntade målchanser.</li><li><strong>PDO</strong> – kombination av skotteffektivitet och räddningsprocent (100 = normalt flyt).</li><li><strong>SOG</strong> – skott på mål.</li><li><strong>TOI</strong> – istid (minuter:sekunder).</li></ul><h4>🏒 Lagöversikt</h4><h5>Matchbild</h5><p>HV71 hade ett tydligt övertag i spel fem mot fem:</p><ul class=\"tight\"><li>Skottförsök: 47–28 (62,7 % CF)</li><li>Förväntade mål: 2.45–0.86</li><li>Skott på mål: 33–19</li></ul><p>Linköping fick hög utdelning på få chanser och målvakten stod för en klart över förväntad insats (+1.45 GSAx).<br>Frederik Dichow startade i HV71:s mål men ersattes av Lassi Lehtinen efter första perioden.</p><h5>Effektivitet</h5><p>HV71:s PDO runt 97 visar låg utdelning i avsluten, medan Linköping låg över 103.<br>HV vann också tekningsstatistiken med 31–22, vilket bekräftar puckövertag men ineffektiva avslut.</p><h5>Special teams</h5><p><strong>Power play:</strong><br>HV71 hade cirka åtta minuter i numerärt överläge, med 11 avslut, 9 på mål och 1.23 xGF, men inga mål.<br>Avsluten kom främst från höger cirkel och blålinje, få i slotten.</p><p><strong>Box play:</strong><br>Fyra utvisningsminuter totalt. Ett insläppt PP-mål på lågt motstånd (xGA 0.07).</p><h5>Periodstatistik</h5><table class=\"tight\"><thead><tr><th>Period</th><th>Skott på mål</th><th>Mål</th><th>Kommentar</th></tr></thead><tbody><tr><td>1</td><td>10–8 HV</td><td>0–2</td><td>Linköping effektivt, HV bytte målvakt.</td></tr><tr><td>2</td><td>8–3 HV</td><td>1–0 HV</td><td>Klart övertag, reducering rättvis.</td></tr><tr><td>3</td><td>15–8 HV</td><td>0–2</td><td>HV pressade men två tomkassemål avgjorde.</td></tr></tbody></table><p>HV71 vann skotten i varje period men fick inte betalt för det.</p><h4>👥 Spelarstatistik</h4><h5>Positiva bidrag</h5><ul class=\"tight\"><li>Martin Johnsen – en assist och hög chansvolym (0.37 ixG) på bara 13 minuters istid.</li><li>Lucas Lagerberg – gjorde lagets mål, flera avslut.</li><li>Nikola Pasic – mest istid av forwards (18 min 5v5 + 4 min PP), starka underliggande siffror (82 % CF).</li><li>Justin Kloos och Lukas Rousek – 84 % CF, flera avslut.</li><li>Niklas Hansson och Olle Alsing – positiva siffror i puckinnehav (63–82 % CF).</li><li>Riley Woods – 92 % CF på begränsad speltid.</li></ul><h5>Övriga noteringar</h5><ul class=\"tight\"><li>Luoto, Heponiemi, Hatakka, Fransson och Rindell bidrog till skottvolym men utan utdelning, särskilt i powerplay.</li><li>Brännström, Tedenby och Lindström hade lägst CF-värden (21–27 %) och låg mest i försvar.</li></ul><h4>🔍 Samlad slutsats</h4><p>HV71 hade kontroll på spelet, skapade mest och vann nästan alla underliggande siffror.<br>Trots det blev det bara ett mål.<br>Med normal utdelning hade HV71 sannolikt vunnit matchen – men där finns också det verkliga problemet just nu: laget skapar tillräckligt för att vinna, men gör inte mål på sina chanser. Det är den skillnaden som måste bort om resultaten ska börja spegla spelet.</p><p class=\"note\">Statistiken i analysen baseras på data från shl.se och hockeysiffror.se.</p>"
+}
 }
