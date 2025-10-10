@@ -1,4 +1,8 @@
 {
+  "matchoversikt": {
+    "html": "<details><summary>🧊 <strong>Matchöversikt – Luleå 3, HV71 2 (SO)</strong></summary><div class=\"details-inner\"><p>Matchen var jämn resultatmässigt, men underliggande siffror visar övertag för Luleå. Luleå hade xGF 2,49 mot HV71:s 1,40 vid lika styrka, samt fler skottförsök (CF 40–34) och klart fler skott på mål (22–11). HV71:s GSAx +1,49 tyder på att målvakten (troligen Lehtinen) räddade mer än förväntat och höll laget kvar i matchen.</p><h4>📊 Period 1</h4><p>Luleå dominerade med 2–0 i mål och 12–6 i skott.<br>xG-grafen visar tidigt övertag för Luleå, som skapade tryck och hög skottvolym från farliga ytor.</p><h4>📊 Period 2</h4><p>HV71 vände spelmässigt och vann perioden 2–0.<br>Powerplaymålet var centralt, laget fick mer zonspel och högre avslutskvalitet.<br>Spelbilden blev mer jämn, men Luleå behöll något högre xG.</p><h4>📊 Period 3</h4><p>Jämn och chansfattig period.<br>Luleå hade fler skott men HV71 försvarade sig kompakt.<br>xG-kurvan planade ut, vilket tyder på försiktigt spel från båda.</p><h4>📊 Förlängning</h4><p>Luleå skapade mer (5–1 i skott) men HV71:s målvakt stod emot.<br>Spelmässigt lutade det åt Luleå, men ingen avgörande skillnad.</p><h4>🥅 Straffläggning</h4><p>Luleå satte enda målet och avgjorde matchen.</p><h4>🎯 Samlad analys</h4><p>Luleå var bättre i spel fem mot fem, både i puckinnehav och chansproduktion.<br>HV71:s styrka låg i målvaktsspelet och ett effektivt powerplay som gav balans i resultatet.<br>Skottkartan visar att Luleå tog fler avslut från slottet, medan HV71 skapade färre men relativt högkvalitativa chanser.<br>Totalt sett förtjänade Luleå segern sett till xG och spelövertag, men HV71:s målvaktsspel och special teams räddade en poäng.</p></div></details>"
+  },
+
   "spelarbetyg": [
     { "name": "Frederik Dichow (G)", "rating": 7.54 },
     { "name": "Andreas Borgman (D)", "rating": 7.04 },
@@ -22,11 +26,13 @@
     { "name": "Niklas Hansson (D)", "rating": 5.33 },
     { "name": "Oskar Stål Lyrenäs (F)", "rating": 5.21 }
   ],
+
   "tranarbanken": {
     "kv": [
       { "k": "Betyg", "v": "5.88" }
     ]
   },
+
   "matchomdomen": {
     "kv": [
       { "k": "Domarnivå", "v": "4.42" },
@@ -34,6 +40,7 @@
       { "k": "Matchbetyg", "v": "5.67" }
     ]
   },
+
   "snitt": {
     "kv": [
       { "k": "Målvakt", "v": "7.54" },
@@ -41,6 +48,7 @@
       { "k": "Forwards", "v": "6.03" }
     ]
   },
+
   "stat_vs_ogat": {
     "html": "<h3>Statistik vs ögat</h3><h4>Speldrivande / Positiv påverkan</h4><ol class=\"tight\"><li><strong>Justin Kloos</strong> – CF% 68.4, FF% 61.5, starkast possession. Ingen poäng men klart drivit offensiven. Topp-6-istid (18:21) och PP-tid (3:01).</li><li><strong>Santeri Hatakka</strong> – CF% 61.1, stabil defensivt, 16 min TOI + BP 2:01. Pålitlig tvåväg.</li><li><strong>Aleksi Heponiemi</strong> – CF% 57.9 men låg FF%. PP-ass, mycket speltid i alla situationer. Kreativ, något passiv i 5-mot-5.</li><li><strong>Lukas Rousek</strong> / <strong>Joona Luoto</strong> – båda CF% 57.1, spelade tungt 5-mot-5 (17–20 min). Bra kontroll, inget mål. Luoto även PP och lite BP.</li><li><strong>Nikola Pasic</strong> – 2A, CF 50 men PDO 125 (tur + effektivitet). Offensivt effektiv, något svag possession.</li><li><strong>Andreas Borgman</strong> – tung istid (24:42), PP + BP, CF% 47.6 men mycket ansvar. Minusspel (+/−1). Bra men överbelastad.</li><li><strong>Niklas Hansson</strong> – CF 50, FF 41, spel i PP och BP. Neutral match men stabil.</li></ol><h4>Mellannivå / Neutral insats</h4><ol class=\"tight\" start=\"8\"><li><strong>Hugo Fransson</strong> – CF 50, PP + BP, 17:28 TOI. Neutral i spelet, ingen produktion.</li><li><strong>Riley Woods</strong> – CF 50, 15:46 TOI, PP-tid 2:52. Höll balansen men skapade lite.</li><li><strong>Axel Rindell</strong> – CF 47.6, PP + 17:20 TOI. Spelbar, låg påverkan.</li><li><strong>Linus Lindström</strong> – CF 46.7, spel i BP (3:08). Defensivt okej, ingen offensiv påverkan.</li><li><strong>Jonathan Ang</strong> – 1 PP-mål, CF 42.3 (svagt 5-mot-5). Effektiv i special teams men tappade spelmässigt.</li><li><strong>Olle Alsing</strong> – 1A, CF 38.5, mest istid bland backar (21:44). PP och BP. Bra poängmässigt men pressad i eget spel.</li></ol><h4>Svagt / Under press</h4><ol class=\"tight\" start=\"14\"><li><strong>Oskar Stål-Lyrenäs</strong> – CF 30, PDO 200 (tur), låg puckkontroll men mål/poängbidrag via tur.</li><li><strong>Mattias Tedenby</strong> – CF 41.7, låg TOI (9:54). Inga tecken på offensivt tryck.</li><li><strong>Isac Brännström</strong> – CF 40, låg TOI, −1, svagt possession.</li><li><strong>Lucas Lagerberg</strong> – CF 36, liten istid, marginell påverkan.</li><li><strong>Jamiro Reber</strong> – CF 25, kortast TOI (5:39), negativ påverkan.</li><li><strong>Martin Johnsen</strong> – 1G, CF 18.2 (klart lägst). Målet väger upp svagt puckinnehav. Effektiv men tillbakapressad.</li></ol><h4>Målvakter</h4><p><strong>Frederik Dichow</strong> – 2 GA, räddnings% ca 0.909, GSAx +1.49 (överpresterade). Räddade poängen.</p><h4>Betyg vs Insats</h4><h5>Undervärderade</h5><ul class=\"tight\"><li><strong>Justin Kloos (6.38)</strong> – Bäst possession i laget, borde ligga runt 7.</li><li><strong>Santeri Hatakka (5.54)</strong> – Stark tvåvägsinsats, för lågt betyg.</li><li><strong>Joona Luoto (6.21)</strong> – Bra 5v5-spel utan poäng, underskattad.</li><li><strong>Lukas Rousek (6.38)</strong> – Stabil insats, betyget något lågt.</li></ul><h5>Övervärderade</h5><ul class=\"tight\"><li><strong>Nikola Pasic (6.75)</strong> – Hög PDO, poäng med flyt.</li><li><strong>Martin Johnsen (6.54)</strong> – Extremt låg CF%, effektiv men tillbakapressad.</li><li><strong>Andreas Borgman (7.04)</strong> – Tung istid men svag possession.</li><li><strong>Oskar Stål Lyrenäs (5.21)</strong> – PDO 200, tur snarare än prestation.</li></ul><h5>Rättvist bedömda</h5><ul class=\"tight\"><li><strong>Frederik Dichow (7.54)</strong> – Matchräddare, helt rätt toppbetyg.</li><li><strong>Heponiemi, Alsing, Fransson (6.0–6.1)</strong> – Neutrala prestationer, rimliga betyg.</li><li><strong>Brännström, Tedenby, Reber (5.3–5.5)</strong> – Låg påverkan, korrekt nivå.</li></ul>"
   }
