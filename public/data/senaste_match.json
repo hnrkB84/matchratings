@@ -1,56 +1,47 @@
 {
-  "meta": {
-    "date": "2025-10-04",
-    "opponent": "Linköping",
-    "venue": "Borta",
-    "score": "1–4",
-    "next_match_url": "/index.html",
-    "share_text": "Linköping–HV71 4–1: spelarbetyg, tränarbänken och stat vs ögat."
-  },
   "spelarbetyg": [
-    { "name": "Lassi Lehtinen (G)", "rating": 6.20 },
-    { "name": "Lucas Lagerberg (D)", "rating": 6.15 },
-    { "name": "Hugo Fransson (D)", "rating": 5.90 },
-    { "name": "Joona Luoto (F)", "rating": 5.75 },
-    { "name": "Niklas Hansson (D)", "rating": 5.60 },
-    { "name": "Santeri Hatakka (D)", "rating": 5.55 },
-    { "name": "Karl Annborn (D)", "rating": 5.55 },
-    { "name": "Olle Alsing (D)", "rating": 5.50 },
-    { "name": "Axel Rindell (D)", "rating": 5.45 },
-    { "name": "Linus Lindström (F)", "rating": 5.40 },
-    { "name": "Martin Johnsen (F)", "rating": 5.35 },
-    { "name": "Jonathan Ang (F)", "rating": 5.25 },
-    { "name": "Justin Kloos (F)", "rating": 5.20 },
-    { "name": "Nikola Pasic (F)", "rating": 5.20 },
-    { "name": "Riley Woods (F)", "rating": 5.10 },
-    { "name": "Aleksi Heponiemi (F)", "rating": 4.95 },
-    { "name": "Jamiro Reber (F)", "rating": 4.95 },
-    { "name": "Oskar Stål Lyrenäs (F)", "rating": 4.70 },
-    { "name": "Lukas Rousek (F)", "rating": 4.65 },
-    { "name": "Frederik Dichow (G)", "rating": 4.60 },
-    { "name": "Isac Brännström (F)", "rating": 4.25 },
-    { "name": "Mattias Tedenby (F)", "rating": 4.10 }
+    { "name": "Frederik Dichow (G)", "rating": 7.54 },
+    { "name": "Andreas Borgman (D)", "rating": 7.04 },
+    { "name": "Nikola Pasic (F)", "rating": 6.75 },
+    { "name": "Martin Johnsen (F)", "rating": 6.54 },
+    { "name": "Lukas Rousek (F)", "rating": 6.38 },
+    { "name": "Justin Kloos (F)", "rating": 6.38 },
+    { "name": "Jonathan Ang (F)", "rating": 6.33 },
+    { "name": "Joona Luoto (F)", "rating": 6.21 },
+    { "name": "Aleksi Heponiemi (F)", "rating": 6.04 },
+    { "name": "Olle Alsing (D)", "rating": 6.04 },
+    { "name": "Lucas Lagerberg (D)", "rating": 6.04 },
+    { "name": "Hugo Fransson (D)", "rating": 6.04 },
+    { "name": "Riley Woods (F)", "rating": 5.88 },
+    { "name": "Linus Lindström (F)", "rating": 5.63 },
+    { "name": "Jamiro Reber (F)", "rating": 5.54 },
+    { "name": "Mattias Tedenby (F)", "rating": 5.54 },
+    { "name": "Santeri Hatakka (D)", "rating": 5.54 },
+    { "name": "Axel Rindell (D)", "rating": 5.42 },
+    { "name": "Isac Brännström (F)", "rating": 5.38 },
+    { "name": "Niklas Hansson (D)", "rating": 5.33 },
+    { "name": "Oskar Stål Lyrenäs (F)", "rating": 5.21 }
   ],
   "tranarbanken": {
     "kv": [
-      { "k": "Betyg", "v": "4.85" }
+      { "k": "Betyg", "v": "5.88" }
     ]
   },
   "matchomdomen": {
     "kv": [
-      { "k": "Matchens helhetsintryck", "v": "5.35" },
-      { "k": "Speglade resultat matchen", "v": "4.60" },
-      { "k": "Domarnivå", "v": "5.70" }
+      { "k": "Domarnivå", "v": "4.42" },
+      { "k": "Speglade resultatet", "v": "6.29" },
+      { "k": "Matchbetyg", "v": "5.67" }
     ]
   },
   "snitt": {
     "kv": [
-      { "k": "Målvakter", "v": "5.40 (Lehtinen 6.20, Dichow 4.60)" },
-      { "k": "Backar", "v": "5.67" },
-      { "k": "Forwards", "v": "4.98" }
+      { "k": "Målvakt", "v": "7.54" },
+      { "k": "Backar", "v": "5.91" },
+      { "k": "Forwards", "v": "6.03" }
     ]
   },
   "stat_vs_ogat": {
-    "html": "<h3>Statistik vs ögat</h3><h4>MATCHRAPPORT – Linköping 4, HV71 1 (2025-10-04)</h4><p>(Två av Linköpings mål i tom kasse)</p><h4>Statistik-termer</h4><ul class=\"tight\"><li><strong>CF% (Corsi %)</strong> – andel av alla skottförsök som går HV71:s väg när spelaren är på isen.</li><li><strong>xG (Expected Goals)</strong> – förväntat antal mål baserat på skottens position och kvalitet.</li><li><strong>ixG</strong> – spelarens egna förväntade målchanser.</li><li><strong>PDO</strong> – kombination av skotteffektivitet och räddningsprocent (100 = normalt flyt).</li><li><strong>SOG</strong> – skott på mål.</li><li><strong>TOI</strong> – istid (minuter:sekunder).</li></ul><h4>Lagöversikt</h4><h5>Matchbild</h5><p>HV71 hade ett tydligt övertag i spel fem mot fem:</p><ul class=\"tight\"><li>Skottförsök: 47–28 (62,7 % CF)</li><li>Förväntade mål: 2.45–0.86</li><li>Skott på mål: 33–19</li></ul><p>Linköping fick hög utdelning på få chanser och målvakten stod för en klart över förväntad insats (+1.45 GSAx).<br>Frederik Dichow (startade i HV71:s mål) men ersattes av Lassi Lehtinen efter första perioden.</p><h5>Effektivitet</h5><p>HV71:s PDO runt 97 visar låg utdelning i avsluten, medan Linköping låg över 103.<br>HV vann också tekningarna med 31–22, vilket bekräftar puckövertag men ineffektiva avslut.</p><h5>Special teams</h5><p><strong>Power play:</strong><br>HV71 hade cirka åtta minuter i numerärt överläge, med 11 avslut, 9 på mål och 1.23 xGF, men inga mål.<br>Avsluten kom främst från höger cirkel och blålinje, få i slotten.</p><p><strong>Box play:</strong><br>Fyra utvisningsminuter totalt. Ett insläppt PP-mål på lågt motstånd (xGA 0.07).</p><h4>Spelarstatistik</h4><h5>Positiva bidrag</h5><ul class=\"tight\"><li>Martin Johnsen – en assist och hög chansvolym (0.37 ixG) på bara 13 minuters istid.</li><li>Lucas Lagerberg – gjorde lagets mål, flera avslut.</li><li>Nikola Pasic – mest istid av forwards (18 min 5v5 + 4 min PP), starka underliggande siffror (82 % CF).</li><li>Justin Kloos och Lukas Rousek – 84 % CF, flera avslut.</li><li>Niklas Hansson och Olle Alsing – positiva siffror i puckinnehav (63–82 % CF).</li><li>Riley Woods – 92 % CF på begränsad speltid.</li></ul><h5>Övriga noteringar</h5><ul class=\"tight\"><li>Luoto, Heponiemi, Hatakka, Fransson och Rindell bidrog till skottvolym men utan utdelning, särskilt i powerplay.</li><li>Brännström, Tedenby och Lindström hade lägst CF-värden (21–27 %) och låg mest i försvar.</li></ul><h4>Samlad slutsats</h4><p>HV71 hade kontroll på spelet, skapade mest och vann nästan alla underliggande siffror. Trots det blev det bara ett mål. Med normal utdelning hade HV71 sannolikt vunnit matchen – men där finns också det verkliga problemet just nu: laget skapar tillräckligt för att vinna, men gör inte mål på sina chanser. Det är den skillnaden som måste bort om resultaten ska börja spegla spelet.</p><p class=\"note\"><em>Statistiken i analysen baseras på data från shl.se och hockeysiffror.se.</em></p>"
+    "html": "<h3>Statistik vs ögat</h3><h4>Speldrivande / Positiv påverkan</h4><ol class=\"tight\"><li><strong>Justin Kloos</strong> – CF% 68.4, FF% 61.5, starkast possession. Ingen poäng men klart drivit offensiven. Topp-6-istid (18:21) och PP-tid (3:01).</li><li><strong>Santeri Hatakka</strong> – CF% 61.1, stabil defensivt, 16 min TOI + BP 2:01. Pålitlig tvåväg.</li><li><strong>Aleksi Heponiemi</strong> – CF% 57.9 men låg FF%. PP-ass, mycket speltid i alla situationer. Kreativ, något passiv i 5-mot-5.</li><li><strong>Lukas Rousek</strong> / <strong>Joona Luoto</strong> – båda CF% 57.1, spelade tungt 5-mot-5 (17–20 min). Bra kontroll, inget mål. Luoto även PP och lite BP.</li><li><strong>Nikola Pasic</strong> – 2A, CF 50 men PDO 125 (tur + effektivitet). Offensivt effektiv, något svag possession.</li><li><strong>Andreas Borgman</strong> – tung istid (24:42), PP + BP, CF% 47.6 men mycket ansvar. Minusspel (+/−1). Bra men överbelastad.</li><li><strong>Niklas Hansson</strong> – CF 50, FF 41, spel i PP och BP. Neutral match men stabil.</li></ol><h4>Mellannivå / Neutral insats</h4><ol class=\"tight\" start=\"8\"><li><strong>Hugo Fransson</strong> – CF 50, PP + BP, 17:28 TOI. Neutral i spelet, ingen produktion.</li><li><strong>Riley Woods</strong> – CF 50, 15:46 TOI, PP-tid 2:52. Höll balansen men skapade lite.</li><li><strong>Axel Rindell</strong> – CF 47.6, PP + 17:20 TOI. Spelbar, låg påverkan.</li><li><strong>Linus Lindström</strong> – CF 46.7, spel i BP (3:08). Defensivt okej, ingen offensiv påverkan.</li><li><strong>Jonathan Ang</strong> – 1 PP-mål, CF 42.3 (svagt 5-mot-5). Effektiv i special teams men tappade spelmässigt.</li><li><strong>Olle Alsing</strong> – 1A, CF 38.5, mest istid bland backar (21:44). PP och BP. Bra poängmässigt men pressad i eget spel.</li></ol><h4>Svagt / Under press</h4><ol class=\"tight\" start=\"14\"><li><strong>Oskar Stål-Lyrenäs</strong> – CF 30, PDO 200 (tur), låg puckkontroll men mål/poängbidrag via tur.</li><li><strong>Mattias Tedenby</strong> – CF 41.7, låg TOI (9:54). Inga tecken på offensivt tryck.</li><li><strong>Isac Brännström</strong> – CF 40, låg TOI, −1, svagt possession.</li><li><strong>Lucas Lagerberg</strong> – CF 36, liten istid, marginell påverkan.</li><li><strong>Jamiro Reber</strong> – CF 25, kortast TOI (5:39), negativ påverkan.</li><li><strong>Martin Johnsen</strong> – 1G, CF 18.2 (klart lägst). Målet väger upp svagt puckinnehav. Effektiv men tillbakapressad.</li></ol><h4>Målvakter</h4><p><strong>Frederik Dichow</strong> – 2 GA, räddnings% ca 0.909, GSAx +1.49 (överpresterade). Räddade poängen.</p><h4>Betyg vs Insats</h4><h5>Undervärderade</h5><ul class=\"tight\"><li><strong>Justin Kloos (6.38)</strong> – Bäst possession i laget, borde ligga runt 7.</li><li><strong>Santeri Hatakka (5.54)</strong> – Stark tvåvägsinsats, för lågt betyg.</li><li><strong>Joona Luoto (6.21)</strong> – Bra 5v5-spel utan poäng, underskattad.</li><li><strong>Lukas Rousek (6.38)</strong> – Stabil insats, betyget något lågt.</li></ul><h5>Övervärderade</h5><ul class=\"tight\"><li><strong>Nikola Pasic (6.75)</strong> – Hög PDO, poäng med flyt.</li><li><strong>Martin Johnsen (6.54)</strong> – Extremt låg CF%, effektiv men tillbakapressad.</li><li><strong>Andreas Borgman (7.04)</strong> – Tung istid men svag possession.</li><li><strong>Oskar Stål Lyrenäs (5.21)</strong> – PDO 200, tur snarare än prestation.</li></ul><h5>Rättvist bedömda</h5><ul class=\"tight\"><li><strong>Frederik Dichow (7.54)</strong> – Matchräddare, helt rätt toppbetyg.</li><li><strong>Heponiemi, Alsing, Fransson (6.0–6.1)</strong> – Neutrala prestationer, rimliga betyg.</li><li><strong>Brännström, Tedenby, Reber (5.3–5.5)</strong> – Låg påverkan, korrekt nivå.</li></ul>"
   }
 }
