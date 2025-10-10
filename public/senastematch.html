@@ -48,6 +48,15 @@
         <span id="metaBadge" class="badge"></span>
       </h2>
 
+      <!-- Matchöversikt (NY) -->
+      <details class="acc">
+        <summary class="acc-sum">
+          <span class="material-symbols-outlined">info</span>
+          Matchöversikt
+        </summary>
+        <div id="matchOverview" class="prose"><!-- Fylls av data (HTML) --></div>
+      </details>
+      
       <!-- Spelarbetyg -->
       <details class="acc">
         <summary class="acc-sum">
@@ -213,6 +222,7 @@
         fillKV(tranarbankenKV, data.tranarbanken?.kv);
         fillKV(matchomdomenKV, data.matchomdomen?.kv);
         fillKV(snittKV, data.snitt?.kv);
+        if (data.matchoversikt?.html && matchOverview) { matchOverview.innerHTML = data.matchoversikt.html; }
         if (data.stat_vs_ogat?.html) { statProse.innerHTML = data.stat_vs_ogat.html; }
 
         bindShare();
