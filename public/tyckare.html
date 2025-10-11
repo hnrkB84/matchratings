@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8" />
+  <title>Svärden har vässats – Spelarbetyg</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <!-- Fonts & Icons (matchar index.html) -->
+  <link href="https://fonts.googleapis.com/css2?family=Teko:wght@600;700&family=Oswald:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:FILL@1" />
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="/styles.css" />
+
+  <!-- Delning/SEO (valfritt att justera) -->
+  <link rel="canonical" href="https://matchratings.onrender.com/" />
+  <meta property="og:site_name" content="Spelarbetyg – HV71" />
+  <meta property="og:title" content="Svärden har vässats – en krönika" />
+  <meta property="og:description" content="När tålamodet möter resultatlistan: en mobilvänlig krönika i HV-stil." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://matchratings.onrender.com/" />
+  <meta property="og:image" content="https://matchratings.onrender.com/ofacb.jpeg" />
+  <meta property="og:locale" content="sv_SE" />
+  <meta name="twitter:card" content="summary_large_image" />
+</head>
+<body>
+  <header>
+    <h1>Svärden har vässats</h1>
+    <div class="muted">En rakt‑på sak krönika, skriven för mobilen.</div>
+  </header>
+
+  <div class="wrap">
+    <div class="card" style="max-width:720px;margin-inline:auto;">
+      <!-- Innehåll: korta stycken för mobil-läsning -->
+      <article>
+        <p>Ingen vill sparka en tränare igen. Ingen vill vara den där som står först i ledet och skriker. Men det här går inte längre. Jag har vässat svärdet, Anton – och nu fäktas jag.</p>
+
+        <p>Efter en Norrlandsturné med en poäng av sex möjliga – vilket ironiskt nog är bättre än på flera år – landade HV71 i Skellefteå. Och till en början såg det faktiskt rätt bra ut. Fram till 1–1 spelade laget snabbt, rakt och med energi.</p>
+
+        <p>Men så händer det där som alltid händer. Rindell, seg som tuggummi i egen zon, tappar markeringen vid bortre stolpen. Ett litet misstag – och plötsligt står hela hönsgården där, redo för den dagliga utfodringen av chanser.</p>
+
+        <p>Sen kom andra perioden. Fem insläppta. Fem. Man kan prata om målvaktsspel, men vad hjälper det när försvaret mest påminner om en kö till korvvagnen? Och när det börjar rinna iväg, då finns inget som heter system eller taktik längre – bara ett förvirrat flaxande i ett kollektivt mörker.</p>
+
+        <p>Man kan prata om underliggande siffror, om processer och att det ser bättre ut än tidigare år. Men poängen kommer inte för att man fört spel i sju minuter i rad. Man får inget betalt för känslan av att det kanske är på gång.</p>
+
+        <p>Jag gillar Anton Blomqvist. Jag tror han har rätt tänk. Men hockeyn är enkel på det viset – till slut handlar allt om resultat. Och just nu händer för lite.</p>
+
+        <p>Jag vill inte ropa efter någon avgång. Men när man står där med ett vässat svärd och ser laget blöda, då får man väl göra som han själv sa.</p>
+
+        <p>Han sa att vi fick fäkta bäst vi ville – men det vore trevligt om någon där nere på isen började parera tillbaka.</p>
+      </article>
+
+      <hr class="divider" />
+
+      <div class="row" style="gap:.5rem;flex-wrap:wrap;">
+        <a class="btn" href="index.html">← Till röstningen</a>
+        <a class="btn secondary" href="resultat.html">Visa resultat</a>
+        <button class="btn secondary" id="shareBtn">Kopiera delningslänk</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Kopierar alltid länken till denna sida
+    document.getElementById("shareBtn").addEventListener("click", async () => {
+      try {
+        const full = window.location.href;
+        await navigator.clipboard.writeText(full);
+        alert("Länk kopierad! Dela den gärna med andra HV-fans.");
+      } catch (e) {
+        alert("Kunde inte kopiera länken.");
+      }
+    });
+  </script>
+</body>
+</html>
