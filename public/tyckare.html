@@ -22,15 +22,22 @@
   <meta property="og:image" content="https://matchratings.onrender.com/ofacb.jpeg" />
   <meta property="og:locale" content="sv_SE" />
   <meta name="twitter:card" content="summary_large_image" />
+  <style>
+    /* Tydligare mobiltypografi utan att störa din globala styles.css */
+    article { font-size: clamp(1.06rem, 2.9vw, 1.18rem); line-height: 1.7; }
+    article p { margin: 0 0 1rem; }
+    @media (max-width: 380px) { article { font-size: 1.12rem; } }
+  </style>
 </head>
 <body>
   <header>
     <h1>Svärden har vässats</h1>
-    <div class="muted">En rakt‑på sak krönika, skriven för mobilen.</div>
   </header>
 
   <div class="wrap">
     <div class="card" style="max-width:720px;margin-inline:auto;">
+      
+      <h2 style="margin-top:0">Svärden har vässats</h2>
       <!-- Innehåll: korta stycken för mobil-läsning -->
       <article>
         <p>Ingen vill sparka en tränare igen. Ingen vill vara den där som står först i ledet och skriker. Men det här går inte längre. Jag har vässat svärdet, Anton – och nu fäktas jag.</p>
