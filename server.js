@@ -11,7 +11,7 @@ const sanitizeHtml = require('sanitize-html');
 
 // ---- Blogg-hemlighet (från Render) ----
 const BLOG_ADMIN_SECRET = String(
-  process.env.BLOG_ADMIN_SECRET || process.env.ADMIN_TOKEN || process.env.ADMIN_SECRET || 'jag_admin_variant_25!!'
+  process.env.BLOG_ADMIN_SECRET || process.env.ADMIN_TOKEN || process.env.ADMIN_SECRET || ''
 ).trim();
 
 // Acceptera hemligheten via header **eller** query (?key=...)
@@ -32,12 +32,7 @@ function mdToSafeHtml(md) {
       '*': ['id','class','style']
     },
     allowedSchemes: ['http','https','mailto']
-  });
-}
-function isBlogAdmin(req){
-  return req.get('x-blog-admin-secret') === BLOG_ADMIN_SECRET;
-}
-
+  });}
 const app = express();
 
 // Lita på Render-proxy så X-Forwarded-* fungerar korrekt (fixar rate-limit felet)
