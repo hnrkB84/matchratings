@@ -5,6 +5,37 @@ const cors = require("cors");
 const rateLimit = require("express-rate-limit");
 const path = require("path");
 
+// --- Blogg: Markdown + sanering ---
+const marked = require('marked');
+const sanitizeHtml = require('sanitize-html');
+
+// ---- Blogg-hemlighet (läs från Render) ----
+const BLOG_ADMIN_SECRET = String(
+  process.env.BLOG_ADMIN_SECRET || process.env.ADMIN_TOKEN || process.env.ADMIN_SECRET || ''
+).trim();
+
+function isBlogAdmin(req) {
+  const h = String(req.get('x-blog-admin-secret') || '').trim();
+  return h === BLOG_ADMIN_SECRET;
+}
+
+// Konvertera MD -> säker HTML
+function mdToSafeHtml(md) {
+  const raw = marked.parse(md || '');
+  return sanitizeHtml(raw, {
+    allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img','h1','h2','h3','figure','figcaption']),
+    allowedAttributes: {
+      a: ['href','name','target','rel'],
+      img: ['src','alt','title','loading','width','height'],
+      '*': ['id','class','style']
+    },
+    allowedSchemes: ['http','https','mailto']
+  });
+}
+function isBlogAdmin(req){
+  return req.get('x-blog-admin-secret') === BLOG_ADMIN_SECRET;
+}
+
 const app = express();
 
 // Lita på Render-proxy så X-Forwarded-* fungerar korrekt (fixar rate-limit felet)
@@ -1037,6 +1068,180 @@ app.get("/api/export/aggregates", (req, res) => {
     res.type("text/csv").send(toCSV(rows));
   }
 });
+
+// === BLOGGADMIN: NY SIDFÖR INLÄGG ===
+app.get('/blog-admin', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'blog-admin.html'));
+});
+
+// === BLOGG API ===
+
+// Hämta alla (admin)
+app.get('/api/blog/posts', (req, res) => {
+  if (!isBlogAdmin(req)) return res.status(401).json({ error: 'Unauthorized' });
+  const rows = db.prepare(`SELECT * FROM posts ORDER BY datetime(created_at) DESC`).all();
+  res.json(rows);
+});
+
+// Skapa nytt inlägg
+app.post('/api/blog/posts', express.json({ limit: '1mb' }), (req, res) => {
+  if (!isBlogAdmin(req)) return res.status(401).json({ error: 'Unauthorized' });
+  const { title, slug, excerpt, content_md, tags, cover_image_url, published } = req.body || {};
+  if (!title || !slug || !content_md)
+    return res.status(400).json({ error: 'title, slug, content_md krävs' });
+  const html = mdToSafeHtml(content_md);
+  try {
+    const info = db
+      .prepare(
+        `INSERT INTO posts (title, slug, excerpt, content_md, content_html, tags, cover_image_url, published)
+         VALUES (?,?,?,?,?,?,?,?)`
+      )
+      .run(
+        title,
+        slug,
+        excerpt || null,
+        content_md,
+        html,
+        tags || null,
+        cover_image_url || null,
+        published ? 1 : 0
+      );
+    res.json({ ok: true, id: info.lastInsertRowid });
+  } catch (e) {
+    res.status(500).json({ error: String(e) });
+  }
+});
+
+// Uppdatera befintligt inlägg
+app.put('/api/blog/posts/:id', express.json({ limit: '1mb' }), (req, res) => {
+  if (!isBlogAdmin(req)) return res.status(401).json({ error: 'Unauthorized' });
+  const id = +req.params.id;
+  const { title, slug, excerpt, content_md, tags, cover_image_url, published } = req.body || {};
+  if (!title || !slug || !content_md)
+    return res.status(400).json({ error: 'title, slug, content_md krävs' });
+  const html = mdToSafeHtml(content_md);
+  try {
+    db.prepare(
+      `UPDATE posts SET
+        title=?, slug=?, excerpt=?, content_md=?, content_html=?,
+        tags=?, cover_image_url=?, published=?, updated_at=datetime('now')
+       WHERE id=?`
+    ).run(
+      title,
+      slug,
+      excerpt || null,
+      content_md,
+      html,
+      tags || null,
+      cover_image_url || null,
+      published ? 1 : 0,
+      id
+    );
+    res.json({ ok: true });
+  } catch (e) {
+    res.status(500).json({ error: String(e) });
+  }
+});
+
+// === PUBLIKA BLOGGSIDOR ===
+
+// /inlagg – lista alla publicerade
+app.get('/inlagg', (req, res) => {
+  const posts = db
+    .prepare(
+      `SELECT id, title, slug, excerpt, cover_image_url, created_at
+       FROM posts WHERE published=1
+       ORDER BY datetime(created_at) DESC`
+    )
+    .all();
+
+  res.send(`<!DOCTYPE html><html lang="sv"><head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Inlägg – HV71</title>
+<link href="https://fonts.googleapis.com/css2?family=Teko:wght@600;700&family=Oswald:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+<style>
+:root{--hv-blue:#0a2240;--hv-yellow:#ffcb01;--ink:#e8eef6;--card:#0b1f3a}
+body{background:#061429;color:#eaf1fb;font-family:system-ui,-apple-system,Inter,Arial}
+.header{padding:14px 16px;background:#0b2a4f;border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:12px}
+.brand{font-family:'Teko',sans-serif;color:var(--hv-yellow);font-size:32px;margin:0}
+.nav a{color:#eaf1fb;text-decoration:none;opacity:.9;margin-left:12px}
+.grid{display:grid;gap:16px;padding:12px 16px 24px;max-width:1100px;margin:0 auto;grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}
+.card{background:var(--card);border:1px solid rgba(255,255,255,.06);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+.card img{width:100%;height:160px;object-fit:cover;background:#091b34}
+.card .p{padding:14px}
+.card h3{font-family:'Oswald',sans-serif;margin:0 0 8px;font-size:20px}
+.meta{opacity:.8;font-size:12px;margin-bottom:6px}
+.btn{display:inline-block;background:var(--hv-yellow);color:#111;padding:8px 12px;border-radius:10px;font-weight:700;text-decoration:none}
+</style>
+</head><body>
+<header class="header">
+  <h1 class="brand">HV71 – Inlägg</h1>
+  <nav class="nav">
+    <a href="/index.html#rosta">Rösta</a>
+    <a href="/latestmatch.html">Senaste matchen</a>
+  </nav>
+</header>
+
+<section class="grid">
+  ${posts
+    .map(
+      (p) => `
+  <article class="card">
+    ${p.cover_image_url ? `<img src="${p.cover_image_url}" alt="">` : ``}
+    <div class="p">
+      <div class="meta">${new Date(p.created_at).toLocaleDateString('sv-SE')}</div>
+      <h3>${p.title}</h3>
+      <p>${p.excerpt ?? ''}</p>
+      <a class="btn" href="/post/${p.slug}">Läs</a>
+    </div>
+  </article>`
+    )
+    .join('')}
+</section>
+</body></html>`);
+});
+
+// /post/:slug – visa ett inlägg
+app.get('/post/:slug', (req, res) => {
+  const p = db.prepare(`SELECT * FROM posts WHERE slug=? AND published=1`).get(req.params.slug);
+  if (!p) return res.status(404).send('Inlägget finns inte.');
+
+  res.send(`<!DOCTYPE html><html lang="sv"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>${p.title} – HV71</title>
+<meta property="og:title" content="${p.title}">
+${p.cover_image_url ? `<meta property="og:image" content="${p.cover_image_url}">` : ``}
+${p.excerpt ? `<meta property="og:description" content="${p.excerpt}">` : ``}
+<link href="https://fonts.googleapis.com/css2?family=Teko:wght@600;700&family=Oswald:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+<style>
+:root{--hv-blue:#0a2240;--hv-yellow:#ffcb01;--ink:#e8eef6;--card:#0b1f3a}
+body{background:#061429;color:#eaf1fb}
+.wrap{max-width:820px;margin:0 auto;padding:18px}
+h1{font-family:'Teko',sans-serif;color:var(--hv-yellow);font-size:44px;margin:8px 0 12px}
+.meta{opacity:.8;margin-bottom:10px}
+.cover{width:100%;border-radius:14px;overflow:hidden;background:#091b34;margin:6px 0 14px}
+.cover img{width:100%;height:auto;display:block}
+.post{background:var(--card);border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:16px;line-height:1.6}
+.post p{margin:0 0 10px}
+.post h2,.post h3{font-family:'Oswald',sans-serif;margin:16px 0 8px}
+a.back{display:inline-block;margin:10px 0 16px}
+.btn{display:inline-block;background:var(--hv-yellow);color:#111;padding:8px 12px;border-radius:10px;font-weight:700;text-decoration:none}
+</style>
+</head><body>
+  <div class="wrap">
+    <a class="back" href="/inlagg">← Alla inlägg</a>
+    <h1>${p.title}</h1>
+    <div class="meta">${new Date(p.created_at).toLocaleDateString('sv-SE')}</div>
+    ${p.cover_image_url ? `<div class="cover"><img src="${p.cover_image_url}" alt=""></div>` : ``}
+    <article class="post">${p.content_html}</article>
+    <p style="margin-top:14px"><a class="btn" href="/index.html#rosta">Rösta på matchen</a></p>
+  </div>
+</body></html>`);
+});
+
 
 // --- Static ---
 app.use(express.static(path.join(__dirname, "public")));
