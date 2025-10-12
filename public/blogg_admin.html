@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Blogg – Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Teko:wght@600;700&family=Oswald:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{--hv-blue:#0a2240;--hv-yellow:#ffcb01;--ink:#e8eef6;--card:#0b1f3a}
+body{background:#061429;color:#eaf1fb;font-family:system-ui,-apple-system,Inter,Arial;margin:0}
+.header{padding:12px 16px;background:#0b2a4f;border-bottom:1px solid rgba(255,255,255,.08)}
+.header h1{font-family:'Teko',sans-serif;color:var(--hv-yellow);margin:0;font-size:34px}
+.wrap{max-width:1100px;margin:0 auto;padding:16px;display:grid;gap:16px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.card{background:var(--card);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:12px}
+label{display:block;font-weight:600;margin:10px 0 6px}
+input,textarea{width:100%;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:#081a32;color:#eaf1fb}
+textarea{min-height:260px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn{background:var(--hv-yellow);color:#111;border:0;border-radius:10px;padding:8px 12px;font-weight:700;cursor:pointer}
+.small{font-size:12px;opacity:.8}
+.list li{margin:6px 0}
+.preview{min-height:260px;background:#081a32;border-radius:10px;padding:12px}
+</style>
+</head>
+<body>
+  <div class="header"><h1>Blogg – Admin</h1></div>
+  <div class="wrap">
+
+    <div class="card">
+      <label>Blogg-adminnyckel</label>
+      <div class="row">
+        <input id="secret" type="password" placeholder="BLOG_ADMIN_SECRET">
+        <button class="btn" id="load">Ladda inlägg</button>
+        <a class="btn" href="/inlagg">Visa /inlagg</a>
+      </div>
+      <ul id="posts" class="list"></ul>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <label>Titel</label><input id="title">
+        <label>Slug</label><input id="slug" placeholder="ex: hv71-lhf-analys">
+        <label>Ingress</label><input id="excerpt">
+        <label>Cover-bild (URL)</label><input id="cover">
+        <label>Taggar (komma-separerat)</label><input id="tags">
+        <div class="row">
+          <label class="row"><input type="checkbox" id="published"> Publicerad</label>
+          <button class="btn" id="save">Spara nytt</button>
+          <button class="btn" id="update" disabled>Uppdatera valt</button>
+          <span class="small" id="status"></span>
+        </div>
+        <label>Innehåll (Markdown)</label>
+        <textarea id="md"></textarea>
+      </div>
+      <div class="card">
+        <label>Förhandsvisning</label>
+        <div id="preview" class="preview"></div>
+      </div>
+    </div>
+  </div>
+
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script>
+const $ = s => document.querySelector(s);
+const postsEl = $('#posts');
+const statusEl = $('#status');
+let current = null;
+
+function toSlug(t){
+  return (t||'').toLowerCase().trim()
+    .replace(/[åä]/g,'a').replace(/[ö]/g,'o')
+    .replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
+}
+$('#title').addEventListener('input', e=>{
+  if(!$('#slug').value) $('#slug').value = toSlug(e.target.value);
+});
+$('#md').addEventListener('input', ()=>{
+  $('#preview').innerHTML = marked.parse($('#md').value || '');
+});
+
+$('#load').onclick = async ()=>{
+  postsEl.innerHTML = 'Laddar...';
+  const r = await fetch('/api/blog/posts', {headers:{'x-blog-admin-secret': $('#secret').value}});
+  if(!r.ok){ postsEl.innerHTML = 'Fel: kontrollera nyckeln.'; return; }
+  const arr = await r.json();
+  postsEl.innerHTML = arr.map(p=>`<li><a href="#" data-id="${p.id}">${p.published?'🟢':'🟡'} ${p.title}</a></li>`).join('');
+  postsEl.querySelectorAll('a').forEach(a=>{
+    a.onclick = ev=>{
+      ev.preventDefault();
+      const id = +a.dataset.id;
+      const p = arr.find(x=>x.id===id);
+      if(!p) return;
+      current = id;
+      $('#title').value = p.title||'';
+      $('#slug').value = p.slug||'';
+      $('#excerpt').value = p.excerpt||'';
+      $('#cover').value = p.cover_image_url||'';
+      $('#tags').value = p.tags||'';
+      $('#published').checked = !!p.published;
+      $('#md').value = p.content_md||'';
+      $('#preview').innerHTML = marked.parse($('#md').value||'');
+      $('#update').disabled = false;
+      $('#save').disabled = true;
+      statusEl.textContent = `Valt #${id}`;
+    };
+  });
+};
+
+function collect(){
+  return {
+    title: $('#title').value.trim(),
+    slug: $('#slug').value.trim(),
+    excerpt: $('#excerpt').value.trim(),
+    cover_image_url: $('#cover').value.trim(),
+    tags: $('#tags').value.trim(),
+    published: $('#published').checked,
+    content_md: $('#md').value
+  };
+}
+
+$('#save').onclick = async ()=>{
+  const r = await fetch('/api/blog/posts', {
+    method:'POST',
+    headers:{'Content-Type':'application/json','x-blog-admin-secret': $('#secret').value},
+    body: JSON.stringify(collect())
+  });
+  statusEl.textContent = r.ok ? 'Sparat ✅' : 'Fel vid sparning';
+};
+
+$('#update').onclick = async ()=>{
+  if(!current){ statusEl.textContent='Välj ett inlägg först.'; return; }
+  const r = await fetch('/api/blog/posts/'+current, {
+    method:'PUT',
+    headers:{'Content-Type':'application/json','x-blog-admin-secret': $('#secret').value},
+    body: JSON.stringify(collect())
+  });
+  statusEl.textContent = r.ok ? 'Uppdaterat ✅' : 'Fel vid uppdatering';
+};
+</script>
+</body>
+</html>
