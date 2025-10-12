@@ -81,7 +81,10 @@ $('#md').addEventListener('input', ()=>{
 
 $('#load').onclick = async ()=>{
   postsEl.innerHTML = 'Laddar...';
-  const r = await fetch('/api/blog/posts', {headers:{'x-blog-admin-secret': $('#secret').value}});
+  const sec = $('#secret').value;
+const r = await fetch('/api/blog/posts?key=' + encodeURIComponent(sec), {
+  headers: {'x-blog-admin-secret': sec}
+});
   if(!r.ok){ postsEl.innerHTML = 'Fel: kontrollera nyckeln.'; return; }
   const arr = await r.json();
   postsEl.innerHTML = arr.map(p=>`<li><a href="#" data-id="${p.id}">${p.published?'🟢':'🟡'} ${p.title}</a></li>`).join('');
@@ -120,21 +123,24 @@ function collect(){
 }
 
 $('#save').onclick = async ()=>{
-  const r = await fetch('/api/blog/posts', {
-    method:'POST',
-    headers:{'Content-Type':'application/json','x-blog-admin-secret': $('#secret').value},
-    body: JSON.stringify(collect())
-  });
+  const sec = $('#secret').value;
+const r = await fetch('/api/blog/posts?key=' + encodeURIComponent(sec), {
+  method:'POST',
+  headers:{'Content-Type':'application/json','x-blog-admin-secret':sec},
+  body: JSON.stringify(collect())
+});
+
   statusEl.textContent = r.ok ? 'Sparat ✅' : 'Fel vid sparning';
 };
 
 $('#update').onclick = async ()=>{
   if(!current){ statusEl.textContent='Välj ett inlägg först.'; return; }
-  const r = await fetch('/api/blog/posts/'+current, {
-    method:'PUT',
-    headers:{'Content-Type':'application/json','x-blog-admin-secret': $('#secret').value},
-    body: JSON.stringify(collect())
-  });
+  const sec = $('#secret').value;
+const r = await fetch('/api/blog/posts/'+current+'?key=' + encodeURIComponent(sec), {
+  method:'PUT',
+  headers:{'Content-Type':'application/json','x-blog-admin-secret':sec},
+  body: JSON.stringify(collect())
+});
   statusEl.textContent = r.ok ? 'Uppdaterat ✅' : 'Fel vid uppdatering';
 };
 </script>

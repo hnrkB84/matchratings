@@ -9,14 +9,16 @@ const path = require("path");
 const marked = require('marked');
 const sanitizeHtml = require('sanitize-html');
 
-// ---- Blogg-hemlighet (läs från Render) ----
+// ---- Blogg-hemlighet (från Render) ----
 const BLOG_ADMIN_SECRET = String(
   process.env.BLOG_ADMIN_SECRET || process.env.ADMIN_TOKEN || process.env.ADMIN_SECRET || ''
 ).trim();
 
+// Acceptera hemligheten via header **eller** query (?key=...)
 function isBlogAdmin(req) {
   const h = String(req.get('x-blog-admin-secret') || '').trim();
-  return h === BLOG_ADMIN_SECRET;
+  const q = String(req.query.key || '').trim();
+  return (h && h === BLOG_ADMIN_SECRET) || (q && q === BLOG_ADMIN_SECRET);
 }
 
 // Konvertera MD -> säker HTML
