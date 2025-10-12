@@ -5,7 +5,8 @@ const cors = require("cors");
 const rateLimit = require("express-rate-limit");
 const path = require("path");
 
-// --- Blogg: Markdown + sanering ---
+// --- Blogg: Margit push
+// kdown + sanering ---
 const marked = require('marked');
 const sanitizeHtml = require('sanitize-html');
 
@@ -20,6 +21,7 @@ function isBlogAdmin(req) {
   const q = String(req.query.key || '').trim();
   return (h && h === BLOG_ADMIN_SECRET) || (q && q === BLOG_ADMIN_SECRET);
 }
+console.log('[DEBUG BLOG] Loaded BLOG_ADMIN_SECRET:', JSON.stringify(BLOG_ADMIN_SECRET));
 
 // Konvertera MD -> säker HTML
 function mdToSafeHtml(md) {
@@ -174,6 +176,20 @@ CREATE TABLE IF NOT EXISTS line_pp_votes (
   created_at TEXT DEFAULT CURRENT_TIMESTAMP,
   updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
   UNIQUE(anon_fingerprint)
+);
+
+CREATE TABLE IF NOT EXISTS posts (
+  id INTEGER PRIMARY KEY,
+  title TEXT NOT NULL,
+  slug TEXT NOT NULL UNIQUE,
+  excerpt TEXT,
+  content_md TEXT NOT NULL,
+  content_html TEXT NOT NULL,
+  tags TEXT,
+  cover_image_url TEXT,
+  published INTEGER DEFAULT 0,
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+  updated_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE INDEX IF NOT EXISTS idx_linepp_fingerprint ON line_pp_votes(anon_fingerprint);
