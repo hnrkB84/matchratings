@@ -11,7 +11,7 @@ const sanitizeHtml = require('sanitize-html');
 
 // ---- Blogg-hemlighet (från Render) ----
 const BLOG_ADMIN_SECRET = String(
-  process.env.BLOG_ADMIN_SECRET || process.env.ADMIN_TOKEN || process.env.ADMIN_SECRET || ''
+  process.env.BLOG_ADMIN_SECRET || process.env.ADMIN_TOKEN || process.env.ADMIN_SECRET || 'jag_admin_variant_25!!'
 ).trim();
 
 // Acceptera hemligheten via header **eller** query (?key=...)
