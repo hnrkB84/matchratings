@@ -1158,63 +1158,89 @@ app.put('/api/blog/posts/:id', express.json({ limit: '1mb' }), (req, res) => {
 
 // === PUBLIKA BLOGGSIDOR ===
 
-// /inlagg – lista alla publicerade
+// /inlagg – lista alla publicerade (hero + grid, inga inline-styles)
 app.get('/inlagg', (req, res) => {
-  const posts = db
-    .prepare(
-      `SELECT id, title, slug, excerpt, cover_image_url, created_at
-       FROM posts WHERE published=1
-       ORDER BY datetime(created_at) DESC`
-    )
-    .all();
+  const posts = db.prepare(`
+    SELECT id, title, slug, excerpt, cover_image_url, created_at
+    FROM posts
+    WHERE published = 1
+    ORDER BY datetime(created_at) DESC
+  `).all();
 
-  res.send(`<!DOCTYPE html><html lang="sv"><head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Inlägg – HV71</title>
-<link href="https://fonts.googleapis.com/css2?family=Teko:wght@600;700&family=Oswald:wght@600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/styles.css">
-<style>
-:root{--hv-blue:#0a2240;--hv-yellow:#ffcb01;--ink:#e8eef6;--card:#0b1f3a}
-body{background:#061429;color:#eaf1fb;font-family:system-ui,-apple-system,Inter,Arial}
-.header{padding:14px 16px;background:#0b2a4f;border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:12px}
-.brand{font-family:'Teko',sans-serif;color:var(--hv-yellow);font-size:32px;margin:0}
-.nav a{color:#eaf1fb;text-decoration:none;opacity:.9;margin-left:12px}
-.grid{display:grid;gap:16px;padding:12px 16px 24px;max-width:1100px;margin:0 auto;grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}
-.card{background:var(--card);border:1px solid rgba(255,255,255,.06);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
-.card img{width:100%;height:160px;object-fit:cover;background:#091b34}
-.card .p{padding:14px}
-.card h3{font-family:'Oswald',sans-serif;margin:0 0 8px;font-size:20px}
-.meta{opacity:.8;font-size:12px;margin-bottom:6px}
-.btn{display:inline-block;background:var(--hv-yellow);color:#111;padding:8px 12px;border-radius:10px;font-weight:700;text-decoration:none}
-</style>
-</head><body>
-<header class="header">
-  <h1 class="brand">HV71 – Inlägg</h1>
-  <nav class="nav">
-    <a href="/index.html#rosta">Rösta</a>
-    <a href="/latestmatch.html">Senaste matchen</a>
-  </nav>
-</header>
+  const hasPosts = posts && posts.length > 0;
+  const hero = hasPosts ? posts[0] : null;
+  const rest = hasPosts ? posts.slice(1) : [];
 
-<section class="grid">
-  ${posts
-    .map(
-      (p) => `
-  <article class="card">
-    ${p.cover_image_url ? `<img src="${p.cover_image_url}" alt="">` : ``}
-    <div class="p">
-      <div class="meta">${new Date(p.created_at).toLocaleDateString('sv-SE')}</div>
-      <h3>${p.title}</h3>
-      <p>${p.excerpt ?? ''}</p>
-      <a class="btn" href="/post/${p.slug}">Läs</a>
+  const fmt = (d) => new Date(d).toLocaleDateString('sv-SE', { year: 'numeric', month: 'short', day: 'numeric' });
+
+  res.send(`<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Inlägg – HV71</title>
+  <meta name="description" content="Senaste analyser, krönikor och sammanställningar från HV71 Ratings." />
+  <link href="https://fonts.googleapis.com/css2?family=Teko:wght@600;700&family=Oswald:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body class="blog-body">
+  <header class="blog-header">
+    <div class="blog-header__inner">
+      <a class="blog-brand" href="/inlagg">HV71 • Inlägg</a>
+      <nav class="blog-nav">
+        <a href="/index.html#rosta">Rösta</a>
+        <a href="/latestmatch.html">Senaste matchen</a>
+      </nav>
     </div>
-  </article>`
-    )
-    .join('')}
-</section>
-</body></html>`);
+  </header>
+
+  <main class="blog-wrap">
+    ${hero ? `
+    <section class="blog-hero">
+      <a class="blog-hero__image" href="/post/${hero.slug}" aria-label="Läs: ${hero.title}">
+        ${hero.cover_image_url
+          ? `<img src="${hero.cover_image_url}" alt="" loading="eager" decoding="async" fetchpriority="high">`
+          : `<div class="blog-no-cover" aria-hidden="true"></div>`}
+      </a>
+      <div class="blog-hero__content">
+        <time class="blog-meta">${fmt(hero.created_at)}</time>
+        <h1 class="blog-hero__title"><a href="/post/${hero.slug}">${hero.title}</a></h1>
+        ${hero.excerpt ? `<p class="blog-hero__excerpt">${hero.excerpt}</p>` : ``}
+        <p><a class="btn" href="/post/${hero.slug}">Läs inlägget</a></p>
+      </div>
+    </section>
+    ` : `
+    <section class="blog-empty">
+      <h1>Inga inlägg ännu</h1>
+      <p>När första inlägget publiceras hamnar det här.</p>
+    </section>
+    `}
+
+    ${rest.length ? `
+    <section class="blog-grid" aria-label="Fler inlägg">
+      ${rest.map(p => `
+        <article class="blog-card">
+          <a class="blog-card__media" href="/post/${p.slug}" aria-label="Läs: ${p.title}">
+            ${p.cover_image_url
+              ? `<img src="${p.cover_image_url}" alt="" loading="lazy" decoding="async">`
+              : `<div class="blog-no-cover" aria-hidden="true"></div>`}
+          </a>
+          <div class="blog-card__body">
+            <time class="blog-meta">${fmt(p.created_at)}</time>
+            <h2 class="blog-card__title"><a href="/post/${p.slug}">${p.title}</a></h2>
+            ${p.excerpt ? `<p class="blog-card__excerpt">${p.excerpt}</p>` : ``}
+            <a class="btn btn--sm" href="/post/${p.slug}">Läs</a>
+          </div>
+          <a class="blog-card__link" href="/post/${p.slug}" aria-hidden="true" tabindex="-1"></a>
+        </article>
+      `).join('')}
+    </section>
+    ` : ``}
+  </main>
+</body>
+</html>`);
 });
+
 
 // /post/:slug – visa ett inlägg
 app.get('/post/:slug', (req, res) => {

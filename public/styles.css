@@ -696,3 +696,165 @@ canvas,img,video{ max-width:100%; height:auto; display:block; }
   .players-grid .p-card .p-nr{ width:74px; font-size:48px; }
   .players-grid .p-card .p-star{ width:84px; font-size:28px; }
 }
+/* =========================
+   BLOG / POSTS (HV71 Ratings)
+   ========================= */
+   :root{
+    --hv-blue:#0a2240;
+    --hv-yellow:#ffcb01;
+    --ink:#eaf1fb;
+    --ink-dim: #cfd9e8;
+    --card:#0b1f3a;
+    --bg:#061429;
+    --line: rgba(255,255,255,.08);
+  }
+  
+  .blog-body{
+    background: var(--bg);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  
+  .blog-header{
+    position: sticky; top:0; z-index: 20;
+    backdrop-filter: saturate(150%) blur(6px);
+    background: color-mix(in oklab, var(--hv-blue) 75%, transparent);
+    border-bottom: 1px solid var(--line);
+  }
+  
+  .blog-header__inner{
+    max-width: 1180px; margin: 0 auto;
+    display:flex; align-items:center; justify-content:space-between;
+    padding: 12px 16px;
+  }
+  
+  .blog-brand{
+    font-family: 'Teko', system-ui, sans-serif;
+    font-size: 28px;
+    line-height: 1;
+    color: var(--hv-yellow);
+    text-decoration: none;
+    letter-spacing: .5px;
+  }
+  
+  .blog-nav a{
+    color: var(--ink);
+    text-decoration: none;
+    opacity: .9;
+    margin-left: 14px;
+  }
+  .blog-nav a:hover{ opacity:1; text-decoration: underline; }
+  
+  .blog-wrap{ max-width:1180px; margin: 0 auto; padding: 16px; }
+  
+  /* Hero */
+  .blog-hero{
+    display:grid; gap:16px;
+    grid-template-columns: 1fr;
+    margin: 12px 0 20px;
+  }
+  @media (min-width: 840px){
+    .blog-hero{ grid-template-columns: 1.3fr 1fr; align-items: stretch; }
+  }
+  
+  .blog-hero__image{
+    display:block; border-radius: 16px; overflow:hidden;
+    background: #091b34; border: 1px solid var(--line);
+  }
+  .blog-hero__image img{
+    width:100%; height:100%; object-fit: cover; display:block;
+    aspect-ratio: 16 / 9;
+  }
+  
+  .blog-no-cover{
+    width:100%; aspect-ratio: 16 / 9;
+    background: linear-gradient(135deg, #0b1f3a 0%, #132a4e 100%);
+  }
+  
+  .blog-hero__content{
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 16px;
+    display:flex; flex-direction: column; justify-content: center;
+  }
+  .blog-meta{ color: var(--ink-dim); font-size: 12px; }
+  .blog-hero__title{
+    font-family: 'Teko', system-ui, sans-serif;
+    font-size: clamp(28px, 4.2vw, 44px);
+    line-height: 1.05; margin: 6px 0 8px;
+  }
+  .blog-hero__title a{ color: var(--ink); text-decoration: none; }
+  .blog-hero__title a:hover{ text-decoration: underline; }
+  .blog-hero__excerpt{ color: var(--ink); opacity: .92; }
+  
+  /* Grid */
+  .blog-grid{
+    display:grid; gap: 16px;
+    grid-template-columns: 1fr;
+    margin: 6px 0 32px;
+  }
+  @media (min-width: 680px){
+    .blog-grid{ grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (min-width: 1040px){
+    .blog-grid{ grid-template-columns: repeat(3, 1fr); }
+  }
+  
+  /* Card */
+  .blog-card{
+    position: relative;
+    display:flex; flex-direction: column;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    overflow: clip;
+    min-height: 100%;
+    transition: transform .08s ease, box-shadow .08s ease;
+  }
+  .blog-card:hover{ transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.25); }
+  
+  .blog-card__media{
+    display:block; background:#091b34;
+  }
+  .blog-card__media img{
+    width:100%; height: 180px; object-fit: cover; display:block;
+  }
+  @media (min-width: 520px){
+    .blog-card__media img{ height: 200px; }
+  }
+  
+  .blog-card__body{
+    padding: 14px;
+  }
+  .blog-card__title{
+    font-family:'Oswald', system-ui, sans-serif;
+    font-size: 20px; line-height: 1.2; margin: 4px 0 6px;
+  }
+  .blog-card__title a{ color: var(--ink); text-decoration: none; }
+  .blog-card__title a:hover{ text-decoration: underline; }
+  .blog-card__excerpt{ margin: 0 0 8px; opacity:.95; }
+  
+  .blog-card__link{
+    position: absolute; inset: 0; /* gör hela kortet klickbart */
+  }
+  
+  /* Buttons */
+  .btn{
+    display:inline-block; background: var(--hv-yellow); color:#111;
+    font-weight: 800; text-decoration: none;
+    padding: 8px 12px; border-radius: 10px; line-height:1;
+  }
+  .btn:hover{ filter: saturate(110%); }
+  .btn--sm{ padding: 6px 10px; font-weight: 700; }
+  
+  /* Empty state */
+  .blog-empty{
+    background: var(--card);
+    border:1px solid var(--line);
+    border-radius: 16px;
+    padding: 18px;
+    text-align: center;
+  }
+  
