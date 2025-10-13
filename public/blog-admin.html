@@ -47,6 +47,9 @@ textarea{min-height:260px}
         <div class="row">
           <label class="row"><input type="checkbox" id="published"> Publicerad</label>
           <button class="btn" id="save">Spara nytt</button>
+          <button class="btn" id="new">Nytt inlägg</button>
+          <button class="btn" id="new">Nytt inlägg</button>
+          <button class="btn" id="delete" disabled>Ta bort valt</button>
           <button class="btn" id="update" disabled>Uppdatera valt</button>
           <span class="small" id="status"></span>
         </div>
@@ -109,6 +112,21 @@ const r = await fetch('/api/blog/posts?key=' + encodeURIComponent(sec), {
     };
   });
 };
+$('#new').onclick = () => {
+  current = null;
+  $('#title').value = '';
+  $('#slug').value = '';
+  $('#excerpt').value = '';
+  $('#cover').value = '';
+  $('#tags').value = '';
+  $('#published').checked = false;
+  $('#md').value = '';
+  $('#preview').innerHTML = '';
+  $('#update').disabled = true;   // kan inte uppdatera något som inte är valt
+  $('#save').disabled = false;    // vi kan spara nytt
+  $('#delete').disabled = true;   // inget att radera
+  statusEl.textContent = 'Nytt inlägg';
+};
 
 function collect(){
   return {
@@ -121,6 +139,24 @@ function collect(){
     content_md: $('#md').value
   };
 }
+$('#delete').onclick = async () => {
+  if(!current){ statusEl.textContent = 'Välj ett inlägg först.'; return; }
+  if(!confirm('Vill du verkligen ta bort detta inlägg?')) return;
+
+  const sec = $('#secret').value;
+  const r = await fetch('/api/blog/posts/' + current + '?key=' + encodeURIComponent(sec), {
+    method: 'DELETE',
+    headers: { 'x-blog-admin-secret': sec }
+  });
+
+  if (r.ok) {
+    statusEl.textContent = 'Inlägg borttaget ✅';
+    $('#new').click();   // töm formuläret
+    $('#load').click();  // ladda listan igen
+  } else {
+    statusEl.textContent = 'Fel vid borttagning';
+  }
+};
 
 $('#save').onclick = async ()=>{
   const sec = $('#secret').value;

@@ -1178,7 +1178,7 @@ app.get('/inlagg', (req, res) => {
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Inlägg – HV71</title>
+  <title>Inlägg</title>
   <meta name="description" content="Senaste analyser, krönikor och sammanställningar från HV71 Ratings." />
   <link href="https://fonts.googleapis.com/css2?family=Teko:wght@600;700&family=Oswald:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/styles.css">
@@ -1186,7 +1186,7 @@ app.get('/inlagg', (req, res) => {
 <body class="blog-body">
   <header class="blog-header">
     <div class="blog-header__inner">
-      <a class="blog-brand" href="/inlagg">HV71 • Inlägg</a>
+      <a class="blog-brand" href="/inlagg">Inlägg</a>
       <nav class="blog-nav">
         <a href="/index.html#rosta">Rösta</a>
         <a href="/latestmatch.html">Senaste matchen</a>
@@ -1279,6 +1279,44 @@ a.back{display:inline-block;margin:10px 0 16px}
     <p style="margin-top:14px"><a class="btn" href="/index.html#rosta">Rösta på matchen</a></p>
   </div>
 </body></html>`);
+});
+
+// =======================================================
+// 🗑️  DELETE /api/blog/posts/:id
+// =======================================================
+// Denna route används av bloggens admin-sida för att
+// ta bort ett inlägg permanent från databasen.
+// Den kan bara anropas av den som har rätt admin-nyckel.
+//
+// Exempel från frontend (blog-admin.html):
+// fetch('/api/blog/posts/12', { method:'DELETE', headers:{'x-blog-admin-secret': 'DIN_NYCKEL'} })
+//
+// Om allt går bra svarar servern med:
+// { ok: true }
+//
+// Om nyckeln är fel, eller ID saknas, skickas ett felmeddelande.
+//
+app.delete('/api/blog/posts/:id', (req, res) => {
+  // 1️⃣  Kontrollera att den som anropar har rätt admin-nyckel.
+  const key = req.headers['x-blog-admin-secret'];
+  if (key !== process.env.BLOG_ADMIN_SECRET) {
+    // Fel nyckel → stoppa direkt.
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+
+  // 2️⃣  Hämta ut ID:t från URL:en (exempel: /api/blog/posts/12 → id = 12)
+  const id = Number(req.params.id);
+  if (!id) {
+    // Om ID:t inte är ett giltigt nummer → skicka fel tillbaka.
+    return res.status(400).json({ error: 'Ogiltigt ID' });
+  }
+
+  // 3️⃣  Kör SQL-kommandot som tar bort posten ur databasen.
+  //     Tabellen heter 'posts' och fältet 'id' identifierar rätt rad.
+  db.prepare('DELETE FROM posts WHERE id = ?').run(id);
+
+  // 4️⃣  Skicka ett enkelt JSON-svar så admin-gränssnittet vet att det lyckades.
+  res.json({ ok: true });
 });
 
 
