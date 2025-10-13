@@ -1,55 +1,54 @@
 {
   "matchoversikt": {
-    "html": "<details><summary>🧊 <strong>Matchöversikt – Luleå 3, HV71 2 (SO)</strong></summary><div class=\"details-inner\"><p>Matchen var jämn resultatmässigt, men underliggande siffror visar övertag för Luleå. Luleå hade xGF 2,49 mot HV71:s 1,40 vid lika styrka, samt fler skottförsök (CF 40–34) och klart fler skott på mål (22–11). HV71:s GSAx +1,49 tyder på att målvakten (troligen Lehtinen) räddade mer än förväntat och höll laget kvar i matchen.</p><h4>📊 Period 1</h4><p>Luleå dominerade med 2–0 i mål och 12–6 i skott.<br>xG-grafen visar tidigt övertag för Luleå, som skapade tryck och hög skottvolym från farliga ytor.</p><h4>📊 Period 2</h4><p>HV71 vände spelmässigt och vann perioden 2–0.<br>Powerplaymålet var centralt, laget fick mer zonspel och högre avslutskvalitet.<br>Spelbilden blev mer jämn, men Luleå behöll något högre xG.</p><h4>📊 Period 3</h4><p>Jämn och chansfattig period.<br>Luleå hade fler skott men HV71 försvarade sig kompakt.<br>xG-kurvan planade ut, vilket tyder på försiktigt spel från båda.</p><h4>📊 Förlängning</h4><p>Luleå skapade mer (5–1 i skott) men HV71:s målvakt stod emot.<br>Spelmässigt lutade det åt Luleå, men ingen avgörande skillnad.</p><h4>🥅 Straffläggning</h4><p>Luleå satte enda målet och avgjorde matchen.</p><h4>🎯 Samlad analys</h4><p>Luleå var bättre i spel fem mot fem, både i puckinnehav och chansproduktion.<br>HV71:s styrka låg i målvaktsspelet och ett effektivt powerplay som gav balans i resultatet.<br>Skottkartan visar att Luleå tog fler avslut från slottet, medan HV71 skapade färre men relativt högkvalitativa chanser.<br>Totalt sett förtjänade Luleå segern sett till xG och spelövertag, men HV71:s målvaktsspel och special teams räddade en poäng.</p></div></details>"
+    "html": "<details><summary>🧊 <strong>Matchöversikt – Skellefteå 8, HV71 3 (2025-10-11)</strong></summary><p>Skellefteå vann klart efter en avgörande andra period där de gjorde fem mål. Spelmässigt var det jämnare än siffrorna visar (xG 2.24–1.81, Corsi 55,6 % för Skellefteå), men HV71:s målvakt Lassi Lehtinen hade en tung kväll med <abbr title=\"Goals Saved Above Expected\">GSAx</abbr> –3.76, vilket innebar flera insläppta mål på låga farlighetschanser. Skellefteå var dessutom effektivt i powerplay med två mål, medan HV71 gick mållöst i special teams.</p></details>"
   },
 
   "spelarbetyg": [
-    { "name": "Frederik Dichow (G)", "rating": 7.54 },
-    { "name": "Andreas Borgman (D)", "rating": 7.04 },
-    { "name": "Nikola Pasic (F)", "rating": 6.75 },
-    { "name": "Martin Johnsen (F)", "rating": 6.54 },
-    { "name": "Lukas Rousek (F)", "rating": 6.38 },
-    { "name": "Justin Kloos (F)", "rating": 6.38 },
-    { "name": "Jonathan Ang (F)", "rating": 6.33 },
-    { "name": "Joona Luoto (F)", "rating": 6.21 },
-    { "name": "Aleksi Heponiemi (F)", "rating": 6.04 },
-    { "name": "Olle Alsing (D)", "rating": 6.04 },
-    { "name": "Lucas Lagerberg (D)", "rating": 6.04 },
-    { "name": "Hugo Fransson (D)", "rating": 6.04 },
-    { "name": "Riley Woods (F)", "rating": 5.88 },
-    { "name": "Linus Lindström (F)", "rating": 5.63 },
-    { "name": "Jamiro Reber (F)", "rating": 5.54 },
-    { "name": "Mattias Tedenby (F)", "rating": 5.54 },
-    { "name": "Santeri Hatakka (D)", "rating": 5.54 },
-    { "name": "Axel Rindell (D)", "rating": 5.42 },
-    { "name": "Isac Brännström (F)", "rating": 5.38 },
-    { "name": "Niklas Hansson (D)", "rating": 5.33 },
-    { "name": "Oskar Stål Lyrenäs (F)", "rating": 5.21 }
+    { "name": "Riley Woods (F)", "rating": 6.17 },
+    { "name": "Jonathan Ang (F)", "rating": 5.97 },
+    { "name": "Andreas Borgman (D)", "rating": 5.03 },
+    { "name": "Joona Luoto (F)", "rating": 4.93 },
+    { "name": "Hugo Fransson (D)", "rating": 4.87 },
+    { "name": "Justin Kloos (F)", "rating": 4.87 },
+    { "name": "Nikola Pasic (F)", "rating": 4.83 },
+    { "name": "Jamiro Reber (F)", "rating": 4.77 },
+    { "name": "Martin Johnsen (F)", "rating": 4.60 },
+    { "name": "Lucas Lagerberg (D)", "rating": 4.57 },
+    { "name": "Aleksi Heponiemi (F)", "rating": 4.53 },
+    { "name": "Linus Lindström (F)", "rating": 4.27 },
+    { "name": "Mattias Tedenby (F)", "rating": 4.10 },
+    { "name": "Lukas Rousek (F)", "rating": 4.07 },
+    { "name": "Santeri Hatakka (D)", "rating": 3.90 },
+    { "name": "Olle Alsing (D)", "rating": 3.87 },
+    { "name": "Axel Rindell (D)", "rating": 3.67 },
+    { "name": "Niklas Hansson (D)", "rating": 3.23 },
+    { "name": "Oskar Stål Lyrenäs (F)", "rating": 2.57 },
+    { "name": "Lassi Lehtinen (G)", "rating": 1.83 }
   ],
 
   "tranarbanken": {
     "kv": [
-      { "k": "Betyg", "v": "5.88" }
+      { "k": "Betyg", "v": "2.70" }
     ]
   },
 
   "matchomdomen": {
     "kv": [
-      { "k": "Domarnivå", "v": "4.42" },
-      { "k": "Speglade resultatet", "v": "6.29" },
-      { "k": "Matchbetyg", "v": "5.67" }
+      { "k": "Domarnivå", "v": "6.10" },
+      { "k": "Speglade resultatet", "v": "6.63" },
+      { "k": "Matchbetyg", "v": "3.30" }
     ]
   },
 
   "snitt": {
     "kv": [
-      { "k": "Målvakt", "v": "7.54" },
-      { "k": "Backar", "v": "5.91" },
-      { "k": "Forwards", "v": "6.03" }
+      { "k": "Målvakt", "v": "1.83" },
+      { "k": "Backar", "v": "4.16" },
+      { "k": "Forwards", "v": "4.64" }
     ]
   },
 
   "stat_vs_ogat": {
-    "html": "<h3>Statistik vs ögat</h3><h4>Speldrivande / Positiv påverkan</h4><ol class=\"tight\"><li><strong>Justin Kloos</strong> – CF% 68.4, FF% 61.5, starkast possession. Ingen poäng men klart drivit offensiven. Topp-6-istid (18:21) och PP-tid (3:01).</li><li><strong>Santeri Hatakka</strong> – CF% 61.1, stabil defensivt, 16 min TOI + BP 2:01. Pålitlig tvåväg.</li><li><strong>Aleksi Heponiemi</strong> – CF% 57.9 men låg FF%. PP-ass, mycket speltid i alla situationer. Kreativ, något passiv i 5-mot-5.</li><li><strong>Lukas Rousek</strong> / <strong>Joona Luoto</strong> – båda CF% 57.1, spelade tungt 5-mot-5 (17–20 min). Bra kontroll, inget mål. Luoto även PP och lite BP.</li><li><strong>Nikola Pasic</strong> – 2A, CF 50 men PDO 125 (tur + effektivitet). Offensivt effektiv, något svag possession.</li><li><strong>Andreas Borgman</strong> – tung istid (24:42), PP + BP, CF% 47.6 men mycket ansvar. Minusspel (+/−1). Bra men överbelastad.</li><li><strong>Niklas Hansson</strong> – CF 50, FF 41, spel i PP och BP. Neutral match men stabil.</li></ol><h4>Mellannivå / Neutral insats</h4><ol class=\"tight\" start=\"8\"><li><strong>Hugo Fransson</strong> – CF 50, PP + BP, 17:28 TOI. Neutral i spelet, ingen produktion.</li><li><strong>Riley Woods</strong> – CF 50, 15:46 TOI, PP-tid 2:52. Höll balansen men skapade lite.</li><li><strong>Axel Rindell</strong> – CF 47.6, PP + 17:20 TOI. Spelbar, låg påverkan.</li><li><strong>Linus Lindström</strong> – CF 46.7, spel i BP (3:08). Defensivt okej, ingen offensiv påverkan.</li><li><strong>Jonathan Ang</strong> – 1 PP-mål, CF 42.3 (svagt 5-mot-5). Effektiv i special teams men tappade spelmässigt.</li><li><strong>Olle Alsing</strong> – 1A, CF 38.5, mest istid bland backar (21:44). PP och BP. Bra poängmässigt men pressad i eget spel.</li></ol><h4>Svagt / Under press</h4><ol class=\"tight\" start=\"14\"><li><strong>Oskar Stål-Lyrenäs</strong> – CF 30, PDO 200 (tur), låg puckkontroll men mål/poängbidrag via tur.</li><li><strong>Mattias Tedenby</strong> – CF 41.7, låg TOI (9:54). Inga tecken på offensivt tryck.</li><li><strong>Isac Brännström</strong> – CF 40, låg TOI, −1, svagt possession.</li><li><strong>Lucas Lagerberg</strong> – CF 36, liten istid, marginell påverkan.</li><li><strong>Jamiro Reber</strong> – CF 25, kortast TOI (5:39), negativ påverkan.</li><li><strong>Martin Johnsen</strong> – 1G, CF 18.2 (klart lägst). Målet väger upp svagt puckinnehav. Effektiv men tillbakapressad.</li></ol><h4>Målvakter</h4><p><strong>Frederik Dichow</strong> – 2 GA, räddnings% ca 0.909, GSAx +1.49 (överpresterade). Räddade poängen.</p><h4>Betyg vs Insats</h4><h5>Undervärderade</h5><ul class=\"tight\"><li><strong>Justin Kloos (6.38)</strong> – Bäst possession i laget, borde ligga runt 7.</li><li><strong>Santeri Hatakka (5.54)</strong> – Stark tvåvägsinsats, för lågt betyg.</li><li><strong>Joona Luoto (6.21)</strong> – Bra 5v5-spel utan poäng, underskattad.</li><li><strong>Lukas Rousek (6.38)</strong> – Stabil insats, betyget något lågt.</li></ul><h5>Övervärderade</h5><ul class=\"tight\"><li><strong>Nikola Pasic (6.75)</strong> – Hög PDO, poäng med flyt.</li><li><strong>Martin Johnsen (6.54)</strong> – Extremt låg CF%, effektiv men tillbakapressad.</li><li><strong>Andreas Borgman (7.04)</strong> – Tung istid men svag possession.</li><li><strong>Oskar Stål Lyrenäs (5.21)</strong> – PDO 200, tur snarare än prestation.</li></ul><h5>Rättvist bedömda</h5><ul class=\"tight\"><li><strong>Frederik Dichow (7.54)</strong> – Matchräddare, helt rätt toppbetyg.</li><li><strong>Heponiemi, Alsing, Fransson (6.0–6.1)</strong> – Neutrala prestationer, rimliga betyg.</li><li><strong>Brännström, Tedenby, Reber (5.3–5.5)</strong> – Låg påverkan, korrekt nivå.</li></ul>"
+    "html": "<h3>Statistik vs ögat</h3><h4>Matchanalys: Skellefteå – HV71 (8–3, 2025-10-11)</h4><h5>Spelet i fem mot fem</h5><p>Matchen började jämnt. Fram till mitten av andra perioden låg lagen nära varandra i både xG (SKE 2.24 – HV71 1.81) och puckinnehav (Corsi 55,6 % för Skellefteå). Skellefteå skapade något fler avslut mot mål (22–14) och hade ett litet spelövertag, men inget som motiverar en så stor målskillnad.</p><h5>Andra perioden – vändpunkten</h5><p>Här rinner matchen iväg. Skellefteå får tryck, HV71 fastnar i egen zon och målvaktsspelet kollapsar. Trots att skillnaden i chanser inte är dramatisk går fem puckar in bakom HV:s målvakt. <abbr title=\"Goals Saved Above Expected\">GSAx</abbr> på –3.76 visar att flera mål kommer från lägen som normalt inte ska resultera. Där avgörs matchen.</p><h5>Special teams</h5><p>Skellefteå var effektiva i powerplay med två mål på 1.60 xGF, medan HV71 inte fick utdelning (0 mål på 0.34 xGF). I boxplay höll Skellefteå tätt, medan HV71:s boxplay släppte in båda sina målchanser.</p><h5>Slutsats</h5><p>Spelmässigt var det jämnt över stora delar, men Skellefteå tog över när HV71:s försvar och målvaktsspel föll i andra perioden. Skillnaden i effektivitet, powerplay och räddningsnivå gör att siffrorna drar iväg – trots att underliggande statistik visar ett jämnare spel än 8–3 antyder.</p>"
   }
 }
