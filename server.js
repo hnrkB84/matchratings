@@ -1189,7 +1189,7 @@ app.get('/inlagg', (req, res) => {
       <a class="blog-brand" href="/inlagg">Inlägg</a>
       <nav class="blog-nav">
         <a href="/index.html#rosta">Rösta</a>
-        <a href="/latestmatch.html">Senaste matchen</a>
+        <a href="/senastematch.html">Senaste matchen</a>
       </nav>
     </div>
   </header>
