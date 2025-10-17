@@ -1,54 +1,51 @@
 {
-  "matchoversikt": {
-    "html": "<details><summary>🧊 <strong>Matchöversikt – Skellefteå 8, HV71 3 (2025-10-11)</strong></summary><p>Skellefteå vann klart efter en avgörande andra period där de gjorde fem mål. Spelmässigt var det jämnare än siffrorna visar (xG 2.24–1.81, Corsi 55,6 % för Skellefteå), men HV71:s målvakt Lassi Lehtinen hade en tung kväll med <abbr title=\"Goals Saved Above Expected\">GSAx</abbr> –3.76, vilket innebar flera insläppta mål på låga farlighetschanser. Skellefteå var dessutom effektivt i powerplay med två mål, medan HV71 gick mållöst i special teams.</p></details>"
-  },
-
   "spelarbetyg": [
-    { "name": "Riley Woods (F)", "rating": 6.17 },
-    { "name": "Jonathan Ang (F)", "rating": 5.97 },
-    { "name": "Andreas Borgman (D)", "rating": 5.03 },
-    { "name": "Joona Luoto (F)", "rating": 4.93 },
-    { "name": "Hugo Fransson (D)", "rating": 4.87 },
-    { "name": "Justin Kloos (F)", "rating": 4.87 },
-    { "name": "Nikola Pasic (F)", "rating": 4.83 },
-    { "name": "Jamiro Reber (F)", "rating": 4.77 },
-    { "name": "Martin Johnsen (F)", "rating": 4.60 },
-    { "name": "Lucas Lagerberg (D)", "rating": 4.57 },
-    { "name": "Aleksi Heponiemi (F)", "rating": 4.53 },
-    { "name": "Linus Lindström (F)", "rating": 4.27 },
-    { "name": "Mattias Tedenby (F)", "rating": 4.10 },
-    { "name": "Lukas Rousek (F)", "rating": 4.07 },
-    { "name": "Santeri Hatakka (D)", "rating": 3.90 },
-    { "name": "Olle Alsing (D)", "rating": 3.87 },
-    { "name": "Axel Rindell (D)", "rating": 3.67 },
-    { "name": "Niklas Hansson (D)", "rating": 3.23 },
-    { "name": "Oskar Stål Lyrenäs (F)", "rating": 2.57 },
-    { "name": "Lassi Lehtinen (G)", "rating": 1.83 }
+    { "name": "Jonathan Ang", "rating": 8.59 },
+    { "name": "Frederik Dichow", "rating": 7.24 },
+    { "name": "Hugo Pettersson", "rating": 7.02 },
+    { "name": "Riley Woods", "rating": 6.96 },
+    { "name": "Andreas Borgman", "rating": 6.78 },
+    { "name": "Niklas Hansson", "rating": 6.74 },
+    { "name": "Santeri Hatakka", "rating": 6.52 },
+    { "name": "Oskar Stål Lyrenäs", "rating": 6.46 },
+    { "name": "Justin Kloos", "rating": 6.43 },
+    { "name": "Olle Alsing", "rating": 6.22 },
+    { "name": "Lucas Lagerberg", "rating": 6.20 },
+    { "name": "Hugo Fransson", "rating": 6.15 },
+    { "name": "Martin Johnsen", "rating": 5.96 },
+    { "name": "Aleksi Heponiemi", "rating": 5.91 },
+    { "name": "Jamiro Reber", "rating": 5.78 },
+    { "name": "Linus Lindström", "rating": 5.76 },
+    { "name": "Nikola Pasic", "rating": 5.67 },
+    { "name": "Lukas Rousek", "rating": 5.63 },
+    { "name": "William Nilsson Ignberg", "rating": 5.46 },
+    { "name": "Axel Rindell", "rating": 5.43 },
+    { "name": "Mattias Tedenby", "rating": 5.15 }
   ],
 
   "tranarbanken": {
     "kv": [
-      { "k": "Betyg", "v": "2.70" }
+      { "k": "Betyg", "v": "6.93" }
     ]
   },
 
   "matchomdomen": {
     "kv": [
-      { "k": "Domarnivå", "v": "6.10" },
-      { "k": "Speglade resultatet", "v": "6.63" },
-      { "k": "Matchbetyg", "v": "3.30" }
+      { "k": "Domarnivå", "v": "6.65" },
+      { "k": "Speglade resultatet", "v": "7.30" },
+      { "k": "Matchbetyg", "v": "7.50" }
     ]
   },
 
   "snitt": {
     "kv": [
-      { "k": "Målvakt", "v": "1.83" },
-      { "k": "Backar", "v": "4.16" },
-      { "k": "Forwards", "v": "4.64" }
+      { "k": "Målvakt", "v": "7.24" },
+      { "k": "Backar", "v": "6.29" },
+      { "k": "Forwards", "v": "6.21" }
     ]
   },
 
   "stat_vs_ogat": {
-    "html": "<h3>Statistik vs ögat</h3><h4>Matchanalys: Skellefteå – HV71 (8–3, 2025-10-11)</h4><h5>Spelet i fem mot fem</h5><p>Matchen började jämnt. Fram till mitten av andra perioden låg lagen nära varandra i både xG (SKE 2.24 – HV71 1.81) och puckinnehav (Corsi 55,6 % för Skellefteå). Skellefteå skapade något fler avslut mot mål (22–14) och hade ett litet spelövertag, men inget som motiverar en så stor målskillnad.</p><h5>Andra perioden – vändpunkten</h5><p>Här rinner matchen iväg. Skellefteå får tryck, HV71 fastnar i egen zon och målvaktsspelet kollapsar. Trots att skillnaden i chanser inte är dramatisk går fem puckar in bakom HV:s målvakt. <abbr title=\"Goals Saved Above Expected\">GSAx</abbr> på –3.76 visar att flera mål kommer från lägen som normalt inte ska resultera. Där avgörs matchen.</p><h5>Special teams</h5><p>Skellefteå var effektiva i powerplay med två mål på 1.60 xGF, medan HV71 inte fick utdelning (0 mål på 0.34 xGF). I boxplay höll Skellefteå tätt, medan HV71:s boxplay släppte in båda sina målchanser.</p><h5>Slutsats</h5><p>Spelmässigt var det jämnt över stora delar, men Skellefteå tog över när HV71:s försvar och målvaktsspel föll i andra perioden. Skillnaden i effektivitet, powerplay och räddningsnivå gör att siffrorna drar iväg – trots att underliggande statistik visar ett jämnare spel än 8–3 antyder.</p>"
+    "html": "<h3>Statistik vs ögat</h3><h4>HV71–Djurgården (7–3, 2025-10-16)</h4><h5>Hög påverkan</h5><ul><li><strong>Jonathan Ang</strong> – 16:15 TOI, 61 % CF. Två mål, tre skott på mål och bra puckkontroll. Bidrog starkt i offensiven och i fem mot fem-spelet.</li><li><strong>Hugo Pettersson</strong> – 15:48 TOI (3:18 i PP), 42 % CF. Fick stort förtroende i PP, gjorde ett mål och två assist. Bidrog offensivt som tänkt, särskilt i numerärt överläge.</li><li><strong>Niklas Hansson</strong> – 18:08 TOI (2:58 i PP), 48 % CF. Två PP-poäng, trygg med pucken. Viktig i uppspelen och tydlig del av PP-strukturen.</li><li><strong>Riley Woods</strong> – 17:43 TOI, 55 % CF. Gjorde mål, drev spel bra i fem mot fem. Positiv match i båda riktningar.</li><li><strong>Andreas Borgman</strong> – 21:17 TOI, 50 % CF. Längst istid i laget. Solid defensivt, höll sin zon ren och var delaktig i anfallen.</li></ul><h5>Medelstor påverkan</h5><ul><li><strong>Justin Kloos</strong> – 13:65 TOI, 61 % CF. En assist, aktiv med pucken. Inget PP men tydligt bidrag i speluppbyggnad.</li><li><strong>Lukas Rousek</strong> – 19:18 TOI, 58 % CF. En assist, bra i transporterna, aktivt spel i offensiv zon.</li><li><strong>Martin Johnsen</strong> – 14:63 TOI, 59 % CF. Skapade tryck i fem mot fem, fick med sig en assist.</li><li><strong>Oskar Stål Lyrenäs</strong> – 13:82 TOI, 50 % CF. Gjorde mål, i övrigt en lugn match. Effektiv i läget han fick.</li><li><strong>Olle Alsing</strong> – 17:55 TOI, 67 % CF. Matchens bästa CF. Stark med puck, trygg på blå. Spelade PP2 men låg riskprofil.</li><li><strong>Hugo Fransson</strong> – 20:03 TOI, 62 % CF. Stark i egen zon, höll spelet framför sig. Bra positionering.</li><li><strong>Lucas Lagerberg</strong> – 15:65 TOI, 55 % CF. Stabil match, inga misstag. Solid i rotationsspelet.</li><li><strong>William Nilsson</strong> – 8:17 TOI, 78 % CF. Kort matchtid men mycket bra siffror. Effektiv i sina minuter.</li><li><strong>Jamiro Reber</strong> – 11:45 TOI, 50 % CF. Två assist, enkel men smart match. Tog rätt beslut med pucken.</li></ul><h5>Liten påverkan</h5><ul><li><strong>Nikola Pasic</strong> – 14:18 TOI, 54 % CF. Relativt neutral match. Bidrog mest genom puckkontroll i mittzon.</li><li><strong>Linus Lindström</strong> – 14:12 TOI, 59 % CF. Bra rörelse, defensivt stabil. Låg poänginvolvering.</li><li><strong>Aleksi Heponiemi</strong> – 15:33 TOI (3:23 i PP), 43 % CF. Fick PP-tid men svårt att skapa tryck. Låg energi och lite pucktid.</li><li><strong>Mattias Tedenby</strong> – 10:18 TOI, 45 % CF. Osynlig match, inget spel i PP, låg pucknärvaro.</li><li><strong>Santeri Hatakka</strong> – 17:60 TOI, 35 % CF. Tung kväll. Hade problem i egen zon och tappade initiativ.</li><li><strong>Axel Rindell</strong> – 4:53 TOI, 67 % CF. Kort insats, gjorde det bra men spelade för lite för att påverka helheten.</li></ul>"
   }
 }
