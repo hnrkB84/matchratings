@@ -1276,7 +1276,7 @@ a.back{display:inline-block;margin:10px 0 16px}
     <div class="meta">${new Date(p.created_at).toLocaleDateString('sv-SE')}</div>
     ${p.cover_image_url ? `<div class="cover"><img src="${p.cover_image_url}" alt=""></div>` : ``}
     <article class="post">${p.content_html}</article>
-    <p style="margin-top:14px"><a class="btn" href="/index.html#rosta">Rösta på matchen</a></p>
+    <p style="margin-top:14px"><a class="btn" href="/rosta.html">Rösta på matchen</a></p>
   </div>
 </body></html>`);
 });
