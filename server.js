@@ -1319,6 +1319,10 @@ app.delete('/api/blog/posts/:id', (req, res) => {
   res.json({ ok: true });
 });
 
+// Redirect root to /inlagg
+app.get(['/', '/index.html'], (req, res) => {
+  res.redirect(301, '/inlagg');
+});
 
 // --- Static ---
 app.use(express.static(path.join(__dirname, "public")));
