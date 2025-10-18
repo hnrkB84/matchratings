@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8" />
+  
+  <script defer src="https://cloud.umami.is/script.js" data-website-id="aadada43-474b-407a-ae37-6be4cc81fb15" data-auto-track="true"></script>
+
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Teko:wght@600;700&family=Oswald:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:FILL@1" />
+
+  <title>Spelarbetyg</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/styles.css">
+
+  <!-- Canonical (bra för delningar och SEO) -->
+  <link rel="canonical" href="https://matchratings.onrender.com/">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:site_name" content="Spelarbetyg – HV71">
+  <meta property="og:title" content="Spelarbetyg – Rösta på HV71:s spelare">
+  <meta property="og:description" content="Sätt betyg 1.0–10.0 på HV71:s spelare efter matchen och välj ⭐ Matchens lirare. Skalan är inspirerad av Gazzetta dello Sport.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://matchratings.onrender.com/">
+  <meta property="og:image" content="https://matchratings.onrender.com/ofacb.jpeg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="sv_SE">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Spelarbetyg – Rösta på HV71:s spelare">
+  <meta name="twitter:description" content="Sätt betyg 1.0–10.0 på HV71:s spelare och välj ⭐ Matchens lirare.">
+  <meta name="twitter:image" content="https://matchratings.onrender.com/ofacb.jpeg">
+</head>
+<body>
+  <header>
+    <h1>Spelarbetyg</h1>
+
+    <!-- Matchinfo badge -->
+    <div id="matchInfo"
+         style="margin-top:.5rem; display:inline-block; font-weight:700;
+                background:var(--yellow); color:var(--blue);
+                padding:.4rem .7rem; border-radius:999px; box-shadow:0 1px 0 rgba(0,0,0,.15);">
+      Laddar match…
+    </div>
+
+    <!-- Länk till om-sidan -->
+    <div style="margin-top:.5rem; font-size:.9rem;">
+      <a href="omprojektet.html"
+         style="color:var(--white); opacity:.8; text-decoration:none;">
+         Om detta projekt
+      </a>
+    </div>
+  </header>
+
+  <div class="wrap">
+
+    <!-- Kollapsande betygsskala -->
+    <div class="card" style="margin-bottom:1rem;">
+      <details>
+        <summary class="section-title" style="cursor:pointer;">
+          Visa/​dölj betygsskalan — <span style="font-weight:700;">Läs gärna först</span>
+        </summary>
+
+        <!-- Highlight: Välj stjärna -->
+        <div style="margin-top:.75rem; background:rgba(255,203,1,.12); border-left:4px solid var(--yellow);
+                    padding:.75rem .9rem; border-radius:.5rem;">
+          <div style="font-weight:800; letter-spacing:.2px;">Välj ⭐ för matchens bästa HV-spelare</div>
+          <div class="muted" style="margin-top:.15rem;">(Du kan bara välja en spelare – sparas när du klickar “Skicka in”.)</div>
+        </div>
+
+        <!-- Själva skalan -->
+        <div class="muted" style="white-space:pre-line; margin-top:.75rem;">
+Denna skala är inspirerad och hämtad från Gazzetta dello Sports klassiska bedömningar i italiensk sportpress. Där är 6.0 alltid godkänt, högre siffror belönar en starkare insats – medan betyg under 6.0 markerar en svag prestation.
+
+1.0–2.0 – Katastrofalt, nästan aldrig utdelat.
+3.0 – Mycket svagt, laget skadas av insatsen.
+4.0 – Klart underkänd, långt från förväntningarna.
+5.0 – Svagt, men inte helt hopplöst.
+6.0 – Godkänt, standardnivå. Gör sitt jobb.
+7.0 – Bra, tydligt positiv insats.
+8.0 – Mycket bra, matchens bästa eller nära där.
+9.0 – Exceptionellt, en prestation som lyfter hela laget.
+10.0 – Mytiskt. Extremt sällsynt, historisk nivå.
+        </div>
+      </details>
+    </div>
+    <!-- /Kollapsande betygsskala -->
+
+    <div class="card">
+      <div class="section-title special-title">Matchtruppen</div>
+
+      <!-- Spelare -->
+      <div id="players" class="players-grid"></div>
+
+      <!-- Avdelare + meta-kort under spelarna -->
+      <hr class="divider">
+      <div class="subsection" style="color:var(--blue); font-weight:700;">Omdömen om matchen</div>
+
+      <div class="meta-grid">
+        <!-- Matchbetyg -->
+        <div class="p-card meta">
+          <div class="p-top">
+            <div class="p-nr">—</div>
+            <div>
+              <div class="p-name">Matchbetyg</div>
+              <div class="p-pos">Helhetsintryck (1–10)</div>
+            </div>
+            <span class="material-symbols-outlined icon-right">sports_hockey</span>
+          </div>
+          <div class="p-rate">
+            <!-- Dold input + stepper -->
+            <input type="hidden" id="mo_range" value="6.0">
+            <div class="stepper" data-target="mo_range">
+              <button class="stepper-btn" aria-label="Minska matchbetyg" onclick="stepValue('mo_range', -0.5)">
+                <span class="material-symbols-outlined">remove</span>
+              </button>
+              <div class="stepper-val" id="badge-mo">6.0</div>
+              <button class="stepper-btn" aria-label="Öka matchbetyg" onclick="stepValue('mo_range', +0.5)">
+                <span class="material-symbols-outlined">add</span>
+              </button>
+            </div>
+          </div>
+          <div class="meta-icon"><span class="material-symbols-outlined">sports_hockey</span></div>
+        </div>
+
+        <!-- Speglade resultatet matchen? -->
+        <div class="p-card meta">
+          <div class="p-top">
+            <div class="p-nr">—</div>
+            <div>
+              <div class="p-name">Speglade resultatet matchen?</div>
+              <div class="p-pos">(1–10)</div>
+            </div>
+            <span class="material-symbols-outlined icon-right">balance</span>
+          </div>
+          <div class="p-rate">
+            <input type="hidden" id="rr_range" value="6.0">
+            <div class="stepper" data-target="rr_range">
+              <button class="stepper-btn" aria-label="Minska spegling" onclick="stepValue('rr_range', -0.5)">
+                <span class="material-symbols-outlined">remove</span>
+              </button>
+              <div class="stepper-val" id="badge-rr">6.0</div>
+              <button class="stepper-btn" aria-label="Öka spegling" onclick="stepValue('rr_range', +0.5)">
+                <span class="material-symbols-outlined">add</span>
+              </button>
+            </div>
+          </div>
+          <div class="meta-icon"><span class="material-symbols-outlined">balance</span></div>
+        </div>
+
+        <!-- Domarnivå -->
+        <div class="p-card meta">
+          <div class="p-top">
+            <div class="p-nr">—</div>
+            <div>
+              <div class="p-name">Domarnivå</div>
+              <div class="p-pos">(1–10)</div>
+            </div>
+            <span class="material-symbols-outlined icon-right">sports</span>
+          </div>
+          <div class="p-rate">
+            <input type="hidden" id="ref_range" value="6.0">
+            <div class="stepper" data-target="ref_range">
+              <button class="stepper-btn" aria-label="Minska domarnivå" onclick="stepValue('ref_range', -0.5)">
+                <span class="material-symbols-outlined">remove</span>
+              </button>
+              <div class="stepper-val" id="badge-ref">6.0</div>
+              <button class="stepper-btn" aria-label="Öka domarnivå" onclick="stepValue('ref_range', +0.5)">
+                <span class="material-symbols-outlined">add</span>
+              </button>
+            </div>
+          </div>
+          <div class="meta-icon"><span class="material-symbols-outlined">sports</span></div>
+        </div>
+
+        <!-- Vart såg jag matchen? -->
+        <div class="p-card meta" style="margin-top:.8rem;">
+          <div class="p-top">
+            <div class="p-nr">—</div>
+            <div>
+              <div class="p-name">Vart såg jag matchen?</div>
+              <div class="p-pos">Valfritt</div>
+            </div>
+          </div>
+          <div style="margin-top:.5rem;">
+            <select id="att" style="width:100%; padding:.55rem .7rem; border-radius:10px; border:1px solid rgba(0,0,0,.08);">
+              <option value="">— Välj —</option>
+              <option value="arena">På plats i arenan</option>
+              <option value="tv">På TV / stream</option>
+              <option value="skip">Vill ej svara</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- KNAPPRAD -->
+      <div class="row" style="margin:1rem 0;">
+        <button class="btn" id="saveAllBtn">Skicka in röster</button>
+        <button class="btn secondary" id="copyLinkBtn">Kopiera delningslänk</button>
+        <button class="btn secondary" onclick="location.href='resultat.html'">Visa resultat</button>
+        <div class="muted">⭐-valet sparas när du klickar Skicka in.</div>
+      </div>
+    </div>
+
+<script>
+/* ======= Parametrar / fingerprint ======= */
+const urlParams = new URLSearchParams(window.location.search);
+let match_id = urlParams.get("match"); // kan vara null -> vi hämtar current/latest
+const fingerprint = localStorage.getItem("hv71_fp_v1") || crypto.randomUUID();
+localStorage.setItem("hv71_fp_v1", fingerprint);
+
+/* ======= State ======= */
+let starPlayerId = null;
+
+/* ======= Helpers (namn/stjärna/badge) ======= */
+function formatName(full){
+  if(!full) return '';
+  const parts = full.trim().split(/\s+/);
+  if(parts.length===1) return parts[0]; // t.ex. "Båset"
+  const first = parts[0][0].toUpperCase() + '.';
+  const last  = parts.slice(-1)[0];
+  return `${first} ${last}`;
+}
+
+function updateBadge(id, v){
+  const badge = document.getElementById(`badge-${id}`);
+  if (badge) badge.textContent = Number(v).toFixed(1);
+}
+
+function selectStar(id){
+  starPlayerId = id;
+  document.querySelectorAll(".p-star").forEach(btn=>{
+    const pid = parseInt(btn.id.split("-")[1],10);
+    if (pid === starPlayerId){ btn.classList.add("active"); btn.innerHTML="<span>★</span>"; }
+    else { btn.classList.remove("active"); btn.innerHTML="<span>☆</span>"; }
+  });
+}
+
+/* ======= Stepper helpers (ersätter sliders) ======= */
+function clamp(v, min, max){
+  return Math.max(min, Math.min(max, v));
+}
+function roundToStep(v, step){
+  return Math.round(v / step) * step;
+}
+function setValue(id, v, step=0.5, min=1.0, max=10.0){
+  const hidden = document.getElementById(id);
+  if(!hidden) return;
+  const val = clamp(roundToStep(v, step), min, max);
+  hidden.value = String(val.toFixed(1));
+
+  // Uppdatera display/badge
+  const isMeta = (id === "mo_range" || id === "rr_range" || id === "ref_range");
+  const badgeId = isMeta
+    ? ("badge-" + id.replace("_range","").replace("mo","mo").replace("rr","rr").replace("ref","ref"))
+    : ("badge-" + id.replace("rate-",""));
+  const badge = document.getElementById(badgeId);
+  if (badge) badge.textContent = val.toFixed(1);
+}
+function stepValue(id, delta){
+  const hidden = document.getElementById(id);
+  const current = hidden ? parseFloat(hidden.value || "6.0") : 6.0;
+  setValue(id, current + delta, 0.5, 1.0, 10.0);
+}
+
+/* ======= UI: spelarkort ======= */
+function playerCard(p){
+  const id = p.id;
+  const nr = p.jersey_number ?? '–';
+  const name = formatName(p.name);
+  const pos = p.position || '';
+  const defaultVal = 6.0; // startvärde
+
+  return `
+    <div class="p-card" data-player-id="${id}">
+      <div class="p-top">
+        <div class="p-nr">${nr}</div>
+        <div>
+          <div class="p-name">${name}</div>
+          <div class="p-pos">${pos}</div>
+        </div>
+        <button id="star-${id}" class="p-star" title="Välj Matchens lirare" onclick="selectStar(${id})">
+          <span>☆</span>
+        </button>
+      </div>
+
+      <div class="p-rate">
+        <!-- dold input som sparas av saveAll() precis som tidigare -->
+        <input type="hidden" id="rate-${id}" value="${defaultVal}">
+        <!-- synlig stepper -->
+        <div class="stepper" data-target="rate-${id}">
+          <button class="stepper-btn" aria-label="Minska betyg" onclick="stepValue('rate-${id}', -0.5)">
+            <span class="material-symbols-outlined">remove</span>
+          </button>
+          <div class="stepper-val" id="badge-${id}">${defaultVal.toFixed(1)}</div>
+          <button class="stepper-btn" aria-label="Öka betyg" onclick="stepValue('rate-${id}', +0.5)">
+            <span class="material-symbols-outlined">add</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+/* ======= Ladda spelare (TRUPP FÖR MATCH) ======= */
+async function loadPlayers(){
+  if (!match_id) return;
+  const res = await fetch(`/api/players?match_id=${match_id}`);
+  const players = await res.json();
+
+  const container = document.getElementById("players");
+  if (!Array.isArray(players) || players.length === 0){
+    container.innerHTML = `<div class="muted">Ingen trupp är satt för denna match ännu.</div>`;
+    return;
+  }
+  container.innerHTML = players.map(playerCard).join("");
+
+  // ev. tidigare lokalt ⭐ för denna match
+  const saved = parseInt(localStorage.getItem(`star_${match_id}`) || "0", 10);
+  if (saved) { selectStar(saved); }
+}
+
+/* ======= Actions ======= */
+function copyLink(){
+  navigator.clipboard.writeText(window.location.href);
+  alert("Länk kopierad!");
+}
+
+async function saveAll(){
+  if (!match_id) return;
+  const ratings = Array.from(document.querySelectorAll("input[id^='rate-']")).map(el=>{
+    const player_id = parseInt(el.id.replace("rate-",""),10);
+    const rating = parseFloat(el.value);
+    return { player_id, rating };
+  });
+
+  const payload = {
+    match_id,
+    anon_fingerprint: fingerprint,
+    ratings,
+    star_player_id: starPlayerId ?? null,
+    attendance: document.getElementById("att").value || null,
+    match_overall: parseFloat(document.getElementById("mo_range").value) || null,
+    result_reflection: parseFloat(document.getElementById("rr_range").value) || null,
+    referee_level: parseFloat(document.getElementById("ref_range").value) || null
+  };
+
+  const res = await fetch("/api/submit", {
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body: JSON.stringify(payload)
+  });
+
+  if (!res.ok) {
+    const errText = await res.text().catch(()=> "Fel");
+    alert("Kunde inte skicka: " + errText);
+    return;
+  }
+  if (starPlayerId) localStorage.setItem(`star_${match_id}`, String(starPlayerId));
+  window.location.href = `tack.html?match=${encodeURIComponent(match_id)}`;
+}
+
+/* ======= Init ======= */
+const saveBtn = document.getElementById("saveAllBtn");
+if (saveBtn) saveBtn.addEventListener("click", saveAll);
+
+const copyBtn = document.getElementById("copyLinkBtn");
+if (copyBtn) copyBtn.addEventListener("click", copyLink);
+
+(async function init(){
+  // Hämta "current" (öppen röstning), annars "latest"
+  if (!match_id) {
+    let current = {};
+    try { current = await fetch("/api/matches/current").then(r=>r.json()); } catch {}
+    if (current?.id) {
+      match_id = current.id;
+    } else {
+      const latest = await fetch("/api/matches/latest").then(r=>r.json()).catch(()=>null);
+      match_id = latest?.id ?? null;
+    }
+    if (match_id){
+      const u = new URL(window.location.href);
+      u.searchParams.set("match", match_id);
+      history.replaceState(null, "", u.toString());
+    }
+  }
+
+  // Visa matchinfo (tre fasta statusar)
+  const infoEl = document.getElementById("matchInfo");
+
+  function fmtDateTime(d){
+    try{
+      const dt = (d instanceof Date) ? d : new Date(d);
+      const date = dt.toLocaleDateString("sv-SE", { year:"numeric", month:"2-digit", day:"2-digit" });
+      const time = dt.toLocaleTimeString("sv-SE", { hour:"2-digit", minute:"2-digit" });
+      return { date, time };
+    }catch{ return { date: String(d), time:"" }; }
+  }
+
+  if (match_id){
+    try{
+      const m = await fetch(`/api/matches/by-id?id=${match_id}`).then(r=>r.json());
+      const label = m.home ? `HV71 vs ${m.opponent}` : `${m.opponent} vs HV71`;
+
+      const now       = new Date();
+      const matchStart= m?.date ? new Date(m.date) : null;
+      const opensAt  = m?.open_at ? new Date(m.open_at) : null;
+      const closesAt = m?.close_at ? new Date(m.close_at) : null;
+
+      let status = "";
+      if (opensAt && now < opensAt) {
+        status = "· Röstning öppnas vid slutsignal";
+      } else if (opensAt && closesAt && now >= opensAt && now <= closesAt) {
+        status = "· Röstning öppen";
+      } else if (closesAt && now > closesAt) {
+        status = "· Röstning stängd";
+      } else if (m.voting_open) {
+        // Fallback om tider saknas men server flaggar öppet
+        status = "· Röstning öppen";
+      } else {
+        // Fallback om inget av ovan kan avgöras
+        status = "· Röstning stängd";
+      }
+
+      const { date } = fmtDateTime(matchStart || m.date);
+      infoEl.textContent = `${label} — ${date} (${m.competition}) ${status}`;
+    }catch{
+      infoEl.textContent = "Matchinfo kunde inte hämtas.";
+    }
+  } else {
+    infoEl.textContent = "Ingen match hittades.";
+  }
+
+  await loadPlayers();
+})();
+</script>
+</body>
+</html>
