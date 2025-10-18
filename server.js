@@ -1188,7 +1188,7 @@ app.get('/inlagg', (req, res) => {
     <div class="blog-header__inner">
       <a class="blog-brand" href="/inlagg">Inlägg</a>
       <nav class="blog-nav">
-        <a href="/index.html#rosta">Rösta</a>
+        <a href="/rosta.html#rosta">Rösta</a>
         <a href="/senastematch.html">Senaste matchen</a>
       </nav>
     </div>
