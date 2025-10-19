@@ -1,51 +1,55 @@
 {
+  "matchoversikt": {
+    "url": "https://matchratings.onrender.com/post/hv71-rogle-analys-251018"
+  },
+
   "spelarbetyg": [
-    { "name": "Jonathan Ang", "rating": 8.59 },
-    { "name": "Frederik Dichow", "rating": 7.24 },
-    { "name": "Hugo Pettersson", "rating": 7.02 },
-    { "name": "Riley Woods", "rating": 6.96 },
-    { "name": "Andreas Borgman", "rating": 6.78 },
-    { "name": "Niklas Hansson", "rating": 6.74 },
-    { "name": "Santeri Hatakka", "rating": 6.52 },
-    { "name": "Oskar Stål Lyrenäs", "rating": 6.46 },
-    { "name": "Justin Kloos", "rating": 6.43 },
-    { "name": "Olle Alsing", "rating": 6.22 },
-    { "name": "Lucas Lagerberg", "rating": 6.20 },
-    { "name": "Hugo Fransson", "rating": 6.15 },
-    { "name": "Martin Johnsen", "rating": 5.96 },
-    { "name": "Aleksi Heponiemi", "rating": 5.91 },
-    { "name": "Jamiro Reber", "rating": 5.78 },
-    { "name": "Linus Lindström", "rating": 5.76 },
-    { "name": "Nikola Pasic", "rating": 5.67 },
-    { "name": "Lukas Rousek", "rating": 5.63 },
-    { "name": "William Nilsson Ignberg", "rating": 5.46 },
-    { "name": "Axel Rindell", "rating": 5.43 },
-    { "name": "Mattias Tedenby", "rating": 5.15 }
+    { "name": "Andreas Borgman", "rating": 6.12 },
+    { "name": "Jamiro Reber", "rating": 5.92 },
+    { "name": "Jonathan Ang", "rating": 5.92 },
+    { "name": "Riley Woods", "rating": 5.75 },
+    { "name": "Niklas Hansson", "rating": 5.75 },
+    { "name": "Santeri Hatakka", "rating": 5.71 },
+    { "name": "Hugo Pettersson", "rating": 5.67 },
+    { "name": "Oskar Stål Lyrenäs", "rating": 5.50 },
+    { "name": "Aleksi Heponiemi", "rating": 5.50 },
+    { "name": "Hugo Fransson", "rating": 5.38 },
+    { "name": "Nikola Pasic", "rating": 5.38 },
+    { "name": "Olle Alsing", "rating": 5.33 },
+    { "name": "Mattias Tedenby", "rating": 5.17 },
+    { "name": "Noel Skarby", "rating": 5.14 },
+    { "name": "Lucas Lagerberg", "rating": 5.04 },
+    { "name": "Axel Rindell", "rating": 5.04 },
+    { "name": "Lukas Rousek", "rating": 4.96 },
+    { "name": "William Nilsson Ignberg", "rating": 4.79 },
+    { "name": "Linus Lindström", "rating": 4.79 },
+    { "name": "Martin Johnsen", "rating": 4.71 },
+    { "name": "Lassi Lehtinen", "rating": 4.36 }
   ],
+
+  "snitt": {
+    "kv": [
+      { "k": "Målvakter", "v": "4.36" },
+      { "k": "Backar", "v": "5.48" },
+      { "k": "Forwards", "v": "5.25" }
+    ]
+  },
 
   "tranarbanken": {
     "kv": [
-      { "k": "Betyg", "v": "6.93" }
+      { "k": "Betyg", "v": "4.30" }
     ]
   },
 
   "matchomdomen": {
     "kv": [
-      { "k": "Domarnivå", "v": "6.65" },
-      { "k": "Speglade resultatet", "v": "7.30" },
-      { "k": "Matchbetyg", "v": "7.50" }
-    ]
-  },
-
-  "snitt": {
-    "kv": [
-      { "k": "Målvakt", "v": "7.24" },
-      { "k": "Backar", "v": "6.29" },
-      { "k": "Forwards", "v": "6.21" }
+      { "k": "Domarnivå", "v": "5.24" },
+      { "k": "Speglade resultatet", "v": "6.63" },
+      { "k": "Matchbetyg", "v": "4.91" }
     ]
   },
 
   "stat_vs_ogat": {
-    "html": "<h3>Statistik vs ögat</h3><h4>HV71–Djurgården (7–3, 2025-10-16)</h4><h5>Hög påverkan</h5><ul><li><strong>Jonathan Ang</strong> – 16:15 TOI, 61 % CF. Två mål, tre skott på mål och bra puckkontroll. Bidrog starkt i offensiven och i fem mot fem-spelet.</li><li><strong>Hugo Pettersson</strong> – 15:48 TOI (3:18 i PP), 42 % CF. Fick stort förtroende i PP, gjorde ett mål och två assist. Bidrog offensivt som tänkt, särskilt i numerärt överläge.</li><li><strong>Niklas Hansson</strong> – 18:08 TOI (2:58 i PP), 48 % CF. Två PP-poäng, trygg med pucken. Viktig i uppspelen och tydlig del av PP-strukturen.</li><li><strong>Riley Woods</strong> – 17:43 TOI, 55 % CF. Gjorde mål, drev spel bra i fem mot fem. Positiv match i båda riktningar.</li><li><strong>Andreas Borgman</strong> – 21:17 TOI, 50 % CF. Längst istid i laget. Solid defensivt, höll sin zon ren och var delaktig i anfallen.</li></ul><h5>Medelstor påverkan</h5><ul><li><strong>Justin Kloos</strong> – 13:65 TOI, 61 % CF. En assist, aktiv med pucken. Inget PP men tydligt bidrag i speluppbyggnad.</li><li><strong>Lukas Rousek</strong> – 19:18 TOI, 58 % CF. En assist, bra i transporterna, aktivt spel i offensiv zon.</li><li><strong>Martin Johnsen</strong> – 14:63 TOI, 59 % CF. Skapade tryck i fem mot fem, fick med sig en assist.</li><li><strong>Oskar Stål Lyrenäs</strong> – 13:82 TOI, 50 % CF. Gjorde mål, i övrigt en lugn match. Effektiv i läget han fick.</li><li><strong>Olle Alsing</strong> – 17:55 TOI, 67 % CF. Matchens bästa CF. Stark med puck, trygg på blå. Spelade PP2 men låg riskprofil.</li><li><strong>Hugo Fransson</strong> – 20:03 TOI, 62 % CF. Stark i egen zon, höll spelet framför sig. Bra positionering.</li><li><strong>Lucas Lagerberg</strong> – 15:65 TOI, 55 % CF. Stabil match, inga misstag. Solid i rotationsspelet.</li><li><strong>William Nilsson</strong> – 8:17 TOI, 78 % CF. Kort matchtid men mycket bra siffror. Effektiv i sina minuter.</li><li><strong>Jamiro Reber</strong> – 11:45 TOI, 50 % CF. Två assist, enkel men smart match. Tog rätt beslut med pucken.</li></ul><h5>Liten påverkan</h5><ul><li><strong>Nikola Pasic</strong> – 14:18 TOI, 54 % CF. Relativt neutral match. Bidrog mest genom puckkontroll i mittzon.</li><li><strong>Linus Lindström</strong> – 14:12 TOI, 59 % CF. Bra rörelse, defensivt stabil. Låg poänginvolvering.</li><li><strong>Aleksi Heponiemi</strong> – 15:33 TOI (3:23 i PP), 43 % CF. Fick PP-tid men svårt att skapa tryck. Låg energi och lite pucktid.</li><li><strong>Mattias Tedenby</strong> – 10:18 TOI, 45 % CF. Osynlig match, inget spel i PP, låg pucknärvaro.</li><li><strong>Santeri Hatakka</strong> – 17:60 TOI, 35 % CF. Tung kväll. Hade problem i egen zon och tappade initiativ.</li><li><strong>Axel Rindell</strong> – 4:53 TOI, 67 % CF. Kort insats, gjorde det bra men spelade för lite för att påverka helheten.</li></ul>"
+    "html": "<h3>Statistik vs ögat</h3><p>(Analys baserad på istid och spelpåverkan i matchen)</p><h4>Bra insats</h4><ul><li><strong>Andreas Borgman</strong> (TOI 23:58) – Ledande back, hög arbetsbörda och stabilt defensivt spel.</li><li><strong>Jonathan Ang</strong> (TOI 20:40) – Stark drivkraft framåt, bra Corsi (61 %), offensiv påverkan synlig även i siffror.</li><li><strong>Lukas Rousek</strong> (TOI 20:60) – Stor istid, spelade stabilt även utan produktion.</li><li><strong>Niklas Hansson</strong> (TOI 19:80) – Nära 20 minuter, defensivt ansvar, något svag Corsi men viktig roll.</li><li><strong>Hugo Pettersson</strong> (TOI 17:28) – Oväntat mycket istid och stabil spelkontroll (61 % CF).</li><li><strong>Lucas Lagerberg</strong> (TOI 12:15) – Kortare istid men mycket bra Game Score (1.20), effektiv i sin roll.</li></ul><h4>Mellaninsats</h4><ul><li><strong>Santeri Hatakka</strong> (TOI 14:87) – Stabil, inga misstag men inget extra.</li><li><strong>Oskar Stål Lyrenäs</strong> (TOI 17:42) – Aktiv men utan utdelning, viss chansproduktion.</li><li><strong>Aleksi Heponiemi</strong> (TOI 19:05) – Lång istid men låg påverkan.</li><li><strong>Riley Woods</strong> (TOI 17:58) – Spelade okej men anonym offensivt.</li><li><strong>Hugo Fransson</strong> (TOI 18:48) – Lång istid men tappade defensivt (två insläppta).</li><li><strong>Olle Alsing</strong> (TOI 14:67) – Okej mängd istid men negativ CF.</li><li><strong>Jamiro Reber</strong> (TOI 9:72) – Kort istid men gjorde mål, positiv energiinsats.</li></ul><h4>Svag insats</h4><ul><li><strong>Axel Rindell</strong> (TOI 8:48) – Kort match, låg CF och negativ Game Score.</li><li><strong>William Nilsson Ignberg</strong> (TOI 11:23) – Svag CF (20 %), låg påverkan.</li><li><strong>Linus Lindström</strong> (TOI 12:38) – Kort TOI och svag defensiv effekt.</li><li><strong>Martin Johnsen</strong> (TOI 19:85) – Hög istid men ingen offensiv produktion.</li><li><strong>Noel Skarby</strong> (TOI 0:68) – För kort istid för att påverka.</li><li><strong>Lassi Lehtinen</strong> – Målvaktssnittet 4.36 och ett lågt matchbetyg tyder på en svagare insats.</li></ul><h4>Kort sammanfattning</h4><ul><li><strong>Överensstämmer väl:</strong> Borgman, Ang och Reber har höga betyg och motsvarande starka siffror.</li><li><strong>Delvis skillnad:</strong> Rousek har lågt betyg men stabil underliggande prestation.</li><li><strong>Överskattade insatser:</strong> Fransson, Heponiemi och Lyrenäs hade goda betyg men svagare siffror i matchen.</li><li><strong>Underskattade insatser:</strong> Lagerberg och Pettersson hade bättre siffror än deras betyg antyder.</li><li><strong>Matchnivån i stort:</strong> Matchbetyget 4.91 visar att helheten var under medel, vilket stämmer med att flera forwards spelade mycket utan tydlig utdelning.</li></ul>"
   }
 }
