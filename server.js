@@ -1177,6 +1177,7 @@ app.get('/inlagg', (req, res) => {
 <html lang="sv">
 <head>
   <meta charset="utf-8"/>
+  <script defer src="https://cloud.umami.is/script.js" data-website-id="aadada43-474b-407a-ae37-6be4cc81fb15" data-auto-track="true"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Inlägg</title>
   <meta name="description" content="Senaste analyser, krönikor och sammanställningar från HV71 Ratings." />
