@@ -3,26 +3,32 @@
     "url": "https://matchratings.onrender.com/"
   },
   "spelarbetyg": [
-    { "name": "Frederik Dichow", "rating": 7.69 },
-    { "name": "Andreas Borgman", "rating": 6.92 },
-    { "name": "Riley Woods", "rating": 6.77 },
-    { "name": "Jamiro Reber", "rating": 6.62 },
-    { "name": "Jonathan Ang", "rating": 6.58 },
-    { "name": "Santeri Hatakka", "rating": 6.46 },
-    { "name": "Hugo Pettersson", "rating": 6.31 },
-    { "name": "Aleksi Heponiemi", "rating": 6.15 },
-    { "name": "Niklas Hansson", "rating": 6.12 },
-    { "name": "Oskar Stål Lyrenäs", "rating": 6.04 },
-    { "name": "Olle Alsing", "rating": 5.88 },
-    { "name": "Hugo Fransson", "rating": 5.71 },
-    { "name": "Nikola Pasic", "rating": 5.58 },
-    { "name": "Mattias Tedenby", "rating": 5.46 }
+    { "name": "Frederik Dichow", "rating": 7.69, "pos": "G" },
+    { "name": "Andreas Borgman", "rating": 7.38, "pos": "D" },
+    { "name": "Hugo Fransson", "rating": 5.81, "pos": "D" },
+    { "name": "Axel Rindell", "rating": 5.63, "pos": "D" },
+    { "name": "Hugo Pettersson", "rating": 5.63, "pos": "F" },
+    { "name": "Jonathan Ang", "rating": 5.63, "pos": "F" },
+    { "name": "Justin Kloos", "rating": 5.50, "pos": "F" },
+    { "name": "Jamiro Reber", "rating": 5.50, "pos": "F" },
+    { "name": "Martin Johnsen", "rating": 5.38, "pos": "F" },
+    { "name": "Lucas Lagerberg", "rating": 5.31, "pos": "D" },
+    { "name": "Santeri Hatakka", "rating": 5.31, "pos": "D" },
+    { "name": "Riley Woods", "rating": 5.31, "pos": "F" },
+    { "name": "Lukas Rousek", "rating": 5.13, "pos": "F" },
+    { "name": "Olle Alsing", "rating": 5.06, "pos": "D" },
+    { "name": "Aleksi Heponiemi", "rating": 5.06, "pos": "F" },
+    { "name": "Linus Lindström", "rating": 4.94, "pos": "F" },
+    { "name": "Niklas Hansson", "rating": 4.75, "pos": "D" },
+    { "name": "Nikola Pasic", "rating": 4.69, "pos": "F" },
+    { "name": "Mattias Tedenby", "rating": 4.63, "pos": "F" },
+    { "name": "William Nilsson Ignberg", "rating": 4.44, "pos": "F" }
   ],
   "snitt": {
     "kv": [
       { "k": "Målvakter", "v": "7.69" },
-      { "k": "Backar", "v": "6.35" },
-      { "k": "Forwards", "v": "6.12" }
+      { "k": "Backar", "v": "5.61" },
+      { "k": "Forwards", "v": "5.15" }
     ]
   },
   "tranarbanken": {
@@ -32,9 +38,9 @@
   },
   "matchomdomen": {
     "kv": [
-      { "k": "Matchbetyg", "v": "5.50" },
+      { "k": "Domarnivå", "v": "5.81" },
       { "k": "Speglade resultatet", "v": "5.75" },
-      { "k": "Domarnivå", "v": "5.81" }
+      { "k": "Matchbetyg", "v": "5.50" }
     ]
   },
   "stat_vs_ogat": {
