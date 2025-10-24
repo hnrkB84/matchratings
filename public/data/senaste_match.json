@@ -1,55 +1,43 @@
 {
   "matchoversikt": {
-    "url": "https://matchratings.onrender.com/post/hv71-rogle-analys-251018"
+    "url": "https://matchratings.onrender.com/"
   },
-
   "spelarbetyg": [
-    { "name": "Andreas Borgman", "rating": 6.12 },
-    { "name": "Jamiro Reber", "rating": 5.92 },
-    { "name": "Jonathan Ang", "rating": 5.92 },
-    { "name": "Riley Woods", "rating": 5.75 },
-    { "name": "Niklas Hansson", "rating": 5.75 },
-    { "name": "Santeri Hatakka", "rating": 5.71 },
-    { "name": "Hugo Pettersson", "rating": 5.67 },
-    { "name": "Oskar Stål Lyrenäs", "rating": 5.50 },
-    { "name": "Aleksi Heponiemi", "rating": 5.50 },
-    { "name": "Hugo Fransson", "rating": 5.38 },
-    { "name": "Nikola Pasic", "rating": 5.38 },
-    { "name": "Olle Alsing", "rating": 5.33 },
-    { "name": "Mattias Tedenby", "rating": 5.17 },
-    { "name": "Noel Skarby", "rating": 5.14 },
-    { "name": "Lucas Lagerberg", "rating": 5.04 },
-    { "name": "Axel Rindell", "rating": 5.04 },
-    { "name": "Lukas Rousek", "rating": 4.96 },
-    { "name": "William Nilsson Ignberg", "rating": 4.79 },
-    { "name": "Linus Lindström", "rating": 4.79 },
-    { "name": "Martin Johnsen", "rating": 4.71 },
-    { "name": "Lassi Lehtinen", "rating": 4.36 }
+    { "name": "Frederik Dichow", "rating": 7.69 },
+    { "name": "Andreas Borgman", "rating": 6.92 },
+    { "name": "Riley Woods", "rating": 6.77 },
+    { "name": "Jamiro Reber", "rating": 6.62 },
+    { "name": "Jonathan Ang", "rating": 6.58 },
+    { "name": "Santeri Hatakka", "rating": 6.46 },
+    { "name": "Hugo Pettersson", "rating": 6.31 },
+    { "name": "Aleksi Heponiemi", "rating": 6.15 },
+    { "name": "Niklas Hansson", "rating": 6.12 },
+    { "name": "Oskar Stål Lyrenäs", "rating": 6.04 },
+    { "name": "Olle Alsing", "rating": 5.88 },
+    { "name": "Hugo Fransson", "rating": 5.71 },
+    { "name": "Nikola Pasic", "rating": 5.58 },
+    { "name": "Mattias Tedenby", "rating": 5.46 }
   ],
-
   "snitt": {
     "kv": [
-      { "k": "Målvakter", "v": "4.36" },
-      { "k": "Backar", "v": "5.48" },
-      { "k": "Forwards", "v": "5.25" }
+      { "k": "Målvakter", "v": "7.69" },
+      { "k": "Backar", "v": "6.35" },
+      { "k": "Forwards", "v": "6.12" }
     ]
   },
-
   "tranarbanken": {
     "kv": [
-      { "k": "Betyg", "v": "4.30" }
+      { "k": "Betyg", "v": "5.50" }
     ]
   },
-
   "matchomdomen": {
     "kv": [
-      { "k": "Domarnivå", "v": "5.24" },
-      { "k": "Speglade resultatet", "v": "6.63" },
-      { "k": "Matchbetyg", "v": "4.91" }
+      { "k": "Matchbetyg", "v": "5.50" },
+      { "k": "Speglade resultatet", "v": "5.75" },
+      { "k": "Domarnivå", "v": "5.81" }
     ]
   },
-
   "stat_vs_ogat": {
-    "html": "<h3>Statistik vs ögat</h3><p>(Analys baserad på istid och spelpåverkan i matchen)</p><h4>Bra insats</h4><ul><li><strong>Andreas Borgman</strong> (TOI 23:58) – Ledande back, hög arbetsbörda och stabilt defensivt spel.</li><li><strong>Jonathan Ang</strong> (TOI 20:40) – Stark drivkraft framåt, bra Corsi (61 %), offensiv påverkan synlig även i siffror.</li><li><strong>Lukas Rousek</strong> (TOI 20:60) – Stor istid, spelade stabilt även utan produktion.</li><li><strong>Niklas Hansson</strong> (TOI 19:80) – Nära 20 minuter, defensivt ansvar, något svag Corsi men viktig roll.</li><li><strong>Hugo Pettersson</strong> (TOI 17:28) – Oväntat mycket istid och stabil spelkontroll (61 % CF).</li><li><strong>Lucas Lagerberg</strong> (TOI 12:15) – Kortare istid men mycket bra Game Score (1.20), effektiv i sin roll.</li></ul><h4>Mellaninsats</h4><ul><li><strong>Santeri Hatakka</strong> (TOI 14:87) – Stabil, inga misstag men inget extra.</li><li><strong>Oskar Stål Lyrenäs</strong> (TOI 17:42) – Aktiv men utan utdelning, viss chansproduktion.</li><li><strong>Aleksi Heponiemi</strong> (TOI 19:05) – Lång istid men låg påverkan.</li><li><strong>Riley Woods</strong> (TOI 17:58) – Spelade okej men anonym offensivt.</li><li><strong>Hugo Fransson</strong> (TOI 18:48) – Lång istid men tappade defensivt (två insläppta).</li><li><strong>Olle Alsing</strong> (TOI 14:67) – Okej mängd istid men negativ CF.</li><li><strong>Jamiro Reber</strong> (TOI 9:72) – Kort istid men gjorde mål, positiv energiinsats.</li></ul><h4>Svag insats</h4><ul><li><strong>Axel Rindell</strong> (TOI 8:48) – Kort match, låg CF och negativ Game Score.</li><li><strong>William Nilsson Ignberg</strong> (TOI 11:23) – Svag CF (20 %), låg påverkan.</li><li><strong>Linus Lindström</strong> (TOI 12:38) – Kort TOI och svag defensiv effekt.</li><li><strong>Martin Johnsen</strong> (TOI 19:85) – Hög istid men ingen offensiv produktion.</li><li><strong>Noel Skarby</strong> (TOI 0:68) – För kort istid för att påverka.</li><li><strong>Lassi Lehtinen</strong> – Målvaktssnittet 4.36 och ett lågt matchbetyg tyder på en svagare insats.</li></ul><h4>Kort sammanfattning</h4><ul><li><strong>Överensstämmer väl:</strong> Borgman, Ang och Reber har höga betyg och motsvarande starka siffror.</li><li><strong>Delvis skillnad:</strong> Rousek har lågt betyg men stabil underliggande prestation.</li><li><strong>Överskattade insatser:</strong> Fransson, Heponiemi och Lyrenäs hade goda betyg men svagare siffror i matchen.</li><li><strong>Underskattade insatser:</strong> Lagerberg och Pettersson hade bättre siffror än deras betyg antyder.</li><li><strong>Matchnivån i stort:</strong> Matchbetyget 4.91 visar att helheten var under medel, vilket stämmer med att flera forwards spelade mycket utan tydlig utdelning.</li></ul>"
+    "html": "<h3>Statistik vs ögat</h3><p>Frölunda vann med 2–1, och statistiken stödjer bilden av ett rättvist resultat. Vid lika styrka hade Frölunda ett tydligt övertag i både spel och chanser: xG 4.5–1.9 och Corsi 51–45 visar hur hemmalaget successivt tog över matchen efter första perioden. HV71 hängde med i skott (24–24) men skapade få avslut av riktigt hög kvalitet.</p><p>Frölundas tryck i mitten av matchen syns tydligt i xG-kurvan, där de byggde upp flera farliga chanser i följd. HV:s offensiv mattades samtidigt av markant efter sitt powerplaymål. Målvakten Lassi Lehtinen (GSAx +1.2) höll laget kvar med flera viktiga räddningar, annars kunde siffrorna sprungit iväg.</p><p>HV71:s special teams var ett positivt inslag – effektivt powerplay och stabilt boxplay – men fem mot fem-spelet var klart i underläge. Med ögat såg det jämnt ut, men siffrorna visar att Frölunda hade kontrollen större delen av kvällen.</p>"
   }
 }
